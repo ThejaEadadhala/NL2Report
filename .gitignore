@@ -1,0 +1,10 @@
+venv/
+__pycache__/
+*.pyc
+.env
+pipeline_run.log
+processed/
+raw/
+*.egg-info/
+.vscode/
+.idea/
