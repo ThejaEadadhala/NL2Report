@@ -1,10 +1,20 @@
-venv/
+# Python
 __pycache__/
-*.pyc
+*.py[cod]
+*.pyo
+venv/
 .env
-pipeline_run.log
-processed/
+
+# Datasets — SQLite files are too large for git
+datasets/**/*.sqlite
+
+# Large data folders
 raw/
-*.egg-info/
-.vscode/
-.idea/
+processed/
+
+# Logs
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
