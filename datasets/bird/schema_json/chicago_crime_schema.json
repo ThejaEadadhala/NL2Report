@@ -1,0 +1,502 @@
+{
+  "database": "chicago_crime",
+  "tables": [
+    {
+      "name": "Community_Area",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "community_area_no",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "community_area_name",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 2,
+          "name": "side",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 3,
+          "name": "population",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        }
+      ],
+      "foreign_keys": [],
+      "row_count": 77
+    },
+    {
+      "name": "Crime",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "report_no",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "case_number",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 2,
+          "name": "date",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 3,
+          "name": "block",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 4,
+          "name": "iucr_no",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 5,
+          "name": "location_description",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 6,
+          "name": "arrest",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 7,
+          "name": "domestic",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 8,
+          "name": "beat",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 9,
+          "name": "district_no",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 10,
+          "name": "ward_no",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 11,
+          "name": "community_area_no",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 12,
+          "name": "fbi_code_no",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 13,
+          "name": "latitude",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 14,
+          "name": "longitude",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        }
+      ],
+      "foreign_keys": [
+        {
+          "from": "fbi_code_no",
+          "to_table": "FBI_Code",
+          "to_col": "fbi_code_no"
+        },
+        {
+          "from": "community_area_no",
+          "to_table": "Community_Area",
+          "to_col": "community_area_no"
+        },
+        {
+          "from": "district_no",
+          "to_table": "District",
+          "to_col": "district_no"
+        },
+        {
+          "from": "iucr_no",
+          "to_table": "IUCR",
+          "to_col": "iucr_no"
+        },
+        {
+          "from": "ward_no",
+          "to_table": "Ward",
+          "to_col": "ward_no"
+        }
+      ],
+      "row_count": 268002
+    },
+    {
+      "name": "District",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "district_no",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "district_name",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 2,
+          "name": "address",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 3,
+          "name": "zip_code",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 4,
+          "name": "commander",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 5,
+          "name": "email",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 6,
+          "name": "phone",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 7,
+          "name": "fax",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 8,
+          "name": "tty",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 9,
+          "name": "twitter",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        }
+      ],
+      "foreign_keys": [],
+      "row_count": 22
+    },
+    {
+      "name": "FBI_Code",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "fbi_code_no",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "title",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 2,
+          "name": "description",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 3,
+          "name": "crime_against",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        }
+      ],
+      "foreign_keys": [],
+      "row_count": 26
+    },
+    {
+      "name": "IUCR",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "iucr_no",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "primary_description",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 2,
+          "name": "secondary_description",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 3,
+          "name": "index_code",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        }
+      ],
+      "foreign_keys": [],
+      "row_count": 401
+    },
+    {
+      "name": "Neighborhood",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "neighborhood_name",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "community_area_no",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        }
+      ],
+      "foreign_keys": [
+        {
+          "from": "community_area_no",
+          "to_table": "Community_Area",
+          "to_col": "community_area_no"
+        }
+      ],
+      "row_count": 246
+    },
+    {
+      "name": "Ward",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "ward_no",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "alderman_first_name",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 2,
+          "name": "alderman_last_name",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 3,
+          "name": "alderman_name_suffix",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 4,
+          "name": "ward_office_address",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 5,
+          "name": "ward_office_zip",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 6,
+          "name": "ward_email",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 7,
+          "name": "ward_office_phone",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 8,
+          "name": "ward_office_fax",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 9,
+          "name": "city_hall_office_room",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 10,
+          "name": "city_hall_office_phone",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 11,
+          "name": "city_hall_office_fax",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 12,
+          "name": "Population",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        }
+      ],
+      "foreign_keys": [],
+      "row_count": 50
+    }
+  ]
+}

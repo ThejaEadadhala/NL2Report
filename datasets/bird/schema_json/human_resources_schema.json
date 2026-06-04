@@ -1,0 +1,197 @@
+{
+  "database": "human_resources",
+  "tables": [
+    {
+      "name": "employee",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "ssn",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "lastname",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 2,
+          "name": "firstname",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 3,
+          "name": "hiredate",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 4,
+          "name": "salary",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 5,
+          "name": "gender",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 6,
+          "name": "performance",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 7,
+          "name": "positionID",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 8,
+          "name": "locationID",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        }
+      ],
+      "foreign_keys": [
+        {
+          "from": "positionID",
+          "to_table": "position",
+          "to_col": "positionID"
+        },
+        {
+          "from": "locationID",
+          "to_table": "location",
+          "to_col": "locationID"
+        }
+      ],
+      "row_count": 25
+    },
+    {
+      "name": "location",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "locationID",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "locationcity",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 2,
+          "name": "address",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 3,
+          "name": "state",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 4,
+          "name": "zipcode",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 5,
+          "name": "officephone",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        }
+      ],
+      "foreign_keys": [],
+      "row_count": 8
+    },
+    {
+      "name": "position",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "positionID",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "positiontitle",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 2,
+          "name": "educationrequired",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 3,
+          "name": "minsalary",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 4,
+          "name": "maxsalary",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        }
+      ],
+      "foreign_keys": [],
+      "row_count": 4
+    }
+  ]
+}

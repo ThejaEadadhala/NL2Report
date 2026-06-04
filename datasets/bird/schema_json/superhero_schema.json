@@ -1,0 +1,381 @@
+{
+  "database": "superhero",
+  "tables": [
+    {
+      "name": "alignment",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "id",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "alignment",
+          "type": "TEXT",
+          "notnull": false,
+          "default": "NULL",
+          "pk": false
+        }
+      ],
+      "foreign_keys": [],
+      "row_count": 4
+    },
+    {
+      "name": "attribute",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "id",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "attribute_name",
+          "type": "TEXT",
+          "notnull": false,
+          "default": "NULL",
+          "pk": false
+        }
+      ],
+      "foreign_keys": [],
+      "row_count": 6
+    },
+    {
+      "name": "colour",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "id",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "colour",
+          "type": "TEXT",
+          "notnull": false,
+          "default": "NULL",
+          "pk": false
+        }
+      ],
+      "foreign_keys": [],
+      "row_count": 35
+    },
+    {
+      "name": "gender",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "id",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "gender",
+          "type": "TEXT",
+          "notnull": false,
+          "default": "NULL",
+          "pk": false
+        }
+      ],
+      "foreign_keys": [],
+      "row_count": 3
+    },
+    {
+      "name": "hero_attribute",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "hero_id",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": "NULL",
+          "pk": false
+        },
+        {
+          "cid": 1,
+          "name": "attribute_id",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": "NULL",
+          "pk": false
+        },
+        {
+          "cid": 2,
+          "name": "attribute_value",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": "NULL",
+          "pk": false
+        }
+      ],
+      "foreign_keys": [
+        {
+          "from": "hero_id",
+          "to_table": "superhero",
+          "to_col": "id"
+        },
+        {
+          "from": "attribute_id",
+          "to_table": "attribute",
+          "to_col": "id"
+        }
+      ],
+      "row_count": 3738
+    },
+    {
+      "name": "hero_power",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "hero_id",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": "NULL",
+          "pk": false
+        },
+        {
+          "cid": 1,
+          "name": "power_id",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": "NULL",
+          "pk": false
+        }
+      ],
+      "foreign_keys": [
+        {
+          "from": "power_id",
+          "to_table": "superpower",
+          "to_col": "id"
+        },
+        {
+          "from": "hero_id",
+          "to_table": "superhero",
+          "to_col": "id"
+        }
+      ],
+      "row_count": 5825
+    },
+    {
+      "name": "publisher",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "id",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "publisher_name",
+          "type": "TEXT",
+          "notnull": false,
+          "default": "NULL",
+          "pk": false
+        }
+      ],
+      "foreign_keys": [],
+      "row_count": 25
+    },
+    {
+      "name": "race",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "id",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "race",
+          "type": "TEXT",
+          "notnull": false,
+          "default": "NULL",
+          "pk": false
+        }
+      ],
+      "foreign_keys": [],
+      "row_count": 61
+    },
+    {
+      "name": "superhero",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "id",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "superhero_name",
+          "type": "TEXT",
+          "notnull": false,
+          "default": "NULL",
+          "pk": false
+        },
+        {
+          "cid": 2,
+          "name": "full_name",
+          "type": "TEXT",
+          "notnull": false,
+          "default": "NULL",
+          "pk": false
+        },
+        {
+          "cid": 3,
+          "name": "gender_id",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": "NULL",
+          "pk": false
+        },
+        {
+          "cid": 4,
+          "name": "eye_colour_id",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": "NULL",
+          "pk": false
+        },
+        {
+          "cid": 5,
+          "name": "hair_colour_id",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": "NULL",
+          "pk": false
+        },
+        {
+          "cid": 6,
+          "name": "skin_colour_id",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": "NULL",
+          "pk": false
+        },
+        {
+          "cid": 7,
+          "name": "race_id",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": "NULL",
+          "pk": false
+        },
+        {
+          "cid": 8,
+          "name": "publisher_id",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": "NULL",
+          "pk": false
+        },
+        {
+          "cid": 9,
+          "name": "alignment_id",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": "NULL",
+          "pk": false
+        },
+        {
+          "cid": 10,
+          "name": "height_cm",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": "NULL",
+          "pk": false
+        },
+        {
+          "cid": 11,
+          "name": "weight_kg",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": "NULL",
+          "pk": false
+        }
+      ],
+      "foreign_keys": [
+        {
+          "from": "skin_colour_id",
+          "to_table": "colour",
+          "to_col": "id"
+        },
+        {
+          "from": "race_id",
+          "to_table": "race",
+          "to_col": "id"
+        },
+        {
+          "from": "publisher_id",
+          "to_table": "publisher",
+          "to_col": "id"
+        },
+        {
+          "from": "hair_colour_id",
+          "to_table": "colour",
+          "to_col": "id"
+        },
+        {
+          "from": "gender_id",
+          "to_table": "gender",
+          "to_col": "id"
+        },
+        {
+          "from": "eye_colour_id",
+          "to_table": "colour",
+          "to_col": "id"
+        },
+        {
+          "from": "alignment_id",
+          "to_table": "alignment",
+          "to_col": "id"
+        }
+      ],
+      "row_count": 750
+    },
+    {
+      "name": "superpower",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "id",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "power_name",
+          "type": "TEXT",
+          "notnull": false,
+          "default": "NULL",
+          "pk": false
+        }
+      ],
+      "foreign_keys": [],
+      "row_count": 167
+    }
+  ]
+}

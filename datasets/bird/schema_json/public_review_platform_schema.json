@@ -1,0 +1,798 @@
+{
+  "database": "public_review_platform",
+  "tables": [
+    {
+      "name": "Attributes",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "attribute_id",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "attribute_name",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        }
+      ],
+      "foreign_keys": [],
+      "row_count": 80
+    },
+    {
+      "name": "Business",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "business_id",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "active",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 2,
+          "name": "city",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 3,
+          "name": "state",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 4,
+          "name": "stars",
+          "type": "REAL",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 5,
+          "name": "review_count",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        }
+      ],
+      "foreign_keys": [],
+      "row_count": 15585
+    },
+    {
+      "name": "Business_Attributes",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "attribute_id",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "business_id",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 2,
+          "name": "attribute_value",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        }
+      ],
+      "foreign_keys": [
+        {
+          "from": "business_id",
+          "to_table": "Business",
+          "to_col": null
+        },
+        {
+          "from": "attribute_id",
+          "to_table": "Attributes",
+          "to_col": null
+        }
+      ],
+      "row_count": 206934
+    },
+    {
+      "name": "Business_Categories",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "business_id",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "category_id",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": true
+        }
+      ],
+      "foreign_keys": [
+        {
+          "from": "category_id",
+          "to_table": "Categories",
+          "to_col": null
+        },
+        {
+          "from": "business_id",
+          "to_table": "Business",
+          "to_col": null
+        }
+      ],
+      "row_count": 43703
+    },
+    {
+      "name": "Business_Hours",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "business_id",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "day_id",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 2,
+          "name": "opening_time",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 3,
+          "name": "closing_time",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        }
+      ],
+      "foreign_keys": [
+        {
+          "from": "day_id",
+          "to_table": "Days",
+          "to_col": null
+        },
+        {
+          "from": "business_id",
+          "to_table": "Business",
+          "to_col": null
+        }
+      ],
+      "row_count": 47831
+    },
+    {
+      "name": "Categories",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "category_id",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "category_name",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        }
+      ],
+      "foreign_keys": [],
+      "row_count": 591
+    },
+    {
+      "name": "Checkins",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "business_id",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "day_id",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 2,
+          "name": "label_time_0",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 3,
+          "name": "label_time_1",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 4,
+          "name": "label_time_2",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 5,
+          "name": "label_time_3",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 6,
+          "name": "label_time_4",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 7,
+          "name": "label_time_5",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 8,
+          "name": "label_time_6",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 9,
+          "name": "label_time_7",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 10,
+          "name": "label_time_8",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 11,
+          "name": "label_time_9",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 12,
+          "name": "label_time_10",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 13,
+          "name": "label_time_11",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 14,
+          "name": "label_time_12",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 15,
+          "name": "label_time_13",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 16,
+          "name": "label_time_14",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 17,
+          "name": "label_time_15",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 18,
+          "name": "label_time_16",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 19,
+          "name": "label_time_17",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 20,
+          "name": "label_time_18",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 21,
+          "name": "label_time_19",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 22,
+          "name": "label_time_20",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 23,
+          "name": "label_time_21",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 24,
+          "name": "label_time_22",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 25,
+          "name": "label_time_23",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        }
+      ],
+      "foreign_keys": [
+        {
+          "from": "day_id",
+          "to_table": "Days",
+          "to_col": null
+        },
+        {
+          "from": "business_id",
+          "to_table": "Business",
+          "to_col": null
+        }
+      ],
+      "row_count": 80038
+    },
+    {
+      "name": "Compliments",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "compliment_id",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "compliment_type",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        }
+      ],
+      "foreign_keys": [],
+      "row_count": 11
+    },
+    {
+      "name": "Days",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "day_id",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "day_of_week",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        }
+      ],
+      "foreign_keys": [],
+      "row_count": 7
+    },
+    {
+      "name": "Elite",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "user_id",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "year_id",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": true
+        }
+      ],
+      "foreign_keys": [
+        {
+          "from": "year_id",
+          "to_table": "Years",
+          "to_col": null
+        },
+        {
+          "from": "user_id",
+          "to_table": "Users",
+          "to_col": null
+        }
+      ],
+      "row_count": 16366
+    },
+    {
+      "name": "Reviews",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "business_id",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "user_id",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 2,
+          "name": "review_stars",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 3,
+          "name": "review_votes_funny",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 4,
+          "name": "review_votes_useful",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 5,
+          "name": "review_votes_cool",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 6,
+          "name": "review_length",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        }
+      ],
+      "foreign_keys": [
+        {
+          "from": "user_id",
+          "to_table": "Users",
+          "to_col": null
+        },
+        {
+          "from": "business_id",
+          "to_table": "Business",
+          "to_col": null
+        }
+      ],
+      "row_count": 322906
+    },
+    {
+      "name": "Tips",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "business_id",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "user_id",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 2,
+          "name": "likes",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 3,
+          "name": "tip_length",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        }
+      ],
+      "foreign_keys": [
+        {
+          "from": "user_id",
+          "to_table": "Users",
+          "to_col": null
+        },
+        {
+          "from": "business_id",
+          "to_table": "Business",
+          "to_col": null
+        }
+      ],
+      "row_count": 87157
+    },
+    {
+      "name": "Users",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "user_id",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "user_yelping_since_year",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 2,
+          "name": "user_average_stars",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 3,
+          "name": "user_votes_funny",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 4,
+          "name": "user_votes_useful",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 5,
+          "name": "user_votes_cool",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 6,
+          "name": "user_review_count",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 7,
+          "name": "user_fans",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        }
+      ],
+      "foreign_keys": [],
+      "row_count": 70817
+    },
+    {
+      "name": "Users_Compliments",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "compliment_id",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "user_id",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 2,
+          "name": "number_of_compliments",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        }
+      ],
+      "foreign_keys": [
+        {
+          "from": "user_id",
+          "to_table": "Users",
+          "to_col": null
+        },
+        {
+          "from": "compliment_id",
+          "to_table": "Compliments",
+          "to_col": null
+        }
+      ],
+      "row_count": 98810
+    },
+    {
+      "name": "Years",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "year_id",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "actual_year",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        }
+      ],
+      "foreign_keys": [],
+      "row_count": 10
+    }
+  ]
+}

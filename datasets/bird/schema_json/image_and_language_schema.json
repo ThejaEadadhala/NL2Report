@@ -1,0 +1,255 @@
+{
+  "database": "image_and_language",
+  "tables": [
+    {
+      "name": "ATT_CLASSES",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "ATT_CLASS_ID",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": "0",
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "ATT_CLASS",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        }
+      ],
+      "foreign_keys": [],
+      "row_count": 699
+    },
+    {
+      "name": "IMG_OBJ",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "IMG_ID",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": "0",
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "OBJ_SAMPLE_ID",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": "0",
+          "pk": true
+        },
+        {
+          "cid": 2,
+          "name": "OBJ_CLASS_ID",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 3,
+          "name": "X",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 4,
+          "name": "Y",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 5,
+          "name": "W",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 6,
+          "name": "H",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        }
+      ],
+      "foreign_keys": [
+        {
+          "from": "OBJ_CLASS_ID",
+          "to_table": "OBJ_CLASSES",
+          "to_col": "OBJ_CLASS_ID"
+        }
+      ],
+      "row_count": 1750617
+    },
+    {
+      "name": "IMG_OBJ_ATT",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "IMG_ID",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": "0",
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "ATT_CLASS_ID",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": "0",
+          "pk": true
+        },
+        {
+          "cid": 2,
+          "name": "OBJ_SAMPLE_ID",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": "0",
+          "pk": true
+        }
+      ],
+      "foreign_keys": [
+        {
+          "from": "IMG_ID",
+          "to_table": "IMG_OBJ",
+          "to_col": "IMG_ID"
+        },
+        {
+          "from": "OBJ_SAMPLE_ID",
+          "to_table": "IMG_OBJ",
+          "to_col": "OBJ_SAMPLE_ID"
+        },
+        {
+          "from": "ATT_CLASS_ID",
+          "to_table": "ATT_CLASSES",
+          "to_col": "ATT_CLASS_ID"
+        }
+      ],
+      "row_count": 1074674
+    },
+    {
+      "name": "IMG_REL",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "IMG_ID",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": "0",
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "PRED_CLASS_ID",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": "0",
+          "pk": true
+        },
+        {
+          "cid": 2,
+          "name": "OBJ1_SAMPLE_ID",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": "0",
+          "pk": true
+        },
+        {
+          "cid": 3,
+          "name": "OBJ2_SAMPLE_ID",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": "0",
+          "pk": true
+        }
+      ],
+      "foreign_keys": [
+        {
+          "from": "IMG_ID",
+          "to_table": "IMG_OBJ",
+          "to_col": "IMG_ID"
+        },
+        {
+          "from": "OBJ2_SAMPLE_ID",
+          "to_table": "IMG_OBJ",
+          "to_col": "OBJ_SAMPLE_ID"
+        },
+        {
+          "from": "IMG_ID",
+          "to_table": "IMG_OBJ",
+          "to_col": "IMG_ID"
+        },
+        {
+          "from": "OBJ1_SAMPLE_ID",
+          "to_table": "IMG_OBJ",
+          "to_col": "OBJ_SAMPLE_ID"
+        },
+        {
+          "from": "PRED_CLASS_ID",
+          "to_table": "PRED_CLASSES",
+          "to_col": "PRED_CLASS_ID"
+        }
+      ],
+      "row_count": 763159
+    },
+    {
+      "name": "OBJ_CLASSES",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "OBJ_CLASS_ID",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": "0",
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "OBJ_CLASS",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        }
+      ],
+      "foreign_keys": [],
+      "row_count": 300
+    },
+    {
+      "name": "PRED_CLASSES",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "PRED_CLASS_ID",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": "0",
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "PRED_CLASS",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        }
+      ],
+      "foreign_keys": [],
+      "row_count": 150
+    }
+  ]
+}

@@ -1,0 +1,651 @@
+{
+  "database": "book_publishing_company",
+  "tables": [
+    {
+      "name": "authors",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "au_id",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "au_lname",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 2,
+          "name": "au_fname",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 3,
+          "name": "phone",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 4,
+          "name": "address",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 5,
+          "name": "city",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 6,
+          "name": "state",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 7,
+          "name": "zip",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 8,
+          "name": "contract",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        }
+      ],
+      "foreign_keys": [],
+      "row_count": 23
+    },
+    {
+      "name": "discounts",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "discounttype",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 1,
+          "name": "stor_id",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 2,
+          "name": "lowqty",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 3,
+          "name": "highqty",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 4,
+          "name": "discount",
+          "type": "REAL",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        }
+      ],
+      "foreign_keys": [
+        {
+          "from": "stor_id",
+          "to_table": "stores",
+          "to_col": "stor_id"
+        }
+      ],
+      "row_count": 3
+    },
+    {
+      "name": "employee",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "emp_id",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "fname",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 2,
+          "name": "minit",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 3,
+          "name": "lname",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 4,
+          "name": "job_id",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 5,
+          "name": "job_lvl",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 6,
+          "name": "pub_id",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 7,
+          "name": "hire_date",
+          "type": "DATETIME",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        }
+      ],
+      "foreign_keys": [
+        {
+          "from": "pub_id",
+          "to_table": "publishers",
+          "to_col": "pub_id"
+        },
+        {
+          "from": "job_id",
+          "to_table": "jobs",
+          "to_col": "job_id"
+        }
+      ],
+      "row_count": 43
+    },
+    {
+      "name": "jobs",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "job_id",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "job_desc",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 2,
+          "name": "min_lvl",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 3,
+          "name": "max_lvl",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        }
+      ],
+      "foreign_keys": [],
+      "row_count": 14
+    },
+    {
+      "name": "pub_info",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "pub_id",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "logo",
+          "type": "BLOB",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 2,
+          "name": "pr_info",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        }
+      ],
+      "foreign_keys": [
+        {
+          "from": "pub_id",
+          "to_table": "publishers",
+          "to_col": "pub_id"
+        }
+      ],
+      "row_count": 7
+    },
+    {
+      "name": "publishers",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "pub_id",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "pub_name",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 2,
+          "name": "city",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 3,
+          "name": "state",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 4,
+          "name": "country",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        }
+      ],
+      "foreign_keys": [],
+      "row_count": 8
+    },
+    {
+      "name": "roysched",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "title_id",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 1,
+          "name": "lorange",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 2,
+          "name": "hirange",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 3,
+          "name": "royalty",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        }
+      ],
+      "foreign_keys": [
+        {
+          "from": "title_id",
+          "to_table": "titles",
+          "to_col": "title_id"
+        }
+      ],
+      "row_count": 86
+    },
+    {
+      "name": "sales",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "stor_id",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "ord_num",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 2,
+          "name": "ord_date",
+          "type": "DATETIME",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 3,
+          "name": "qty",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 4,
+          "name": "payterms",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 5,
+          "name": "title_id",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": true
+        }
+      ],
+      "foreign_keys": [
+        {
+          "from": "title_id",
+          "to_table": "titles",
+          "to_col": "title_id"
+        },
+        {
+          "from": "stor_id",
+          "to_table": "stores",
+          "to_col": "stor_id"
+        }
+      ],
+      "row_count": 21
+    },
+    {
+      "name": "stores",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "stor_id",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "stor_name",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 2,
+          "name": "stor_address",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 3,
+          "name": "city",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 4,
+          "name": "state",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 5,
+          "name": "zip",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        }
+      ],
+      "foreign_keys": [],
+      "row_count": 6
+    },
+    {
+      "name": "titleauthor",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "au_id",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "title_id",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 2,
+          "name": "au_ord",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 3,
+          "name": "royaltyper",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        }
+      ],
+      "foreign_keys": [
+        {
+          "from": "title_id",
+          "to_table": "titles",
+          "to_col": "title_id"
+        },
+        {
+          "from": "au_id",
+          "to_table": "authors",
+          "to_col": "au_id"
+        }
+      ],
+      "row_count": 25
+    },
+    {
+      "name": "titles",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "title_id",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "title",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 2,
+          "name": "type",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 3,
+          "name": "pub_id",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 4,
+          "name": "price",
+          "type": "REAL",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 5,
+          "name": "advance",
+          "type": "REAL",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 6,
+          "name": "royalty",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 7,
+          "name": "ytd_sales",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 8,
+          "name": "notes",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 9,
+          "name": "pubdate",
+          "type": "DATETIME",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        }
+      ],
+      "foreign_keys": [
+        {
+          "from": "pub_id",
+          "to_table": "publishers",
+          "to_col": "pub_id"
+        }
+      ],
+      "row_count": 18
+    }
+  ]
+}

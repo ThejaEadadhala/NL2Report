@@ -1,0 +1,4602 @@
+{
+  "database": "works_cycles",
+  "tables": [
+    {
+      "name": "Address",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "AddressID",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "AddressLine1",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 2,
+          "name": "AddressLine2",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 3,
+          "name": "City",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 4,
+          "name": "StateProvinceID",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 5,
+          "name": "PostalCode",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 6,
+          "name": "SpatialLocation",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 7,
+          "name": "rowguid",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 8,
+          "name": "ModifiedDate",
+          "type": "DATETIME",
+          "notnull": true,
+          "default": "current_timestamp",
+          "pk": false
+        }
+      ],
+      "foreign_keys": [
+        {
+          "from": "StateProvinceID",
+          "to_table": "StateProvince",
+          "to_col": null
+        }
+      ],
+      "row_count": 19614
+    },
+    {
+      "name": "AddressType",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "AddressTypeID",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "Name",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 2,
+          "name": "rowguid",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 3,
+          "name": "ModifiedDate",
+          "type": "DATETIME",
+          "notnull": true,
+          "default": "current_timestamp",
+          "pk": false
+        }
+      ],
+      "foreign_keys": [],
+      "row_count": 6
+    },
+    {
+      "name": "BillOfMaterials",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "BillOfMaterialsID",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "ProductAssemblyID",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 2,
+          "name": "ComponentID",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 3,
+          "name": "StartDate",
+          "type": "DATETIME",
+          "notnull": true,
+          "default": "current_timestamp",
+          "pk": false
+        },
+        {
+          "cid": 4,
+          "name": "EndDate",
+          "type": "DATETIME",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 5,
+          "name": "UnitMeasureCode",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 6,
+          "name": "BOMLevel",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 7,
+          "name": "PerAssemblyQty",
+          "type": "REAL",
+          "notnull": true,
+          "default": "1.00",
+          "pk": false
+        },
+        {
+          "cid": 8,
+          "name": "ModifiedDate",
+          "type": "DATETIME",
+          "notnull": true,
+          "default": "current_timestamp",
+          "pk": false
+        }
+      ],
+      "foreign_keys": [
+        {
+          "from": "UnitMeasureCode",
+          "to_table": "UnitMeasure",
+          "to_col": null
+        },
+        {
+          "from": "ComponentID",
+          "to_table": "Product",
+          "to_col": null
+        },
+        {
+          "from": "ProductAssemblyID",
+          "to_table": "Product",
+          "to_col": null
+        }
+      ],
+      "row_count": 2679
+    },
+    {
+      "name": "BusinessEntity",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "BusinessEntityID",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "rowguid",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 2,
+          "name": "ModifiedDate",
+          "type": "DATETIME",
+          "notnull": true,
+          "default": "current_timestamp",
+          "pk": false
+        }
+      ],
+      "foreign_keys": [],
+      "row_count": 20777
+    },
+    {
+      "name": "BusinessEntityAddress",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "BusinessEntityID",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "AddressID",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 2,
+          "name": "AddressTypeID",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 3,
+          "name": "rowguid",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 4,
+          "name": "ModifiedDate",
+          "type": "DATETIME",
+          "notnull": true,
+          "default": "current_timestamp",
+          "pk": false
+        }
+      ],
+      "foreign_keys": [
+        {
+          "from": "BusinessEntityID",
+          "to_table": "BusinessEntity",
+          "to_col": "BusinessEntityID"
+        },
+        {
+          "from": "AddressTypeID",
+          "to_table": "AddressType",
+          "to_col": "AddressTypeID"
+        },
+        {
+          "from": "AddressID",
+          "to_table": "Address",
+          "to_col": "AddressID"
+        }
+      ],
+      "row_count": 19614
+    },
+    {
+      "name": "BusinessEntityContact",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "BusinessEntityID",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "PersonID",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 2,
+          "name": "ContactTypeID",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 3,
+          "name": "rowguid",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 4,
+          "name": "ModifiedDate",
+          "type": "DATETIME",
+          "notnull": true,
+          "default": "current_timestamp",
+          "pk": false
+        }
+      ],
+      "foreign_keys": [
+        {
+          "from": "PersonID",
+          "to_table": "Person",
+          "to_col": "BusinessEntityID"
+        },
+        {
+          "from": "ContactTypeID",
+          "to_table": "ContactType",
+          "to_col": "ContactTypeID"
+        },
+        {
+          "from": "BusinessEntityID",
+          "to_table": "BusinessEntity",
+          "to_col": "BusinessEntityID"
+        }
+      ],
+      "row_count": 909
+    },
+    {
+      "name": "ContactType",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "ContactTypeID",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "Name",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 2,
+          "name": "ModifiedDate",
+          "type": "DATETIME",
+          "notnull": true,
+          "default": "current_timestamp",
+          "pk": false
+        }
+      ],
+      "foreign_keys": [],
+      "row_count": 20
+    },
+    {
+      "name": "CountryRegion",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "CountryRegionCode",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "Name",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 2,
+          "name": "ModifiedDate",
+          "type": "DATETIME",
+          "notnull": true,
+          "default": "current_timestamp",
+          "pk": false
+        }
+      ],
+      "foreign_keys": [],
+      "row_count": 239
+    },
+    {
+      "name": "CountryRegionCurrency",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "CountryRegionCode",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "CurrencyCode",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 2,
+          "name": "ModifiedDate",
+          "type": "DATETIME",
+          "notnull": true,
+          "default": "current_timestamp",
+          "pk": false
+        }
+      ],
+      "foreign_keys": [
+        {
+          "from": "CurrencyCode",
+          "to_table": "Currency",
+          "to_col": "CurrencyCode"
+        },
+        {
+          "from": "CountryRegionCode",
+          "to_table": "CountryRegion",
+          "to_col": "CountryRegionCode"
+        }
+      ],
+      "row_count": 109
+    },
+    {
+      "name": "CreditCard",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "CreditCardID",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "CardType",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 2,
+          "name": "CardNumber",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 3,
+          "name": "ExpMonth",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 4,
+          "name": "ExpYear",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 5,
+          "name": "ModifiedDate",
+          "type": "DATETIME",
+          "notnull": true,
+          "default": "current_timestamp",
+          "pk": false
+        }
+      ],
+      "foreign_keys": [],
+      "row_count": 19118
+    },
+    {
+      "name": "Culture",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "CultureID",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "Name",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 2,
+          "name": "ModifiedDate",
+          "type": "DATETIME",
+          "notnull": true,
+          "default": "current_timestamp",
+          "pk": false
+        }
+      ],
+      "foreign_keys": [],
+      "row_count": 8
+    },
+    {
+      "name": "Currency",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "CurrencyCode",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "Name",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 2,
+          "name": "ModifiedDate",
+          "type": "DATETIME",
+          "notnull": true,
+          "default": "current_timestamp",
+          "pk": false
+        }
+      ],
+      "foreign_keys": [],
+      "row_count": 105
+    },
+    {
+      "name": "CurrencyRate",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "CurrencyRateID",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "CurrencyRateDate",
+          "type": "DATETIME",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 2,
+          "name": "FromCurrencyCode",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 3,
+          "name": "ToCurrencyCode",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 4,
+          "name": "AverageRate",
+          "type": "REAL",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 5,
+          "name": "EndOfDayRate",
+          "type": "REAL",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 6,
+          "name": "ModifiedDate",
+          "type": "DATETIME",
+          "notnull": true,
+          "default": "current_timestamp",
+          "pk": false
+        }
+      ],
+      "foreign_keys": [
+        {
+          "from": "ToCurrencyCode",
+          "to_table": "Currency",
+          "to_col": null
+        },
+        {
+          "from": "FromCurrencyCode",
+          "to_table": "Currency",
+          "to_col": null
+        }
+      ],
+      "row_count": 13532
+    },
+    {
+      "name": "Customer",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "CustomerID",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "PersonID",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 2,
+          "name": "StoreID",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 3,
+          "name": "TerritoryID",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 4,
+          "name": "AccountNumber",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 5,
+          "name": "rowguid",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 6,
+          "name": "ModifiedDate",
+          "type": "DATETIME",
+          "notnull": true,
+          "default": "current_timestamp",
+          "pk": false
+        }
+      ],
+      "foreign_keys": [
+        {
+          "from": "StoreID",
+          "to_table": "Store",
+          "to_col": "BusinessEntityID"
+        },
+        {
+          "from": "TerritoryID",
+          "to_table": "SalesTerritory",
+          "to_col": "TerritoryID"
+        },
+        {
+          "from": "PersonID",
+          "to_table": "Person",
+          "to_col": "BusinessEntityID"
+        }
+      ],
+      "row_count": 0
+    },
+    {
+      "name": "Department",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "DepartmentID",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "Name",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 2,
+          "name": "GroupName",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 3,
+          "name": "ModifiedDate",
+          "type": "DATETIME",
+          "notnull": true,
+          "default": "current_timestamp",
+          "pk": false
+        }
+      ],
+      "foreign_keys": [],
+      "row_count": 16
+    },
+    {
+      "name": "Document",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "DocumentNode",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "DocumentLevel",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 2,
+          "name": "Title",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 3,
+          "name": "Owner",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 4,
+          "name": "FolderFlag",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": "0",
+          "pk": false
+        },
+        {
+          "cid": 5,
+          "name": "FileName",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 6,
+          "name": "FileExtension",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 7,
+          "name": "Revision",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 8,
+          "name": "ChangeNumber",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": "0",
+          "pk": false
+        },
+        {
+          "cid": 9,
+          "name": "Status",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 10,
+          "name": "DocumentSummary",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 11,
+          "name": "Document",
+          "type": "BLOB",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 12,
+          "name": "rowguid",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 13,
+          "name": "ModifiedDate",
+          "type": "DATETIME",
+          "notnull": true,
+          "default": "current_timestamp",
+          "pk": false
+        }
+      ],
+      "foreign_keys": [
+        {
+          "from": "Owner",
+          "to_table": "Employee",
+          "to_col": null
+        }
+      ],
+      "row_count": 13
+    },
+    {
+      "name": "EmailAddress",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "BusinessEntityID",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "EmailAddressID",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 2,
+          "name": "EmailAddress",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 3,
+          "name": "rowguid",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 4,
+          "name": "ModifiedDate",
+          "type": "DATETIME",
+          "notnull": true,
+          "default": "current_timestamp",
+          "pk": false
+        }
+      ],
+      "foreign_keys": [
+        {
+          "from": "BusinessEntityID",
+          "to_table": "Person",
+          "to_col": "BusinessEntityID"
+        }
+      ],
+      "row_count": 19972
+    },
+    {
+      "name": "Employee",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "BusinessEntityID",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "NationalIDNumber",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 2,
+          "name": "LoginID",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 3,
+          "name": "OrganizationNode",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 4,
+          "name": "OrganizationLevel",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 5,
+          "name": "JobTitle",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 6,
+          "name": "BirthDate",
+          "type": "DATE",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 7,
+          "name": "MaritalStatus",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 8,
+          "name": "Gender",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 9,
+          "name": "HireDate",
+          "type": "DATE",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 10,
+          "name": "SalariedFlag",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": "1",
+          "pk": false
+        },
+        {
+          "cid": 11,
+          "name": "VacationHours",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": "0",
+          "pk": false
+        },
+        {
+          "cid": 12,
+          "name": "SickLeaveHours",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": "0",
+          "pk": false
+        },
+        {
+          "cid": 13,
+          "name": "CurrentFlag",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": "1",
+          "pk": false
+        },
+        {
+          "cid": 14,
+          "name": "rowguid",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 15,
+          "name": "ModifiedDate",
+          "type": "DATETIME",
+          "notnull": true,
+          "default": "current_timestamp",
+          "pk": false
+        }
+      ],
+      "foreign_keys": [
+        {
+          "from": "BusinessEntityID",
+          "to_table": "Person",
+          "to_col": "BusinessEntityID"
+        }
+      ],
+      "row_count": 290
+    },
+    {
+      "name": "EmployeeDepartmentHistory",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "BusinessEntityID",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "DepartmentID",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 2,
+          "name": "ShiftID",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 3,
+          "name": "StartDate",
+          "type": "DATE",
+          "notnull": true,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 4,
+          "name": "EndDate",
+          "type": "DATE",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 5,
+          "name": "ModifiedDate",
+          "type": "DATETIME",
+          "notnull": true,
+          "default": "current_timestamp",
+          "pk": false
+        }
+      ],
+      "foreign_keys": [
+        {
+          "from": "ShiftID",
+          "to_table": "Shift",
+          "to_col": null
+        },
+        {
+          "from": "DepartmentID",
+          "to_table": "Department",
+          "to_col": null
+        },
+        {
+          "from": "BusinessEntityID",
+          "to_table": "Employee",
+          "to_col": null
+        }
+      ],
+      "row_count": 296
+    },
+    {
+      "name": "EmployeePayHistory",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "BusinessEntityID",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "RateChangeDate",
+          "type": "DATETIME",
+          "notnull": true,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 2,
+          "name": "Rate",
+          "type": "REAL",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 3,
+          "name": "PayFrequency",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 4,
+          "name": "ModifiedDate",
+          "type": "DATETIME",
+          "notnull": true,
+          "default": "current_timestamp",
+          "pk": false
+        }
+      ],
+      "foreign_keys": [
+        {
+          "from": "BusinessEntityID",
+          "to_table": "Employee",
+          "to_col": null
+        }
+      ],
+      "row_count": 316
+    },
+    {
+      "name": "JobCandidate",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "JobCandidateID",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "BusinessEntityID",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 2,
+          "name": "Resume",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 3,
+          "name": "ModifiedDate",
+          "type": "DATETIME",
+          "notnull": true,
+          "default": "current_timestamp",
+          "pk": false
+        }
+      ],
+      "foreign_keys": [
+        {
+          "from": "BusinessEntityID",
+          "to_table": "Employee",
+          "to_col": null
+        }
+      ],
+      "row_count": 12
+    },
+    {
+      "name": "Location",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "LocationID",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "Name",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 2,
+          "name": "CostRate",
+          "type": "REAL",
+          "notnull": true,
+          "default": "0.0000",
+          "pk": false
+        },
+        {
+          "cid": 3,
+          "name": "Availability",
+          "type": "REAL",
+          "notnull": true,
+          "default": "0.00",
+          "pk": false
+        },
+        {
+          "cid": 4,
+          "name": "ModifiedDate",
+          "type": "DATETIME",
+          "notnull": true,
+          "default": "current_timestamp",
+          "pk": false
+        }
+      ],
+      "foreign_keys": [],
+      "row_count": 14
+    },
+    {
+      "name": "Password",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "BusinessEntityID",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "PasswordHash",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 2,
+          "name": "PasswordSalt",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 3,
+          "name": "rowguid",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 4,
+          "name": "ModifiedDate",
+          "type": "DATETIME",
+          "notnull": true,
+          "default": "current_timestamp",
+          "pk": false
+        }
+      ],
+      "foreign_keys": [
+        {
+          "from": "BusinessEntityID",
+          "to_table": "Person",
+          "to_col": "BusinessEntityID"
+        }
+      ],
+      "row_count": 19972
+    },
+    {
+      "name": "Person",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "BusinessEntityID",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "PersonType",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 2,
+          "name": "NameStyle",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": "0",
+          "pk": false
+        },
+        {
+          "cid": 3,
+          "name": "Title",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 4,
+          "name": "FirstName",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 5,
+          "name": "MiddleName",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 6,
+          "name": "LastName",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 7,
+          "name": "Suffix",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 8,
+          "name": "EmailPromotion",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": "0",
+          "pk": false
+        },
+        {
+          "cid": 9,
+          "name": "AdditionalContactInfo",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 10,
+          "name": "Demographics",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 11,
+          "name": "rowguid",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 12,
+          "name": "ModifiedDate",
+          "type": "DATETIME",
+          "notnull": true,
+          "default": "current_timestamp",
+          "pk": false
+        }
+      ],
+      "foreign_keys": [
+        {
+          "from": "BusinessEntityID",
+          "to_table": "BusinessEntity",
+          "to_col": "BusinessEntityID"
+        }
+      ],
+      "row_count": 19972
+    },
+    {
+      "name": "PersonCreditCard",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "BusinessEntityID",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "CreditCardID",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 2,
+          "name": "ModifiedDate",
+          "type": "DATETIME",
+          "notnull": true,
+          "default": "current_timestamp",
+          "pk": false
+        }
+      ],
+      "foreign_keys": [
+        {
+          "from": "BusinessEntityID",
+          "to_table": "Person",
+          "to_col": "BusinessEntityID"
+        },
+        {
+          "from": "CreditCardID",
+          "to_table": "CreditCard",
+          "to_col": "CreditCardID"
+        }
+      ],
+      "row_count": 19118
+    },
+    {
+      "name": "PhoneNumberType",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "PhoneNumberTypeID",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "Name",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 2,
+          "name": "ModifiedDate",
+          "type": "DATETIME",
+          "notnull": true,
+          "default": "current_timestamp",
+          "pk": false
+        }
+      ],
+      "foreign_keys": [],
+      "row_count": 3
+    },
+    {
+      "name": "Product",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "ProductID",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "Name",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 2,
+          "name": "ProductNumber",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 3,
+          "name": "MakeFlag",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": "1",
+          "pk": false
+        },
+        {
+          "cid": 4,
+          "name": "FinishedGoodsFlag",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": "1",
+          "pk": false
+        },
+        {
+          "cid": 5,
+          "name": "Color",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 6,
+          "name": "SafetyStockLevel",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 7,
+          "name": "ReorderPoint",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 8,
+          "name": "StandardCost",
+          "type": "REAL",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 9,
+          "name": "ListPrice",
+          "type": "REAL",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 10,
+          "name": "Size",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 11,
+          "name": "SizeUnitMeasureCode",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 12,
+          "name": "WeightUnitMeasureCode",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 13,
+          "name": "Weight",
+          "type": "REAL",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 14,
+          "name": "DaysToManufacture",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 15,
+          "name": "ProductLine",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 16,
+          "name": "Class",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 17,
+          "name": "Style",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 18,
+          "name": "ProductSubcategoryID",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 19,
+          "name": "ProductModelID",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 20,
+          "name": "SellStartDate",
+          "type": "DATETIME",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 21,
+          "name": "SellEndDate",
+          "type": "DATETIME",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 22,
+          "name": "DiscontinuedDate",
+          "type": "DATETIME",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 23,
+          "name": "rowguid",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 24,
+          "name": "ModifiedDate",
+          "type": "DATETIME",
+          "notnull": true,
+          "default": "current_timestamp",
+          "pk": false
+        }
+      ],
+      "foreign_keys": [
+        {
+          "from": "ProductModelID",
+          "to_table": "ProductModel",
+          "to_col": null
+        },
+        {
+          "from": "ProductSubcategoryID",
+          "to_table": "ProductSubcategory",
+          "to_col": null
+        },
+        {
+          "from": "WeightUnitMeasureCode",
+          "to_table": "UnitMeasure",
+          "to_col": null
+        },
+        {
+          "from": "SizeUnitMeasureCode",
+          "to_table": "UnitMeasure",
+          "to_col": null
+        }
+      ],
+      "row_count": 504
+    },
+    {
+      "name": "ProductCategory",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "ProductCategoryID",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "Name",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 2,
+          "name": "rowguid",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 3,
+          "name": "ModifiedDate",
+          "type": "DATETIME",
+          "notnull": true,
+          "default": "CURRENT_TIMESTAMP",
+          "pk": false
+        }
+      ],
+      "foreign_keys": [],
+      "row_count": 4
+    },
+    {
+      "name": "ProductCostHistory",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "ProductID",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "StartDate",
+          "type": "DATE",
+          "notnull": true,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 2,
+          "name": "EndDate",
+          "type": "DATE",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 3,
+          "name": "StandardCost",
+          "type": "REAL",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 4,
+          "name": "ModifiedDate",
+          "type": "DATETIME",
+          "notnull": true,
+          "default": "CURRENT_TIMESTAMP",
+          "pk": false
+        }
+      ],
+      "foreign_keys": [
+        {
+          "from": "ProductID",
+          "to_table": "Product",
+          "to_col": "ProductID"
+        }
+      ],
+      "row_count": 395
+    },
+    {
+      "name": "ProductDescription",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "ProductDescriptionID",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "Description",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 2,
+          "name": "rowguid",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 3,
+          "name": "ModifiedDate",
+          "type": "DATETIME",
+          "notnull": true,
+          "default": "CURRENT_TIMESTAMP",
+          "pk": false
+        }
+      ],
+      "foreign_keys": [],
+      "row_count": 762
+    },
+    {
+      "name": "ProductDocument",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "ProductID",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "DocumentNode",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 2,
+          "name": "ModifiedDate",
+          "type": "DATETIME",
+          "notnull": true,
+          "default": "CURRENT_TIMESTAMP",
+          "pk": false
+        }
+      ],
+      "foreign_keys": [
+        {
+          "from": "DocumentNode",
+          "to_table": "Document",
+          "to_col": "DocumentNode"
+        },
+        {
+          "from": "ProductID",
+          "to_table": "Product",
+          "to_col": "ProductID"
+        }
+      ],
+      "row_count": 32
+    },
+    {
+      "name": "ProductInventory",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "ProductID",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "LocationID",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 2,
+          "name": "Shelf",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 3,
+          "name": "Bin",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 4,
+          "name": "Quantity",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": "0",
+          "pk": false
+        },
+        {
+          "cid": 5,
+          "name": "rowguid",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 6,
+          "name": "ModifiedDate",
+          "type": "DATETIME",
+          "notnull": true,
+          "default": "CURRENT_TIMESTAMP",
+          "pk": false
+        }
+      ],
+      "foreign_keys": [
+        {
+          "from": "LocationID",
+          "to_table": "Location",
+          "to_col": "LocationID"
+        },
+        {
+          "from": "ProductID",
+          "to_table": "Product",
+          "to_col": "ProductID"
+        }
+      ],
+      "row_count": 1069
+    },
+    {
+      "name": "ProductListPriceHistory",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "ProductID",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "StartDate",
+          "type": "DATE",
+          "notnull": true,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 2,
+          "name": "EndDate",
+          "type": "DATE",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 3,
+          "name": "ListPrice",
+          "type": "REAL",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 4,
+          "name": "ModifiedDate",
+          "type": "DATETIME",
+          "notnull": true,
+          "default": "CURRENT_TIMESTAMP",
+          "pk": false
+        }
+      ],
+      "foreign_keys": [
+        {
+          "from": "ProductID",
+          "to_table": "Product",
+          "to_col": "ProductID"
+        }
+      ],
+      "row_count": 395
+    },
+    {
+      "name": "ProductModel",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "ProductModelID",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "Name",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 2,
+          "name": "CatalogDescription",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 3,
+          "name": "Instructions",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 4,
+          "name": "rowguid",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 5,
+          "name": "ModifiedDate",
+          "type": "DATETIME",
+          "notnull": true,
+          "default": "CURRENT_TIMESTAMP",
+          "pk": false
+        }
+      ],
+      "foreign_keys": [],
+      "row_count": 128
+    },
+    {
+      "name": "ProductModelProductDescriptionCulture",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "ProductModelID",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "ProductDescriptionID",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 2,
+          "name": "CultureID",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 3,
+          "name": "ModifiedDate",
+          "type": "DATETIME",
+          "notnull": true,
+          "default": "CURRENT_TIMESTAMP",
+          "pk": false
+        }
+      ],
+      "foreign_keys": [
+        {
+          "from": "CultureID",
+          "to_table": "Culture",
+          "to_col": "CultureID"
+        },
+        {
+          "from": "ProductDescriptionID",
+          "to_table": "ProductDescription",
+          "to_col": "ProductDescriptionID"
+        },
+        {
+          "from": "ProductModelID",
+          "to_table": "ProductModel",
+          "to_col": "ProductModelID"
+        }
+      ],
+      "row_count": 762
+    },
+    {
+      "name": "ProductPhoto",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "ProductPhotoID",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "ThumbNailPhoto",
+          "type": "BLOB",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 2,
+          "name": "ThumbnailPhotoFileName",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 3,
+          "name": "LargePhoto",
+          "type": "BLOB",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 4,
+          "name": "LargePhotoFileName",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 5,
+          "name": "ModifiedDate",
+          "type": "DATETIME",
+          "notnull": true,
+          "default": "CURRENT_TIMESTAMP",
+          "pk": false
+        }
+      ],
+      "foreign_keys": [],
+      "row_count": 100
+    },
+    {
+      "name": "ProductProductPhoto",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "ProductID",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "ProductPhotoID",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 2,
+          "name": "Primary",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": "0",
+          "pk": false
+        },
+        {
+          "cid": 3,
+          "name": "ModifiedDate",
+          "type": "DATETIME",
+          "notnull": true,
+          "default": "CURRENT_TIMESTAMP",
+          "pk": false
+        }
+      ],
+      "foreign_keys": [
+        {
+          "from": "ProductPhotoID",
+          "to_table": "ProductPhoto",
+          "to_col": "ProductPhotoID"
+        },
+        {
+          "from": "ProductID",
+          "to_table": "Product",
+          "to_col": "ProductID"
+        }
+      ],
+      "row_count": 504
+    },
+    {
+      "name": "ProductReview",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "ProductReviewID",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "ProductID",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 2,
+          "name": "ReviewerName",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 3,
+          "name": "ReviewDate",
+          "type": "DATETIME",
+          "notnull": true,
+          "default": "CURRENT_TIMESTAMP",
+          "pk": false
+        },
+        {
+          "cid": 4,
+          "name": "EmailAddress",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 5,
+          "name": "Rating",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 6,
+          "name": "Comments",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 7,
+          "name": "ModifiedDate",
+          "type": "DATETIME",
+          "notnull": true,
+          "default": "CURRENT_TIMESTAMP",
+          "pk": false
+        }
+      ],
+      "foreign_keys": [
+        {
+          "from": "ProductID",
+          "to_table": "Product",
+          "to_col": "ProductID"
+        }
+      ],
+      "row_count": 4
+    },
+    {
+      "name": "ProductSubcategory",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "ProductSubcategoryID",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "ProductCategoryID",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 2,
+          "name": "Name",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 3,
+          "name": "rowguid",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 4,
+          "name": "ModifiedDate",
+          "type": "DATETIME",
+          "notnull": true,
+          "default": "CURRENT_TIMESTAMP",
+          "pk": false
+        }
+      ],
+      "foreign_keys": [
+        {
+          "from": "ProductCategoryID",
+          "to_table": "ProductCategory",
+          "to_col": "ProductCategoryID"
+        }
+      ],
+      "row_count": 37
+    },
+    {
+      "name": "ProductVendor",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "ProductID",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "BusinessEntityID",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 2,
+          "name": "AverageLeadTime",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 3,
+          "name": "StandardPrice",
+          "type": "REAL",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 4,
+          "name": "LastReceiptCost",
+          "type": "REAL",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 5,
+          "name": "LastReceiptDate",
+          "type": "DATETIME",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 6,
+          "name": "MinOrderQty",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 7,
+          "name": "MaxOrderQty",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 8,
+          "name": "OnOrderQty",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 9,
+          "name": "UnitMeasureCode",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 10,
+          "name": "ModifiedDate",
+          "type": "DATETIME",
+          "notnull": true,
+          "default": "CURRENT_TIMESTAMP",
+          "pk": false
+        }
+      ],
+      "foreign_keys": [
+        {
+          "from": "UnitMeasureCode",
+          "to_table": "UnitMeasure",
+          "to_col": "UnitMeasureCode"
+        },
+        {
+          "from": "BusinessEntityID",
+          "to_table": "Vendor",
+          "to_col": "BusinessEntityID"
+        },
+        {
+          "from": "ProductID",
+          "to_table": "Product",
+          "to_col": "ProductID"
+        }
+      ],
+      "row_count": 460
+    },
+    {
+      "name": "PurchaseOrderDetail",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "PurchaseOrderID",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 1,
+          "name": "PurchaseOrderDetailID",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 2,
+          "name": "DueDate",
+          "type": "DATETIME",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 3,
+          "name": "OrderQty",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 4,
+          "name": "ProductID",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 5,
+          "name": "UnitPrice",
+          "type": "REAL",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 6,
+          "name": "LineTotal",
+          "type": "REAL",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 7,
+          "name": "ReceivedQty",
+          "type": "REAL",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 8,
+          "name": "RejectedQty",
+          "type": "REAL",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 9,
+          "name": "StockedQty",
+          "type": "REAL",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 10,
+          "name": "ModifiedDate",
+          "type": "DATETIME",
+          "notnull": true,
+          "default": "CURRENT_TIMESTAMP",
+          "pk": false
+        }
+      ],
+      "foreign_keys": [
+        {
+          "from": "ProductID",
+          "to_table": "Product",
+          "to_col": "ProductID"
+        },
+        {
+          "from": "PurchaseOrderID",
+          "to_table": "PurchaseOrderHeader",
+          "to_col": "PurchaseOrderID"
+        }
+      ],
+      "row_count": 8845
+    },
+    {
+      "name": "PurchaseOrderHeader",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "PurchaseOrderID",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "RevisionNumber",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": "0",
+          "pk": false
+        },
+        {
+          "cid": 2,
+          "name": "Status",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": "1",
+          "pk": false
+        },
+        {
+          "cid": 3,
+          "name": "EmployeeID",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 4,
+          "name": "VendorID",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 5,
+          "name": "ShipMethodID",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 6,
+          "name": "OrderDate",
+          "type": "DATETIME",
+          "notnull": true,
+          "default": "CURRENT_TIMESTAMP",
+          "pk": false
+        },
+        {
+          "cid": 7,
+          "name": "ShipDate",
+          "type": "DATETIME",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 8,
+          "name": "SubTotal",
+          "type": "REAL",
+          "notnull": true,
+          "default": "0.0000",
+          "pk": false
+        },
+        {
+          "cid": 9,
+          "name": "TaxAmt",
+          "type": "REAL",
+          "notnull": true,
+          "default": "0.0000",
+          "pk": false
+        },
+        {
+          "cid": 10,
+          "name": "Freight",
+          "type": "REAL",
+          "notnull": true,
+          "default": "0.0000",
+          "pk": false
+        },
+        {
+          "cid": 11,
+          "name": "TotalDue",
+          "type": "REAL",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 12,
+          "name": "ModifiedDate",
+          "type": "DATETIME",
+          "notnull": true,
+          "default": "CURRENT_TIMESTAMP",
+          "pk": false
+        }
+      ],
+      "foreign_keys": [
+        {
+          "from": "ShipMethodID",
+          "to_table": "ShipMethod",
+          "to_col": "ShipMethodID"
+        },
+        {
+          "from": "VendorID",
+          "to_table": "Vendor",
+          "to_col": "BusinessEntityID"
+        },
+        {
+          "from": "EmployeeID",
+          "to_table": "Employee",
+          "to_col": "BusinessEntityID"
+        }
+      ],
+      "row_count": 4012
+    },
+    {
+      "name": "SalesOrderDetail",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "SalesOrderID",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 1,
+          "name": "SalesOrderDetailID",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 2,
+          "name": "CarrierTrackingNumber",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 3,
+          "name": "OrderQty",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 4,
+          "name": "ProductID",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 5,
+          "name": "SpecialOfferID",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 6,
+          "name": "UnitPrice",
+          "type": "REAL",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 7,
+          "name": "UnitPriceDiscount",
+          "type": "REAL",
+          "notnull": true,
+          "default": "0.0000",
+          "pk": false
+        },
+        {
+          "cid": 8,
+          "name": "LineTotal",
+          "type": "REAL",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 9,
+          "name": "rowguid",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 10,
+          "name": "ModifiedDate",
+          "type": "DATETIME",
+          "notnull": true,
+          "default": "CURRENT_TIMESTAMP",
+          "pk": false
+        }
+      ],
+      "foreign_keys": [
+        {
+          "from": "SpecialOfferID",
+          "to_table": "SpecialOfferProduct",
+          "to_col": "SpecialOfferID"
+        },
+        {
+          "from": "ProductID",
+          "to_table": "SpecialOfferProduct",
+          "to_col": "ProductID"
+        },
+        {
+          "from": "SalesOrderID",
+          "to_table": "SalesOrderHeader",
+          "to_col": "SalesOrderID"
+        }
+      ],
+      "row_count": 121317
+    },
+    {
+      "name": "SalesOrderHeader",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "SalesOrderID",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "RevisionNumber",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": "0",
+          "pk": false
+        },
+        {
+          "cid": 2,
+          "name": "OrderDate",
+          "type": "DATETIME",
+          "notnull": true,
+          "default": "CURRENT_TIMESTAMP",
+          "pk": false
+        },
+        {
+          "cid": 3,
+          "name": "DueDate",
+          "type": "DATETIME",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 4,
+          "name": "ShipDate",
+          "type": "DATETIME",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 5,
+          "name": "Status",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": "1",
+          "pk": false
+        },
+        {
+          "cid": 6,
+          "name": "OnlineOrderFlag",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": "1",
+          "pk": false
+        },
+        {
+          "cid": 7,
+          "name": "SalesOrderNumber",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 8,
+          "name": "PurchaseOrderNumber",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 9,
+          "name": "AccountNumber",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 10,
+          "name": "CustomerID",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 11,
+          "name": "SalesPersonID",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 12,
+          "name": "TerritoryID",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 13,
+          "name": "BillToAddressID",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 14,
+          "name": "ShipToAddressID",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 15,
+          "name": "ShipMethodID",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 16,
+          "name": "CreditCardID",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 17,
+          "name": "CreditCardApprovalCode",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 18,
+          "name": "CurrencyRateID",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 19,
+          "name": "SubTotal",
+          "type": "REAL",
+          "notnull": true,
+          "default": "0.0000",
+          "pk": false
+        },
+        {
+          "cid": 20,
+          "name": "TaxAmt",
+          "type": "REAL",
+          "notnull": true,
+          "default": "0.0000",
+          "pk": false
+        },
+        {
+          "cid": 21,
+          "name": "Freight",
+          "type": "REAL",
+          "notnull": true,
+          "default": "0.0000",
+          "pk": false
+        },
+        {
+          "cid": 22,
+          "name": "TotalDue",
+          "type": "REAL",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 23,
+          "name": "Comment",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 24,
+          "name": "rowguid",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 25,
+          "name": "ModifiedDate",
+          "type": "DATETIME",
+          "notnull": true,
+          "default": "CURRENT_TIMESTAMP",
+          "pk": false
+        }
+      ],
+      "foreign_keys": [
+        {
+          "from": "CurrencyRateID",
+          "to_table": "CurrencyRate",
+          "to_col": null
+        },
+        {
+          "from": "CreditCardID",
+          "to_table": "CreditCard",
+          "to_col": null
+        },
+        {
+          "from": "ShipMethodID",
+          "to_table": "Address",
+          "to_col": null
+        },
+        {
+          "from": "ShipToAddressID",
+          "to_table": "Address",
+          "to_col": null
+        },
+        {
+          "from": "BillToAddressID",
+          "to_table": "Address",
+          "to_col": null
+        },
+        {
+          "from": "TerritoryID",
+          "to_table": "SalesTerritory",
+          "to_col": null
+        },
+        {
+          "from": "SalesPersonID",
+          "to_table": "SalesPerson",
+          "to_col": null
+        },
+        {
+          "from": "CustomerID",
+          "to_table": "Customer",
+          "to_col": null
+        }
+      ],
+      "row_count": 31465
+    },
+    {
+      "name": "SalesOrderHeaderSalesReason",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "SalesOrderID",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "SalesReasonID",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 2,
+          "name": "ModifiedDate",
+          "type": "DATETIME",
+          "notnull": true,
+          "default": "CURRENT_TIMESTAMP",
+          "pk": false
+        }
+      ],
+      "foreign_keys": [
+        {
+          "from": "SalesReasonID",
+          "to_table": "SalesReason",
+          "to_col": "SalesReasonID"
+        },
+        {
+          "from": "SalesOrderID",
+          "to_table": "SalesOrderHeader",
+          "to_col": "SalesOrderID"
+        }
+      ],
+      "row_count": 27647
+    },
+    {
+      "name": "SalesPerson",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "BusinessEntityID",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "TerritoryID",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 2,
+          "name": "SalesQuota",
+          "type": "REAL",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 3,
+          "name": "Bonus",
+          "type": "REAL",
+          "notnull": true,
+          "default": "0.0000",
+          "pk": false
+        },
+        {
+          "cid": 4,
+          "name": "CommissionPct",
+          "type": "REAL",
+          "notnull": true,
+          "default": "0.0000",
+          "pk": false
+        },
+        {
+          "cid": 5,
+          "name": "SalesYTD",
+          "type": "REAL",
+          "notnull": true,
+          "default": "0.0000",
+          "pk": false
+        },
+        {
+          "cid": 6,
+          "name": "SalesLastYear",
+          "type": "REAL",
+          "notnull": true,
+          "default": "0.0000",
+          "pk": false
+        },
+        {
+          "cid": 7,
+          "name": "rowguid",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 8,
+          "name": "ModifiedDate",
+          "type": "DATETIME",
+          "notnull": true,
+          "default": "CURRENT_TIMESTAMP",
+          "pk": false
+        }
+      ],
+      "foreign_keys": [
+        {
+          "from": "TerritoryID",
+          "to_table": "SalesTerritory",
+          "to_col": "TerritoryID"
+        },
+        {
+          "from": "BusinessEntityID",
+          "to_table": "Employee",
+          "to_col": "BusinessEntityID"
+        }
+      ],
+      "row_count": 17
+    },
+    {
+      "name": "SalesPersonQuotaHistory",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "BusinessEntityID",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "QuotaDate",
+          "type": "DATETIME",
+          "notnull": true,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 2,
+          "name": "SalesQuota",
+          "type": "REAL",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 3,
+          "name": "rowguid",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 4,
+          "name": "ModifiedDate",
+          "type": "DATETIME",
+          "notnull": true,
+          "default": "CURRENT_TIMESTAMP",
+          "pk": false
+        }
+      ],
+      "foreign_keys": [
+        {
+          "from": "BusinessEntityID",
+          "to_table": "SalesPerson",
+          "to_col": "BusinessEntityID"
+        }
+      ],
+      "row_count": 163
+    },
+    {
+      "name": "SalesReason",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "SalesReasonID",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "Name",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 2,
+          "name": "ReasonType",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 3,
+          "name": "ModifiedDate",
+          "type": "DATETIME",
+          "notnull": true,
+          "default": "CURRENT_TIMESTAMP",
+          "pk": false
+        }
+      ],
+      "foreign_keys": [],
+      "row_count": 10
+    },
+    {
+      "name": "SalesTaxRate",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "SalesTaxRateID",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "StateProvinceID",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 2,
+          "name": "TaxType",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 3,
+          "name": "TaxRate",
+          "type": "REAL",
+          "notnull": true,
+          "default": "0.0000",
+          "pk": false
+        },
+        {
+          "cid": 4,
+          "name": "Name",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 5,
+          "name": "rowguid",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 6,
+          "name": "ModifiedDate",
+          "type": "DATETIME",
+          "notnull": true,
+          "default": "CURRENT_TIMESTAMP",
+          "pk": false
+        }
+      ],
+      "foreign_keys": [
+        {
+          "from": "StateProvinceID",
+          "to_table": "StateProvince",
+          "to_col": "StateProvinceID"
+        }
+      ],
+      "row_count": 29
+    },
+    {
+      "name": "SalesTerritory",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "TerritoryID",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "Name",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 2,
+          "name": "CountryRegionCode",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 3,
+          "name": "Group",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 4,
+          "name": "SalesYTD",
+          "type": "REAL",
+          "notnull": true,
+          "default": "0.0000",
+          "pk": false
+        },
+        {
+          "cid": 5,
+          "name": "SalesLastYear",
+          "type": "REAL",
+          "notnull": true,
+          "default": "0.0000",
+          "pk": false
+        },
+        {
+          "cid": 6,
+          "name": "CostYTD",
+          "type": "REAL",
+          "notnull": true,
+          "default": "0.0000",
+          "pk": false
+        },
+        {
+          "cid": 7,
+          "name": "CostLastYear",
+          "type": "REAL",
+          "notnull": true,
+          "default": "0.0000",
+          "pk": false
+        },
+        {
+          "cid": 8,
+          "name": "rowguid",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 9,
+          "name": "ModifiedDate",
+          "type": "DATETIME",
+          "notnull": true,
+          "default": "CURRENT_TIMESTAMP",
+          "pk": false
+        }
+      ],
+      "foreign_keys": [
+        {
+          "from": "CountryRegionCode",
+          "to_table": "CountryRegion",
+          "to_col": "CountryRegionCode"
+        }
+      ],
+      "row_count": 10
+    },
+    {
+      "name": "SalesTerritoryHistory",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "BusinessEntityID",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "TerritoryID",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 2,
+          "name": "StartDate",
+          "type": "DATETIME",
+          "notnull": true,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 3,
+          "name": "EndDate",
+          "type": "DATETIME",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 4,
+          "name": "rowguid",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 5,
+          "name": "ModifiedDate",
+          "type": "DATETIME",
+          "notnull": true,
+          "default": "CURRENT_TIMESTAMP",
+          "pk": false
+        }
+      ],
+      "foreign_keys": [
+        {
+          "from": "TerritoryID",
+          "to_table": "SalesTerritory",
+          "to_col": "TerritoryID"
+        },
+        {
+          "from": "BusinessEntityID",
+          "to_table": "SalesPerson",
+          "to_col": "BusinessEntityID"
+        }
+      ],
+      "row_count": 17
+    },
+    {
+      "name": "ScrapReason",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "ScrapReasonID",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "Name",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 2,
+          "name": "ModifiedDate",
+          "type": "DATETIME",
+          "notnull": true,
+          "default": "CURRENT_TIMESTAMP",
+          "pk": false
+        }
+      ],
+      "foreign_keys": [],
+      "row_count": 16
+    },
+    {
+      "name": "Shift",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "ShiftID",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "Name",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 2,
+          "name": "StartTime",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 3,
+          "name": "EndTime",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 4,
+          "name": "ModifiedDate",
+          "type": "DATETIME",
+          "notnull": true,
+          "default": "CURRENT_TIMESTAMP",
+          "pk": false
+        }
+      ],
+      "foreign_keys": [],
+      "row_count": 3
+    },
+    {
+      "name": "ShipMethod",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "ShipMethodID",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "Name",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 2,
+          "name": "ShipBase",
+          "type": "REAL",
+          "notnull": true,
+          "default": "0.0000",
+          "pk": false
+        },
+        {
+          "cid": 3,
+          "name": "ShipRate",
+          "type": "REAL",
+          "notnull": true,
+          "default": "0.0000",
+          "pk": false
+        },
+        {
+          "cid": 4,
+          "name": "rowguid",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 5,
+          "name": "ModifiedDate",
+          "type": "DATETIME",
+          "notnull": true,
+          "default": "CURRENT_TIMESTAMP",
+          "pk": false
+        }
+      ],
+      "foreign_keys": [],
+      "row_count": 5
+    },
+    {
+      "name": "ShoppingCartItem",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "ShoppingCartItemID",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "ShoppingCartID",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 2,
+          "name": "Quantity",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": "1",
+          "pk": false
+        },
+        {
+          "cid": 3,
+          "name": "ProductID",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 4,
+          "name": "DateCreated",
+          "type": "DATETIME",
+          "notnull": true,
+          "default": "CURRENT_TIMESTAMP",
+          "pk": false
+        },
+        {
+          "cid": 5,
+          "name": "ModifiedDate",
+          "type": "DATETIME",
+          "notnull": true,
+          "default": "CURRENT_TIMESTAMP",
+          "pk": false
+        }
+      ],
+      "foreign_keys": [
+        {
+          "from": "ProductID",
+          "to_table": "Product",
+          "to_col": "ProductID"
+        }
+      ],
+      "row_count": 3
+    },
+    {
+      "name": "SpecialOffer",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "SpecialOfferID",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "Description",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 2,
+          "name": "DiscountPct",
+          "type": "REAL",
+          "notnull": true,
+          "default": "0.0000",
+          "pk": false
+        },
+        {
+          "cid": 3,
+          "name": "Type",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 4,
+          "name": "Category",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 5,
+          "name": "StartDate",
+          "type": "DATETIME",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 6,
+          "name": "EndDate",
+          "type": "DATETIME",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 7,
+          "name": "MinQty",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": "0",
+          "pk": false
+        },
+        {
+          "cid": 8,
+          "name": "MaxQty",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 9,
+          "name": "rowguid",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 10,
+          "name": "ModifiedDate",
+          "type": "DATETIME",
+          "notnull": true,
+          "default": "CURRENT_TIMESTAMP",
+          "pk": false
+        }
+      ],
+      "foreign_keys": [],
+      "row_count": 16
+    },
+    {
+      "name": "SpecialOfferProduct",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "SpecialOfferID",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "ProductID",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 2,
+          "name": "rowguid",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 3,
+          "name": "ModifiedDate",
+          "type": "DATETIME",
+          "notnull": true,
+          "default": "CURRENT_TIMESTAMP",
+          "pk": false
+        }
+      ],
+      "foreign_keys": [
+        {
+          "from": "ProductID",
+          "to_table": "Product",
+          "to_col": "ProductID"
+        },
+        {
+          "from": "SpecialOfferID",
+          "to_table": "SpecialOffer",
+          "to_col": "SpecialOfferID"
+        }
+      ],
+      "row_count": 538
+    },
+    {
+      "name": "StateProvince",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "StateProvinceID",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "StateProvinceCode",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 2,
+          "name": "CountryRegionCode",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 3,
+          "name": "IsOnlyStateProvinceFlag",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": "1",
+          "pk": false
+        },
+        {
+          "cid": 4,
+          "name": "Name",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 5,
+          "name": "TerritoryID",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 6,
+          "name": "rowguid",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 7,
+          "name": "ModifiedDate",
+          "type": "DATETIME",
+          "notnull": true,
+          "default": "CURRENT_TIMESTAMP",
+          "pk": false
+        }
+      ],
+      "foreign_keys": [
+        {
+          "from": "TerritoryID",
+          "to_table": "SalesTerritory",
+          "to_col": null
+        },
+        {
+          "from": "CountryRegionCode",
+          "to_table": "CountryRegion",
+          "to_col": null
+        }
+      ],
+      "row_count": 181
+    },
+    {
+      "name": "Store",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "BusinessEntityID",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "Name",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 2,
+          "name": "SalesPersonID",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 3,
+          "name": "Demographics",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 4,
+          "name": "rowguid",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 5,
+          "name": "ModifiedDate",
+          "type": "DATETIME",
+          "notnull": true,
+          "default": "CURRENT_TIMESTAMP",
+          "pk": false
+        }
+      ],
+      "foreign_keys": [
+        {
+          "from": "SalesPersonID",
+          "to_table": "SalesPerson",
+          "to_col": "BusinessEntityID"
+        },
+        {
+          "from": "BusinessEntityID",
+          "to_table": "BusinessEntity",
+          "to_col": "BusinessEntityID"
+        }
+      ],
+      "row_count": 701
+    },
+    {
+      "name": "TransactionHistory",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "TransactionID",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "ProductID",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 2,
+          "name": "ReferenceOrderID",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 3,
+          "name": "ReferenceOrderLineID",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": "0",
+          "pk": false
+        },
+        {
+          "cid": 4,
+          "name": "TransactionDate",
+          "type": "DATETIME",
+          "notnull": true,
+          "default": "CURRENT_TIMESTAMP",
+          "pk": false
+        },
+        {
+          "cid": 5,
+          "name": "TransactionType",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 6,
+          "name": "Quantity",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 7,
+          "name": "ActualCost",
+          "type": "REAL",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 8,
+          "name": "ModifiedDate",
+          "type": "DATETIME",
+          "notnull": true,
+          "default": "CURRENT_TIMESTAMP",
+          "pk": false
+        }
+      ],
+      "foreign_keys": [
+        {
+          "from": "ProductID",
+          "to_table": "Product",
+          "to_col": "ProductID"
+        }
+      ],
+      "row_count": 113443
+    },
+    {
+      "name": "TransactionHistoryArchive",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "TransactionID",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "ProductID",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 2,
+          "name": "ReferenceOrderID",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 3,
+          "name": "ReferenceOrderLineID",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": "0",
+          "pk": false
+        },
+        {
+          "cid": 4,
+          "name": "TransactionDate",
+          "type": "DATETIME",
+          "notnull": true,
+          "default": "CURRENT_TIMESTAMP",
+          "pk": false
+        },
+        {
+          "cid": 5,
+          "name": "TransactionType",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 6,
+          "name": "Quantity",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 7,
+          "name": "ActualCost",
+          "type": "REAL",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 8,
+          "name": "ModifiedDate",
+          "type": "DATETIME",
+          "notnull": true,
+          "default": "CURRENT_TIMESTAMP",
+          "pk": false
+        }
+      ],
+      "foreign_keys": [],
+      "row_count": 89253
+    },
+    {
+      "name": "UnitMeasure",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "UnitMeasureCode",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "Name",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 2,
+          "name": "ModifiedDate",
+          "type": "DATETIME",
+          "notnull": true,
+          "default": "CURRENT_TIMESTAMP",
+          "pk": false
+        }
+      ],
+      "foreign_keys": [],
+      "row_count": 38
+    },
+    {
+      "name": "Vendor",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "BusinessEntityID",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "AccountNumber",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 2,
+          "name": "Name",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 3,
+          "name": "CreditRating",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 4,
+          "name": "PreferredVendorStatus",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": "1",
+          "pk": false
+        },
+        {
+          "cid": 5,
+          "name": "ActiveFlag",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": "1",
+          "pk": false
+        },
+        {
+          "cid": 6,
+          "name": "PurchasingWebServiceURL",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 7,
+          "name": "ModifiedDate",
+          "type": "DATETIME",
+          "notnull": true,
+          "default": "CURRENT_TIMESTAMP",
+          "pk": false
+        }
+      ],
+      "foreign_keys": [
+        {
+          "from": "BusinessEntityID",
+          "to_table": "BusinessEntity",
+          "to_col": "BusinessEntityID"
+        }
+      ],
+      "row_count": 104
+    },
+    {
+      "name": "WorkOrder",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "WorkOrderID",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "ProductID",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 2,
+          "name": "OrderQty",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 3,
+          "name": "StockedQty",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 4,
+          "name": "ScrappedQty",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 5,
+          "name": "StartDate",
+          "type": "DATETIME",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 6,
+          "name": "EndDate",
+          "type": "DATETIME",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 7,
+          "name": "DueDate",
+          "type": "DATETIME",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 8,
+          "name": "ScrapReasonID",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 9,
+          "name": "ModifiedDate",
+          "type": "DATETIME",
+          "notnull": true,
+          "default": "CURRENT_TIMESTAMP",
+          "pk": false
+        }
+      ],
+      "foreign_keys": [
+        {
+          "from": "ScrapReasonID",
+          "to_table": "ScrapReason",
+          "to_col": "ScrapReasonID"
+        },
+        {
+          "from": "ProductID",
+          "to_table": "Product",
+          "to_col": "ProductID"
+        }
+      ],
+      "row_count": 72591
+    },
+    {
+      "name": "WorkOrderRouting",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "WorkOrderID",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "ProductID",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 2,
+          "name": "OperationSequence",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 3,
+          "name": "LocationID",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 4,
+          "name": "ScheduledStartDate",
+          "type": "DATETIME",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 5,
+          "name": "ScheduledEndDate",
+          "type": "DATETIME",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 6,
+          "name": "ActualStartDate",
+          "type": "DATETIME",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 7,
+          "name": "ActualEndDate",
+          "type": "DATETIME",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 8,
+          "name": "ActualResourceHrs",
+          "type": "REAL",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 9,
+          "name": "PlannedCost",
+          "type": "REAL",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 10,
+          "name": "ActualCost",
+          "type": "REAL",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 11,
+          "name": "ModifiedDate",
+          "type": "DATETIME",
+          "notnull": true,
+          "default": "CURRENT_TIMESTAMP",
+          "pk": false
+        }
+      ],
+      "foreign_keys": [
+        {
+          "from": "LocationID",
+          "to_table": "Location",
+          "to_col": "LocationID"
+        },
+        {
+          "from": "WorkOrderID",
+          "to_table": "WorkOrder",
+          "to_col": "WorkOrderID"
+        }
+      ],
+      "row_count": 67131
+    },
+    {
+      "name": "sqlite_sequence",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "name",
+          "type": "",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 1,
+          "name": "seq",
+          "type": "",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        }
+      ],
+      "foreign_keys": [],
+      "row_count": 33
+    }
+  ]
+}

@@ -1,0 +1,548 @@
+{
+  "database": "financial",
+  "tables": [
+    {
+      "name": "account",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "account_id",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": "0",
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "district_id",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": "0",
+          "pk": false
+        },
+        {
+          "cid": 2,
+          "name": "frequency",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 3,
+          "name": "date",
+          "type": "DATE",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        }
+      ],
+      "foreign_keys": [
+        {
+          "from": "district_id",
+          "to_table": "district",
+          "to_col": "district_id"
+        }
+      ],
+      "row_count": 4500
+    },
+    {
+      "name": "card",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "card_id",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": "0",
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "disp_id",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 2,
+          "name": "type",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 3,
+          "name": "issued",
+          "type": "DATE",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        }
+      ],
+      "foreign_keys": [
+        {
+          "from": "disp_id",
+          "to_table": "disp",
+          "to_col": "disp_id"
+        }
+      ],
+      "row_count": 892
+    },
+    {
+      "name": "client",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "client_id",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "gender",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 2,
+          "name": "birth_date",
+          "type": "DATE",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 3,
+          "name": "district_id",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        }
+      ],
+      "foreign_keys": [
+        {
+          "from": "district_id",
+          "to_table": "district",
+          "to_col": "district_id"
+        }
+      ],
+      "row_count": 5369
+    },
+    {
+      "name": "disp",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "disp_id",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "client_id",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 2,
+          "name": "account_id",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 3,
+          "name": "type",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        }
+      ],
+      "foreign_keys": [
+        {
+          "from": "client_id",
+          "to_table": "client",
+          "to_col": "client_id"
+        },
+        {
+          "from": "account_id",
+          "to_table": "account",
+          "to_col": "account_id"
+        }
+      ],
+      "row_count": 5369
+    },
+    {
+      "name": "district",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "district_id",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": "0",
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "A2",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 2,
+          "name": "A3",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 3,
+          "name": "A4",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 4,
+          "name": "A5",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 5,
+          "name": "A6",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 6,
+          "name": "A7",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 7,
+          "name": "A8",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 8,
+          "name": "A9",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 9,
+          "name": "A10",
+          "type": "REAL",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 10,
+          "name": "A11",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 11,
+          "name": "A12",
+          "type": "REAL",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 12,
+          "name": "A13",
+          "type": "REAL",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 13,
+          "name": "A14",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 14,
+          "name": "A15",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 15,
+          "name": "A16",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        }
+      ],
+      "foreign_keys": [],
+      "row_count": 77
+    },
+    {
+      "name": "loan",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "loan_id",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": "0",
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "account_id",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 2,
+          "name": "date",
+          "type": "DATE",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 3,
+          "name": "amount",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 4,
+          "name": "duration",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 5,
+          "name": "payments",
+          "type": "REAL",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 6,
+          "name": "status",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        }
+      ],
+      "foreign_keys": [
+        {
+          "from": "account_id",
+          "to_table": "account",
+          "to_col": "account_id"
+        }
+      ],
+      "row_count": 682
+    },
+    {
+      "name": "order",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "order_id",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": "0",
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "account_id",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 2,
+          "name": "bank_to",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 3,
+          "name": "account_to",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 4,
+          "name": "amount",
+          "type": "REAL",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 5,
+          "name": "k_symbol",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        }
+      ],
+      "foreign_keys": [
+        {
+          "from": "account_id",
+          "to_table": "account",
+          "to_col": "account_id"
+        }
+      ],
+      "row_count": 6471
+    },
+    {
+      "name": "trans",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "trans_id",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": "0",
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "account_id",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": "0",
+          "pk": false
+        },
+        {
+          "cid": 2,
+          "name": "date",
+          "type": "DATE",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 3,
+          "name": "type",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 4,
+          "name": "operation",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 5,
+          "name": "amount",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 6,
+          "name": "balance",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 7,
+          "name": "k_symbol",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 8,
+          "name": "bank",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 9,
+          "name": "account",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        }
+      ],
+      "foreign_keys": [
+        {
+          "from": "account_id",
+          "to_table": "account",
+          "to_col": "account_id"
+        }
+      ],
+      "row_count": 1056320
+    }
+  ]
+}

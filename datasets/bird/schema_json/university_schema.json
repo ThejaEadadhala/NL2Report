@@ -1,0 +1,236 @@
+{
+  "database": "university",
+  "tables": [
+    {
+      "name": "country",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "id",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "country_name",
+          "type": "TEXT",
+          "notnull": false,
+          "default": "NULL",
+          "pk": false
+        }
+      ],
+      "foreign_keys": [],
+      "row_count": 74
+    },
+    {
+      "name": "ranking_criteria",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "id",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "ranking_system_id",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": "NULL",
+          "pk": false
+        },
+        {
+          "cid": 2,
+          "name": "criteria_name",
+          "type": "TEXT",
+          "notnull": false,
+          "default": "NULL",
+          "pk": false
+        }
+      ],
+      "foreign_keys": [
+        {
+          "from": "ranking_system_id",
+          "to_table": "ranking_system",
+          "to_col": "id"
+        }
+      ],
+      "row_count": 21
+    },
+    {
+      "name": "ranking_system",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "id",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "system_name",
+          "type": "TEXT",
+          "notnull": false,
+          "default": "NULL",
+          "pk": false
+        }
+      ],
+      "foreign_keys": [],
+      "row_count": 3
+    },
+    {
+      "name": "university",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "id",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "country_id",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": "NULL",
+          "pk": false
+        },
+        {
+          "cid": 2,
+          "name": "university_name",
+          "type": "TEXT",
+          "notnull": false,
+          "default": "NULL",
+          "pk": false
+        }
+      ],
+      "foreign_keys": [
+        {
+          "from": "country_id",
+          "to_table": "country",
+          "to_col": "id"
+        }
+      ],
+      "row_count": 1247
+    },
+    {
+      "name": "university_ranking_year",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "university_id",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": "NULL",
+          "pk": false
+        },
+        {
+          "cid": 1,
+          "name": "ranking_criteria_id",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": "NULL",
+          "pk": false
+        },
+        {
+          "cid": 2,
+          "name": "year",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": "NULL",
+          "pk": false
+        },
+        {
+          "cid": 3,
+          "name": "score",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": "NULL",
+          "pk": false
+        }
+      ],
+      "foreign_keys": [
+        {
+          "from": "university_id",
+          "to_table": "university",
+          "to_col": "id"
+        },
+        {
+          "from": "ranking_criteria_id",
+          "to_table": "ranking_criteria",
+          "to_col": "id"
+        }
+      ],
+      "row_count": 29612
+    },
+    {
+      "name": "university_year",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "university_id",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": "NULL",
+          "pk": false
+        },
+        {
+          "cid": 1,
+          "name": "year",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": "NULL",
+          "pk": false
+        },
+        {
+          "cid": 2,
+          "name": "num_students",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": "NULL",
+          "pk": false
+        },
+        {
+          "cid": 3,
+          "name": "student_staff_ratio",
+          "type": "REAL",
+          "notnull": false,
+          "default": "NULL",
+          "pk": false
+        },
+        {
+          "cid": 4,
+          "name": "pct_international_students",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": "NULL",
+          "pk": false
+        },
+        {
+          "cid": 5,
+          "name": "pct_female_students",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": "NULL",
+          "pk": false
+        }
+      ],
+      "foreign_keys": [
+        {
+          "from": "university_id",
+          "to_table": "university",
+          "to_col": "id"
+        }
+      ],
+      "row_count": 1085
+    }
+  ]
+}

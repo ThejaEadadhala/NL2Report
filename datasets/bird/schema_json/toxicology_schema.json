@@ -1,0 +1,149 @@
+{
+  "database": "toxicology",
+  "tables": [
+    {
+      "name": "atom",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "atom_id",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "molecule_id",
+          "type": "TEXT",
+          "notnull": false,
+          "default": "NULL",
+          "pk": false
+        },
+        {
+          "cid": 2,
+          "name": "element",
+          "type": "TEXT",
+          "notnull": false,
+          "default": "NULL",
+          "pk": false
+        }
+      ],
+      "foreign_keys": [
+        {
+          "from": "molecule_id",
+          "to_table": "molecule",
+          "to_col": "molecule_id"
+        }
+      ],
+      "row_count": 12333
+    },
+    {
+      "name": "bond",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "bond_id",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "molecule_id",
+          "type": "TEXT",
+          "notnull": false,
+          "default": "NULL",
+          "pk": false
+        },
+        {
+          "cid": 2,
+          "name": "bond_type",
+          "type": "TEXT",
+          "notnull": false,
+          "default": "NULL",
+          "pk": false
+        }
+      ],
+      "foreign_keys": [
+        {
+          "from": "molecule_id",
+          "to_table": "molecule",
+          "to_col": "molecule_id"
+        }
+      ],
+      "row_count": 12379
+    },
+    {
+      "name": "connected",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "atom_id",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "atom_id2",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 2,
+          "name": "bond_id",
+          "type": "TEXT",
+          "notnull": false,
+          "default": "NULL",
+          "pk": false
+        }
+      ],
+      "foreign_keys": [
+        {
+          "from": "bond_id",
+          "to_table": "bond",
+          "to_col": "bond_id"
+        },
+        {
+          "from": "atom_id2",
+          "to_table": "atom",
+          "to_col": "atom_id"
+        },
+        {
+          "from": "atom_id",
+          "to_table": "atom",
+          "to_col": "atom_id"
+        }
+      ],
+      "row_count": 24758
+    },
+    {
+      "name": "molecule",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "molecule_id",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "label",
+          "type": "TEXT",
+          "notnull": false,
+          "default": "NULL",
+          "pk": false
+        }
+      ],
+      "foreign_keys": [],
+      "row_count": 343
+    }
+  ]
+}

@@ -1,0 +1,513 @@
+{
+  "database": "talkingdata",
+  "tables": [
+    {
+      "name": "app_all",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "app_id",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": true
+        }
+      ],
+      "foreign_keys": [],
+      "row_count": 113211
+    },
+    {
+      "name": "app_events",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "event_id",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "app_id",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 2,
+          "name": "is_installed",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 3,
+          "name": "is_active",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        }
+      ],
+      "foreign_keys": [
+        {
+          "from": "event_id",
+          "to_table": "events",
+          "to_col": "event_id"
+        }
+      ],
+      "row_count": 32473067
+    },
+    {
+      "name": "app_events_relevant",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "event_id",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "app_id",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 2,
+          "name": "is_installed",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": "NULL",
+          "pk": false
+        },
+        {
+          "cid": 3,
+          "name": "is_active",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": "NULL",
+          "pk": false
+        }
+      ],
+      "foreign_keys": [
+        {
+          "from": "app_id",
+          "to_table": "app_all",
+          "to_col": "app_id"
+        },
+        {
+          "from": "event_id",
+          "to_table": "events_relevant",
+          "to_col": "event_id"
+        }
+      ],
+      "row_count": 3701900
+    },
+    {
+      "name": "app_labels",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "app_id",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 1,
+          "name": "label_id",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        }
+      ],
+      "foreign_keys": [
+        {
+          "from": "app_id",
+          "to_table": "app_all",
+          "to_col": "app_id"
+        },
+        {
+          "from": "label_id",
+          "to_table": "label_categories",
+          "to_col": "label_id"
+        }
+      ],
+      "row_count": 459943
+    },
+    {
+      "name": "events",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "event_id",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "device_id",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": "NULL",
+          "pk": false
+        },
+        {
+          "cid": 2,
+          "name": "timestamp",
+          "type": "DATETIME",
+          "notnull": false,
+          "default": "NULL",
+          "pk": false
+        },
+        {
+          "cid": 3,
+          "name": "longitude",
+          "type": "REAL",
+          "notnull": false,
+          "default": "NULL",
+          "pk": false
+        },
+        {
+          "cid": 4,
+          "name": "latitude",
+          "type": "REAL",
+          "notnull": false,
+          "default": "NULL",
+          "pk": false
+        }
+      ],
+      "foreign_keys": [],
+      "row_count": 3252950
+    },
+    {
+      "name": "events_relevant",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "event_id",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "device_id",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": "NULL",
+          "pk": false
+        },
+        {
+          "cid": 2,
+          "name": "timestamp",
+          "type": "DATETIME",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 3,
+          "name": "longitude",
+          "type": "REAL",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 4,
+          "name": "latitude",
+          "type": "REAL",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        }
+      ],
+      "foreign_keys": [
+        {
+          "from": "device_id",
+          "to_table": "gender_age",
+          "to_col": "device_id"
+        }
+      ],
+      "row_count": 167389
+    },
+    {
+      "name": "gender_age",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "device_id",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "gender",
+          "type": "TEXT",
+          "notnull": false,
+          "default": "NULL",
+          "pk": false
+        },
+        {
+          "cid": 2,
+          "name": "age",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": "NULL",
+          "pk": false
+        },
+        {
+          "cid": 3,
+          "name": "group",
+          "type": "TEXT",
+          "notnull": false,
+          "default": "NULL",
+          "pk": false
+        }
+      ],
+      "foreign_keys": [
+        {
+          "from": "device_id",
+          "to_table": "phone_brand_device_model2",
+          "to_col": "device_id"
+        }
+      ],
+      "row_count": 186697
+    },
+    {
+      "name": "gender_age_test",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "device_id",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": true
+        }
+      ],
+      "foreign_keys": [],
+      "row_count": 112071
+    },
+    {
+      "name": "gender_age_train",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "device_id",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "gender",
+          "type": "TEXT",
+          "notnull": false,
+          "default": "NULL",
+          "pk": false
+        },
+        {
+          "cid": 2,
+          "name": "age",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": "NULL",
+          "pk": false
+        },
+        {
+          "cid": 3,
+          "name": "group",
+          "type": "TEXT",
+          "notnull": false,
+          "default": "NULL",
+          "pk": false
+        }
+      ],
+      "foreign_keys": [],
+      "row_count": 74645
+    },
+    {
+      "name": "label_categories",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "label_id",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "category",
+          "type": "TEXT",
+          "notnull": false,
+          "default": "NULL",
+          "pk": false
+        }
+      ],
+      "foreign_keys": [],
+      "row_count": 930
+    },
+    {
+      "name": "phone_brand_device_model2",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "device_id",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "phone_brand",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 2,
+          "name": "device_model",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": true
+        }
+      ],
+      "foreign_keys": [],
+      "row_count": 89200
+    },
+    {
+      "name": "sample_submission",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "device_id",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "F23-",
+          "type": "REAL",
+          "notnull": false,
+          "default": "NULL",
+          "pk": false
+        },
+        {
+          "cid": 2,
+          "name": "F24-26",
+          "type": "REAL",
+          "notnull": false,
+          "default": "NULL",
+          "pk": false
+        },
+        {
+          "cid": 3,
+          "name": "F27-28",
+          "type": "REAL",
+          "notnull": false,
+          "default": "NULL",
+          "pk": false
+        },
+        {
+          "cid": 4,
+          "name": "F29-32",
+          "type": "REAL",
+          "notnull": false,
+          "default": "NULL",
+          "pk": false
+        },
+        {
+          "cid": 5,
+          "name": "F33-42",
+          "type": "REAL",
+          "notnull": false,
+          "default": "NULL",
+          "pk": false
+        },
+        {
+          "cid": 6,
+          "name": "F43+",
+          "type": "REAL",
+          "notnull": false,
+          "default": "NULL",
+          "pk": false
+        },
+        {
+          "cid": 7,
+          "name": "M22-",
+          "type": "REAL",
+          "notnull": false,
+          "default": "NULL",
+          "pk": false
+        },
+        {
+          "cid": 8,
+          "name": "M23-26",
+          "type": "REAL",
+          "notnull": false,
+          "default": "NULL",
+          "pk": false
+        },
+        {
+          "cid": 9,
+          "name": "M27-28",
+          "type": "REAL",
+          "notnull": false,
+          "default": "NULL",
+          "pk": false
+        },
+        {
+          "cid": 10,
+          "name": "M29-31",
+          "type": "REAL",
+          "notnull": false,
+          "default": "NULL",
+          "pk": false
+        },
+        {
+          "cid": 11,
+          "name": "M32-38",
+          "type": "REAL",
+          "notnull": false,
+          "default": "NULL",
+          "pk": false
+        },
+        {
+          "cid": 12,
+          "name": "M39+",
+          "type": "REAL",
+          "notnull": false,
+          "default": "NULL",
+          "pk": false
+        }
+      ],
+      "foreign_keys": [],
+      "row_count": 13700
+    }
+  ]
+}

@@ -1,0 +1,393 @@
+{
+  "database": "olympics",
+  "tables": [
+    {
+      "name": "city",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "id",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "city_name",
+          "type": "TEXT",
+          "notnull": false,
+          "default": "NULL",
+          "pk": false
+        }
+      ],
+      "foreign_keys": [],
+      "row_count": 42
+    },
+    {
+      "name": "competitor_event",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "event_id",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": "NULL",
+          "pk": false
+        },
+        {
+          "cid": 1,
+          "name": "competitor_id",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": "NULL",
+          "pk": false
+        },
+        {
+          "cid": 2,
+          "name": "medal_id",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": "NULL",
+          "pk": false
+        }
+      ],
+      "foreign_keys": [
+        {
+          "from": "medal_id",
+          "to_table": "medal",
+          "to_col": "id"
+        },
+        {
+          "from": "event_id",
+          "to_table": "event",
+          "to_col": "id"
+        },
+        {
+          "from": "competitor_id",
+          "to_table": "games_competitor",
+          "to_col": "id"
+        }
+      ],
+      "row_count": 260971
+    },
+    {
+      "name": "event",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "id",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "sport_id",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": "NULL",
+          "pk": false
+        },
+        {
+          "cid": 2,
+          "name": "event_name",
+          "type": "TEXT",
+          "notnull": false,
+          "default": "NULL",
+          "pk": false
+        }
+      ],
+      "foreign_keys": [
+        {
+          "from": "sport_id",
+          "to_table": "sport",
+          "to_col": "id"
+        }
+      ],
+      "row_count": 757
+    },
+    {
+      "name": "games",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "id",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "games_year",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": "NULL",
+          "pk": false
+        },
+        {
+          "cid": 2,
+          "name": "games_name",
+          "type": "TEXT",
+          "notnull": false,
+          "default": "NULL",
+          "pk": false
+        },
+        {
+          "cid": 3,
+          "name": "season",
+          "type": "TEXT",
+          "notnull": false,
+          "default": "NULL",
+          "pk": false
+        }
+      ],
+      "foreign_keys": [],
+      "row_count": 51
+    },
+    {
+      "name": "games_city",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "games_id",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": "NULL",
+          "pk": false
+        },
+        {
+          "cid": 1,
+          "name": "city_id",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": "NULL",
+          "pk": false
+        }
+      ],
+      "foreign_keys": [
+        {
+          "from": "games_id",
+          "to_table": "games",
+          "to_col": "id"
+        },
+        {
+          "from": "city_id",
+          "to_table": "city",
+          "to_col": "id"
+        }
+      ],
+      "row_count": 52
+    },
+    {
+      "name": "games_competitor",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "id",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "games_id",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": "NULL",
+          "pk": false
+        },
+        {
+          "cid": 2,
+          "name": "person_id",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": "NULL",
+          "pk": false
+        },
+        {
+          "cid": 3,
+          "name": "age",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": "NULL",
+          "pk": false
+        }
+      ],
+      "foreign_keys": [
+        {
+          "from": "person_id",
+          "to_table": "person",
+          "to_col": "id"
+        },
+        {
+          "from": "games_id",
+          "to_table": "games",
+          "to_col": "id"
+        }
+      ],
+      "row_count": 180252
+    },
+    {
+      "name": "medal",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "id",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "medal_name",
+          "type": "TEXT",
+          "notnull": false,
+          "default": "NULL",
+          "pk": false
+        }
+      ],
+      "foreign_keys": [],
+      "row_count": 4
+    },
+    {
+      "name": "noc_region",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "id",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "noc",
+          "type": "TEXT",
+          "notnull": false,
+          "default": "NULL",
+          "pk": false
+        },
+        {
+          "cid": 2,
+          "name": "region_name",
+          "type": "TEXT",
+          "notnull": false,
+          "default": "NULL",
+          "pk": false
+        }
+      ],
+      "foreign_keys": [],
+      "row_count": 231
+    },
+    {
+      "name": "person",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "id",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "full_name",
+          "type": "TEXT",
+          "notnull": false,
+          "default": "NULL",
+          "pk": false
+        },
+        {
+          "cid": 2,
+          "name": "gender",
+          "type": "TEXT",
+          "notnull": false,
+          "default": "NULL",
+          "pk": false
+        },
+        {
+          "cid": 3,
+          "name": "height",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": "NULL",
+          "pk": false
+        },
+        {
+          "cid": 4,
+          "name": "weight",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": "NULL",
+          "pk": false
+        }
+      ],
+      "foreign_keys": [],
+      "row_count": 128854
+    },
+    {
+      "name": "person_region",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "person_id",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": "NULL",
+          "pk": false
+        },
+        {
+          "cid": 1,
+          "name": "region_id",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": "NULL",
+          "pk": false
+        }
+      ],
+      "foreign_keys": [
+        {
+          "from": "region_id",
+          "to_table": "noc_region",
+          "to_col": "id"
+        },
+        {
+          "from": "person_id",
+          "to_table": "person",
+          "to_col": "id"
+        }
+      ],
+      "row_count": 130521
+    },
+    {
+      "name": "sport",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "id",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "sport_name",
+          "type": "TEXT",
+          "notnull": false,
+          "default": "NULL",
+          "pk": false
+        }
+      ],
+      "foreign_keys": [],
+      "row_count": 66
+    }
+  ]
+}

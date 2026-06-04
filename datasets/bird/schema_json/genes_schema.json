@@ -1,0 +1,163 @@
+{
+  "database": "genes",
+  "tables": [
+    {
+      "name": "Classification",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "GeneID",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "Localization",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        }
+      ],
+      "foreign_keys": [],
+      "row_count": 862
+    },
+    {
+      "name": "Genes",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "GeneID",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 1,
+          "name": "Essential",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 2,
+          "name": "Class",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 3,
+          "name": "Complex",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 4,
+          "name": "Phenotype",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 5,
+          "name": "Motif",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 6,
+          "name": "Chromosome",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 7,
+          "name": "Function",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 8,
+          "name": "Localization",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        }
+      ],
+      "foreign_keys": [
+        {
+          "from": "GeneID",
+          "to_table": "Classification",
+          "to_col": "GeneID"
+        }
+      ],
+      "row_count": 4346
+    },
+    {
+      "name": "Interactions",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "GeneID1",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "GeneID2",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 2,
+          "name": "Type",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 3,
+          "name": "Expression_Corr",
+          "type": "REAL",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        }
+      ],
+      "foreign_keys": [
+        {
+          "from": "GeneID2",
+          "to_table": "Classification",
+          "to_col": "GeneID"
+        },
+        {
+          "from": "GeneID1",
+          "to_table": "Classification",
+          "to_col": "GeneID"
+        }
+      ],
+      "row_count": 910
+    }
+  ]
+}

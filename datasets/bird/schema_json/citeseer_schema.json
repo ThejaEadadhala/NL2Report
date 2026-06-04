@@ -1,0 +1,80 @@
+{
+  "database": "citeseer",
+  "tables": [
+    {
+      "name": "cites",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "cited_paper_id",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "citing_paper_id",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": true
+        }
+      ],
+      "foreign_keys": [],
+      "row_count": 4732
+    },
+    {
+      "name": "content",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "paper_id",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "word_cited_id",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": true
+        }
+      ],
+      "foreign_keys": [
+        {
+          "from": "paper_id",
+          "to_table": "paper",
+          "to_col": "paper_id"
+        }
+      ],
+      "row_count": 105165
+    },
+    {
+      "name": "paper",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "paper_id",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "class_label",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        }
+      ],
+      "foreign_keys": [],
+      "row_count": 3312
+    }
+  ]
+}

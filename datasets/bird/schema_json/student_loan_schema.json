@@ -1,0 +1,248 @@
+{
+  "database": "student_loan",
+  "tables": [
+    {
+      "name": "bool",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "name",
+          "type": "TEXT",
+          "notnull": true,
+          "default": "''",
+          "pk": true
+        }
+      ],
+      "foreign_keys": [],
+      "row_count": 2
+    },
+    {
+      "name": "disabled",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "name",
+          "type": "TEXT",
+          "notnull": true,
+          "default": "''",
+          "pk": true
+        }
+      ],
+      "foreign_keys": [
+        {
+          "from": "name",
+          "to_table": "person",
+          "to_col": "name"
+        }
+      ],
+      "row_count": 95
+    },
+    {
+      "name": "enlist",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "name",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 1,
+          "name": "organ",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        }
+      ],
+      "foreign_keys": [
+        {
+          "from": "name",
+          "to_table": "person",
+          "to_col": "name"
+        }
+      ],
+      "row_count": 306
+    },
+    {
+      "name": "enrolled",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "name",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "school",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 2,
+          "name": "month",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": "0",
+          "pk": false
+        }
+      ],
+      "foreign_keys": [
+        {
+          "from": "name",
+          "to_table": "person",
+          "to_col": "name"
+        }
+      ],
+      "row_count": 1194
+    },
+    {
+      "name": "filed_for_bankrupcy",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "name",
+          "type": "TEXT",
+          "notnull": true,
+          "default": "''",
+          "pk": true
+        }
+      ],
+      "foreign_keys": [
+        {
+          "from": "name",
+          "to_table": "person",
+          "to_col": "name"
+        }
+      ],
+      "row_count": 96
+    },
+    {
+      "name": "longest_absense_from_school",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "name",
+          "type": "TEXT",
+          "notnull": true,
+          "default": "''",
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "month",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": "0",
+          "pk": false
+        }
+      ],
+      "foreign_keys": [
+        {
+          "from": "name",
+          "to_table": "person",
+          "to_col": "name"
+        }
+      ],
+      "row_count": 1000
+    },
+    {
+      "name": "male",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "name",
+          "type": "TEXT",
+          "notnull": true,
+          "default": "''",
+          "pk": true
+        }
+      ],
+      "foreign_keys": [
+        {
+          "from": "name",
+          "to_table": "person",
+          "to_col": "name"
+        }
+      ],
+      "row_count": 497
+    },
+    {
+      "name": "no_payment_due",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "name",
+          "type": "TEXT",
+          "notnull": true,
+          "default": "''",
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "bool",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        }
+      ],
+      "foreign_keys": [
+        {
+          "from": "bool",
+          "to_table": "bool",
+          "to_col": "name"
+        },
+        {
+          "from": "name",
+          "to_table": "person",
+          "to_col": "name"
+        }
+      ],
+      "row_count": 1000
+    },
+    {
+      "name": "person",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "name",
+          "type": "TEXT",
+          "notnull": true,
+          "default": "''",
+          "pk": true
+        }
+      ],
+      "foreign_keys": [],
+      "row_count": 1000
+    },
+    {
+      "name": "unemployed",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "name",
+          "type": "TEXT",
+          "notnull": true,
+          "default": "''",
+          "pk": true
+        }
+      ],
+      "foreign_keys": [
+        {
+          "from": "name",
+          "to_table": "person",
+          "to_col": "name"
+        }
+      ],
+      "row_count": 98
+    }
+  ]
+}

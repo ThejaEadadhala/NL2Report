@@ -1,0 +1,306 @@
+{
+  "database": "language_corpus",
+  "tables": [
+    {
+      "name": "biwords",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "lid",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "w1st",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 2,
+          "name": "w2nd",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 3,
+          "name": "occurrences",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": "0",
+          "pk": false
+        }
+      ],
+      "foreign_keys": [
+        {
+          "from": "w2nd",
+          "to_table": "words",
+          "to_col": "wid"
+        },
+        {
+          "from": "w1st",
+          "to_table": "words",
+          "to_col": "wid"
+        },
+        {
+          "from": "lid",
+          "to_table": "langs",
+          "to_col": "lid"
+        }
+      ],
+      "row_count": 21587486
+    },
+    {
+      "name": "langs",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "lid",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "lang",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 2,
+          "name": "locale",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 3,
+          "name": "pages",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": "0",
+          "pk": false
+        },
+        {
+          "cid": 4,
+          "name": "words",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": "0",
+          "pk": false
+        }
+      ],
+      "foreign_keys": [],
+      "row_count": 1
+    },
+    {
+      "name": "langs_words",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "lid",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "wid",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 2,
+          "name": "occurrences",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        }
+      ],
+      "foreign_keys": [
+        {
+          "from": "wid",
+          "to_table": "words",
+          "to_col": "wid"
+        },
+        {
+          "from": "lid",
+          "to_table": "langs",
+          "to_col": "lid"
+        }
+      ],
+      "row_count": 2764996
+    },
+    {
+      "name": "pages",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "pid",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "lid",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 2,
+          "name": "page",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": "NULL",
+          "pk": false
+        },
+        {
+          "cid": 3,
+          "name": "revision",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": "NULL",
+          "pk": false
+        },
+        {
+          "cid": 4,
+          "name": "title",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 5,
+          "name": "words",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": "0",
+          "pk": false
+        }
+      ],
+      "foreign_keys": [
+        {
+          "from": "lid",
+          "to_table": "langs",
+          "to_col": "lid"
+        }
+      ],
+      "row_count": 1129144
+    },
+    {
+      "name": "pages_words",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "pid",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "wid",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 2,
+          "name": "occurrences",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": "0",
+          "pk": false
+        }
+      ],
+      "foreign_keys": [
+        {
+          "from": "wid",
+          "to_table": "words",
+          "to_col": "wid"
+        },
+        {
+          "from": "pid",
+          "to_table": "pages",
+          "to_col": "pid"
+        }
+      ],
+      "row_count": 129131916
+    },
+    {
+      "name": "sqlite_sequence",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "name",
+          "type": "",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 1,
+          "name": "seq",
+          "type": "",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        }
+      ],
+      "foreign_keys": [],
+      "row_count": 3
+    },
+    {
+      "name": "words",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "wid",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "word",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 2,
+          "name": "occurrences",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": "0",
+          "pk": false
+        }
+      ],
+      "foreign_keys": [],
+      "row_count": 2764996
+    }
+  ]
+}

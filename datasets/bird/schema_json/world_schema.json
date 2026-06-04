@@ -1,0 +1,253 @@
+{
+  "database": "world",
+  "tables": [
+    {
+      "name": "City",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "ID",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "Name",
+          "type": "TEXT",
+          "notnull": true,
+          "default": "''",
+          "pk": false
+        },
+        {
+          "cid": 2,
+          "name": "CountryCode",
+          "type": "TEXT",
+          "notnull": true,
+          "default": "''",
+          "pk": false
+        },
+        {
+          "cid": 3,
+          "name": "District",
+          "type": "TEXT",
+          "notnull": true,
+          "default": "''",
+          "pk": false
+        },
+        {
+          "cid": 4,
+          "name": "Population",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": "0",
+          "pk": false
+        }
+      ],
+      "foreign_keys": [
+        {
+          "from": "CountryCode",
+          "to_table": "Country",
+          "to_col": "Code"
+        }
+      ],
+      "row_count": 4079
+    },
+    {
+      "name": "Country",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "Code",
+          "type": "TEXT",
+          "notnull": true,
+          "default": "''",
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "Name",
+          "type": "TEXT",
+          "notnull": true,
+          "default": "''",
+          "pk": false
+        },
+        {
+          "cid": 2,
+          "name": "Continent",
+          "type": "TEXT",
+          "notnull": true,
+          "default": "'Asia'",
+          "pk": false
+        },
+        {
+          "cid": 3,
+          "name": "Region",
+          "type": "TEXT",
+          "notnull": true,
+          "default": "''",
+          "pk": false
+        },
+        {
+          "cid": 4,
+          "name": "SurfaceArea",
+          "type": "REAL",
+          "notnull": true,
+          "default": "0.00",
+          "pk": false
+        },
+        {
+          "cid": 5,
+          "name": "IndepYear",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": "NULL",
+          "pk": false
+        },
+        {
+          "cid": 6,
+          "name": "Population",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": "0",
+          "pk": false
+        },
+        {
+          "cid": 7,
+          "name": "LifeExpectancy",
+          "type": "REAL",
+          "notnull": false,
+          "default": "NULL",
+          "pk": false
+        },
+        {
+          "cid": 8,
+          "name": "GNP",
+          "type": "REAL",
+          "notnull": false,
+          "default": "NULL",
+          "pk": false
+        },
+        {
+          "cid": 9,
+          "name": "GNPOld",
+          "type": "REAL",
+          "notnull": false,
+          "default": "NULL",
+          "pk": false
+        },
+        {
+          "cid": 10,
+          "name": "LocalName",
+          "type": "TEXT",
+          "notnull": true,
+          "default": "''",
+          "pk": false
+        },
+        {
+          "cid": 11,
+          "name": "GovernmentForm",
+          "type": "TEXT",
+          "notnull": true,
+          "default": "''",
+          "pk": false
+        },
+        {
+          "cid": 12,
+          "name": "HeadOfState",
+          "type": "TEXT",
+          "notnull": false,
+          "default": "NULL",
+          "pk": false
+        },
+        {
+          "cid": 13,
+          "name": "Capital",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": "NULL",
+          "pk": false
+        },
+        {
+          "cid": 14,
+          "name": "Code2",
+          "type": "TEXT",
+          "notnull": true,
+          "default": "''",
+          "pk": false
+        }
+      ],
+      "foreign_keys": [],
+      "row_count": 239
+    },
+    {
+      "name": "CountryLanguage",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "CountryCode",
+          "type": "TEXT",
+          "notnull": true,
+          "default": "''",
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "Language",
+          "type": "TEXT",
+          "notnull": true,
+          "default": "''",
+          "pk": true
+        },
+        {
+          "cid": 2,
+          "name": "IsOfficial",
+          "type": "TEXT",
+          "notnull": true,
+          "default": "'F'",
+          "pk": false
+        },
+        {
+          "cid": 3,
+          "name": "Percentage",
+          "type": "REAL",
+          "notnull": true,
+          "default": "0.0",
+          "pk": false
+        }
+      ],
+      "foreign_keys": [
+        {
+          "from": "CountryCode",
+          "to_table": "Country",
+          "to_col": "Code"
+        }
+      ],
+      "row_count": 984
+    },
+    {
+      "name": "sqlite_sequence",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "name",
+          "type": "",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 1,
+          "name": "seq",
+          "type": "",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        }
+      ],
+      "foreign_keys": [],
+      "row_count": 1
+    }
+  ]
+}

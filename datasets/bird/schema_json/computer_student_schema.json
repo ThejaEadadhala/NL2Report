@@ -1,0 +1,151 @@
+{
+  "database": "computer_student",
+  "tables": [
+    {
+      "name": "advisedBy",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "p_id",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "p_id_dummy",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": true
+        }
+      ],
+      "foreign_keys": [
+        {
+          "from": "p_id",
+          "to_table": "person",
+          "to_col": "p_id"
+        },
+        {
+          "from": "p_id_dummy",
+          "to_table": "person",
+          "to_col": "p_id"
+        }
+      ],
+      "row_count": 113
+    },
+    {
+      "name": "course",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "course_id",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "courseLevel",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        }
+      ],
+      "foreign_keys": [],
+      "row_count": 132
+    },
+    {
+      "name": "person",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "p_id",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "professor",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 2,
+          "name": "student",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 3,
+          "name": "hasPosition",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 4,
+          "name": "inPhase",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 5,
+          "name": "yearsInProgram",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        }
+      ],
+      "foreign_keys": [],
+      "row_count": 278
+    },
+    {
+      "name": "taughtBy",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "course_id",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "p_id",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": true
+        }
+      ],
+      "foreign_keys": [
+        {
+          "from": "course_id",
+          "to_table": "course",
+          "to_col": "course_id"
+        },
+        {
+          "from": "p_id",
+          "to_table": "person",
+          "to_col": "p_id"
+        }
+      ],
+      "row_count": 189
+    }
+  ]
+}

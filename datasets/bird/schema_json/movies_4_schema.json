@@ -1,0 +1,640 @@
+{
+  "database": "movies_4",
+  "tables": [
+    {
+      "name": "country",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "country_id",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "country_iso_code",
+          "type": "TEXT",
+          "notnull": false,
+          "default": "NULL",
+          "pk": false
+        },
+        {
+          "cid": 2,
+          "name": "country_name",
+          "type": "TEXT",
+          "notnull": false,
+          "default": "NULL",
+          "pk": false
+        }
+      ],
+      "foreign_keys": [],
+      "row_count": 88
+    },
+    {
+      "name": "department",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "department_id",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "department_name",
+          "type": "TEXT",
+          "notnull": false,
+          "default": "NULL",
+          "pk": false
+        }
+      ],
+      "foreign_keys": [],
+      "row_count": 12
+    },
+    {
+      "name": "gender",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "gender_id",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "gender",
+          "type": "TEXT",
+          "notnull": false,
+          "default": "NULL",
+          "pk": false
+        }
+      ],
+      "foreign_keys": [],
+      "row_count": 3
+    },
+    {
+      "name": "genre",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "genre_id",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "genre_name",
+          "type": "TEXT",
+          "notnull": false,
+          "default": "NULL",
+          "pk": false
+        }
+      ],
+      "foreign_keys": [],
+      "row_count": 20
+    },
+    {
+      "name": "keyword",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "keyword_id",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "keyword_name",
+          "type": "TEXT",
+          "notnull": false,
+          "default": "NULL",
+          "pk": false
+        }
+      ],
+      "foreign_keys": [],
+      "row_count": 9794
+    },
+    {
+      "name": "language",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "language_id",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "language_code",
+          "type": "TEXT",
+          "notnull": false,
+          "default": "NULL",
+          "pk": false
+        },
+        {
+          "cid": 2,
+          "name": "language_name",
+          "type": "TEXT",
+          "notnull": false,
+          "default": "NULL",
+          "pk": false
+        }
+      ],
+      "foreign_keys": [],
+      "row_count": 88
+    },
+    {
+      "name": "language_role",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "role_id",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "language_role",
+          "type": "TEXT",
+          "notnull": false,
+          "default": "NULL",
+          "pk": false
+        }
+      ],
+      "foreign_keys": [],
+      "row_count": 2
+    },
+    {
+      "name": "movie",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "movie_id",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "title",
+          "type": "TEXT",
+          "notnull": false,
+          "default": "NULL",
+          "pk": false
+        },
+        {
+          "cid": 2,
+          "name": "budget",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": "NULL",
+          "pk": false
+        },
+        {
+          "cid": 3,
+          "name": "homepage",
+          "type": "TEXT",
+          "notnull": false,
+          "default": "NULL",
+          "pk": false
+        },
+        {
+          "cid": 4,
+          "name": "overview",
+          "type": "TEXT",
+          "notnull": false,
+          "default": "NULL",
+          "pk": false
+        },
+        {
+          "cid": 5,
+          "name": "popularity",
+          "type": "REAL",
+          "notnull": false,
+          "default": "NULL",
+          "pk": false
+        },
+        {
+          "cid": 6,
+          "name": "release_date",
+          "type": "DATE",
+          "notnull": false,
+          "default": "NULL",
+          "pk": false
+        },
+        {
+          "cid": 7,
+          "name": "revenue",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": "NULL",
+          "pk": false
+        },
+        {
+          "cid": 8,
+          "name": "runtime",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": "NULL",
+          "pk": false
+        },
+        {
+          "cid": 9,
+          "name": "movie_status",
+          "type": "TEXT",
+          "notnull": false,
+          "default": "NULL",
+          "pk": false
+        },
+        {
+          "cid": 10,
+          "name": "tagline",
+          "type": "TEXT",
+          "notnull": false,
+          "default": "NULL",
+          "pk": false
+        },
+        {
+          "cid": 11,
+          "name": "vote_average",
+          "type": "REAL",
+          "notnull": false,
+          "default": "NULL",
+          "pk": false
+        },
+        {
+          "cid": 12,
+          "name": "vote_count",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": "NULL",
+          "pk": false
+        }
+      ],
+      "foreign_keys": [],
+      "row_count": 4627
+    },
+    {
+      "name": "movie_cast",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "movie_id",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": "NULL",
+          "pk": false
+        },
+        {
+          "cid": 1,
+          "name": "person_id",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": "NULL",
+          "pk": false
+        },
+        {
+          "cid": 2,
+          "name": "character_name",
+          "type": "TEXT",
+          "notnull": false,
+          "default": "NULL",
+          "pk": false
+        },
+        {
+          "cid": 3,
+          "name": "gender_id",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": "NULL",
+          "pk": false
+        },
+        {
+          "cid": 4,
+          "name": "cast_order",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": "NULL",
+          "pk": false
+        }
+      ],
+      "foreign_keys": [
+        {
+          "from": "person_id",
+          "to_table": "person",
+          "to_col": "person_id"
+        },
+        {
+          "from": "movie_id",
+          "to_table": "movie",
+          "to_col": "movie_id"
+        },
+        {
+          "from": "gender_id",
+          "to_table": "gender",
+          "to_col": "gender_id"
+        }
+      ],
+      "row_count": 59083
+    },
+    {
+      "name": "movie_company",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "movie_id",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": "NULL",
+          "pk": false
+        },
+        {
+          "cid": 1,
+          "name": "company_id",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": "NULL",
+          "pk": false
+        }
+      ],
+      "foreign_keys": [
+        {
+          "from": "company_id",
+          "to_table": "production_company",
+          "to_col": null
+        },
+        {
+          "from": "movie_id",
+          "to_table": "movie",
+          "to_col": null
+        }
+      ],
+      "row_count": 13677
+    },
+    {
+      "name": "movie_crew",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "movie_id",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": "NULL",
+          "pk": false
+        },
+        {
+          "cid": 1,
+          "name": "person_id",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": "NULL",
+          "pk": false
+        },
+        {
+          "cid": 2,
+          "name": "department_id",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": "NULL",
+          "pk": false
+        },
+        {
+          "cid": 3,
+          "name": "job",
+          "type": "TEXT",
+          "notnull": false,
+          "default": "NULL",
+          "pk": false
+        }
+      ],
+      "foreign_keys": [
+        {
+          "from": "person_id",
+          "to_table": "person",
+          "to_col": "person_id"
+        },
+        {
+          "from": "movie_id",
+          "to_table": "movie",
+          "to_col": "movie_id"
+        },
+        {
+          "from": "department_id",
+          "to_table": "department",
+          "to_col": "department_id"
+        }
+      ],
+      "row_count": 129581
+    },
+    {
+      "name": "movie_genres",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "movie_id",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": "NULL",
+          "pk": false
+        },
+        {
+          "cid": 1,
+          "name": "genre_id",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": "NULL",
+          "pk": false
+        }
+      ],
+      "foreign_keys": [
+        {
+          "from": "movie_id",
+          "to_table": "movie",
+          "to_col": "movie_id"
+        },
+        {
+          "from": "genre_id",
+          "to_table": "genre",
+          "to_col": "genre_id"
+        }
+      ],
+      "row_count": 12160
+    },
+    {
+      "name": "movie_keywords",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "movie_id",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": "NULL",
+          "pk": false
+        },
+        {
+          "cid": 1,
+          "name": "keyword_id",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": "NULL",
+          "pk": false
+        }
+      ],
+      "foreign_keys": [
+        {
+          "from": "keyword_id",
+          "to_table": "keyword",
+          "to_col": null
+        },
+        {
+          "from": "movie_id",
+          "to_table": "movie",
+          "to_col": null
+        }
+      ],
+      "row_count": 36162
+    },
+    {
+      "name": "movie_languages",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "movie_id",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": "NULL",
+          "pk": false
+        },
+        {
+          "cid": 1,
+          "name": "language_id",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": "NULL",
+          "pk": false
+        },
+        {
+          "cid": 2,
+          "name": "language_role_id",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": "NULL",
+          "pk": false
+        }
+      ],
+      "foreign_keys": [
+        {
+          "from": "language_role_id",
+          "to_table": "language_role",
+          "to_col": "role_id"
+        },
+        {
+          "from": "movie_id",
+          "to_table": "movie",
+          "to_col": "movie_id"
+        },
+        {
+          "from": "language_id",
+          "to_table": "language",
+          "to_col": "language_id"
+        }
+      ],
+      "row_count": 11740
+    },
+    {
+      "name": "person",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "person_id",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "person_name",
+          "type": "TEXT",
+          "notnull": false,
+          "default": "NULL",
+          "pk": false
+        }
+      ],
+      "foreign_keys": [],
+      "row_count": 104838
+    },
+    {
+      "name": "production_company",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "company_id",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "company_name",
+          "type": "TEXT",
+          "notnull": false,
+          "default": "NULL",
+          "pk": false
+        }
+      ],
+      "foreign_keys": [],
+      "row_count": 5047
+    },
+    {
+      "name": "production_country",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "movie_id",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": "NULL",
+          "pk": false
+        },
+        {
+          "cid": 1,
+          "name": "country_id",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": "NULL",
+          "pk": false
+        }
+      ],
+      "foreign_keys": [
+        {
+          "from": "movie_id",
+          "to_table": "movie",
+          "to_col": "movie_id"
+        },
+        {
+          "from": "country_id",
+          "to_table": "country",
+          "to_col": "country_id"
+        }
+      ],
+      "row_count": 6436
+    }
+  ]
+}

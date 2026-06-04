@@ -1,0 +1,974 @@
+{
+  "database": "formula_1",
+  "tables": [
+    {
+      "name": "circuits",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "circuitId",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "circuitRef",
+          "type": "TEXT",
+          "notnull": true,
+          "default": "''",
+          "pk": false
+        },
+        {
+          "cid": 2,
+          "name": "name",
+          "type": "TEXT",
+          "notnull": true,
+          "default": "''",
+          "pk": false
+        },
+        {
+          "cid": 3,
+          "name": "location",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 4,
+          "name": "country",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 5,
+          "name": "lat",
+          "type": "REAL",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 6,
+          "name": "lng",
+          "type": "REAL",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 7,
+          "name": "alt",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 8,
+          "name": "url",
+          "type": "TEXT",
+          "notnull": true,
+          "default": "''",
+          "pk": false
+        }
+      ],
+      "foreign_keys": [],
+      "row_count": 72
+    },
+    {
+      "name": "constructorResults",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "constructorResultsId",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "raceId",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": "0",
+          "pk": false
+        },
+        {
+          "cid": 2,
+          "name": "constructorId",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": "0",
+          "pk": false
+        },
+        {
+          "cid": 3,
+          "name": "points",
+          "type": "REAL",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 4,
+          "name": "status",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        }
+      ],
+      "foreign_keys": [
+        {
+          "from": "constructorId",
+          "to_table": "constructors",
+          "to_col": "constructorId"
+        },
+        {
+          "from": "raceId",
+          "to_table": "races",
+          "to_col": "raceId"
+        }
+      ],
+      "row_count": 11082
+    },
+    {
+      "name": "constructorStandings",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "constructorStandingsId",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "raceId",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": "0",
+          "pk": false
+        },
+        {
+          "cid": 2,
+          "name": "constructorId",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": "0",
+          "pk": false
+        },
+        {
+          "cid": 3,
+          "name": "points",
+          "type": "REAL",
+          "notnull": true,
+          "default": "0",
+          "pk": false
+        },
+        {
+          "cid": 4,
+          "name": "position",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 5,
+          "name": "positionText",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 6,
+          "name": "wins",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": "0",
+          "pk": false
+        }
+      ],
+      "foreign_keys": [
+        {
+          "from": "constructorId",
+          "to_table": "constructors",
+          "to_col": "constructorId"
+        },
+        {
+          "from": "raceId",
+          "to_table": "races",
+          "to_col": "raceId"
+        }
+      ],
+      "row_count": 11836
+    },
+    {
+      "name": "constructors",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "constructorId",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "constructorRef",
+          "type": "TEXT",
+          "notnull": true,
+          "default": "''",
+          "pk": false
+        },
+        {
+          "cid": 2,
+          "name": "name",
+          "type": "TEXT",
+          "notnull": true,
+          "default": "''",
+          "pk": false
+        },
+        {
+          "cid": 3,
+          "name": "nationality",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 4,
+          "name": "url",
+          "type": "TEXT",
+          "notnull": true,
+          "default": "''",
+          "pk": false
+        }
+      ],
+      "foreign_keys": [],
+      "row_count": 208
+    },
+    {
+      "name": "driverStandings",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "driverStandingsId",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "raceId",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": "0",
+          "pk": false
+        },
+        {
+          "cid": 2,
+          "name": "driverId",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": "0",
+          "pk": false
+        },
+        {
+          "cid": 3,
+          "name": "points",
+          "type": "REAL",
+          "notnull": true,
+          "default": "0",
+          "pk": false
+        },
+        {
+          "cid": 4,
+          "name": "position",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 5,
+          "name": "positionText",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 6,
+          "name": "wins",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": "0",
+          "pk": false
+        }
+      ],
+      "foreign_keys": [
+        {
+          "from": "driverId",
+          "to_table": "drivers",
+          "to_col": "driverId"
+        },
+        {
+          "from": "raceId",
+          "to_table": "races",
+          "to_col": "raceId"
+        }
+      ],
+      "row_count": 31578
+    },
+    {
+      "name": "drivers",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "driverId",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "driverRef",
+          "type": "TEXT",
+          "notnull": true,
+          "default": "''",
+          "pk": false
+        },
+        {
+          "cid": 2,
+          "name": "number",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 3,
+          "name": "code",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 4,
+          "name": "forename",
+          "type": "TEXT",
+          "notnull": true,
+          "default": "''",
+          "pk": false
+        },
+        {
+          "cid": 5,
+          "name": "surname",
+          "type": "TEXT",
+          "notnull": true,
+          "default": "''",
+          "pk": false
+        },
+        {
+          "cid": 6,
+          "name": "dob",
+          "type": "DATE",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 7,
+          "name": "nationality",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 8,
+          "name": "url",
+          "type": "TEXT",
+          "notnull": true,
+          "default": "''",
+          "pk": false
+        }
+      ],
+      "foreign_keys": [],
+      "row_count": 840
+    },
+    {
+      "name": "lapTimes",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "raceId",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "driverId",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 2,
+          "name": "lap",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 3,
+          "name": "position",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 4,
+          "name": "time",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 5,
+          "name": "milliseconds",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        }
+      ],
+      "foreign_keys": [
+        {
+          "from": "driverId",
+          "to_table": "drivers",
+          "to_col": "driverId"
+        },
+        {
+          "from": "raceId",
+          "to_table": "races",
+          "to_col": "raceId"
+        }
+      ],
+      "row_count": 420369
+    },
+    {
+      "name": "pitStops",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "raceId",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "driverId",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 2,
+          "name": "stop",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 3,
+          "name": "lap",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 4,
+          "name": "time",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 5,
+          "name": "duration",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 6,
+          "name": "milliseconds",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        }
+      ],
+      "foreign_keys": [
+        {
+          "from": "driverId",
+          "to_table": "drivers",
+          "to_col": "driverId"
+        },
+        {
+          "from": "raceId",
+          "to_table": "races",
+          "to_col": "raceId"
+        }
+      ],
+      "row_count": 6070
+    },
+    {
+      "name": "qualifying",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "qualifyId",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "raceId",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": "0",
+          "pk": false
+        },
+        {
+          "cid": 2,
+          "name": "driverId",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": "0",
+          "pk": false
+        },
+        {
+          "cid": 3,
+          "name": "constructorId",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": "0",
+          "pk": false
+        },
+        {
+          "cid": 4,
+          "name": "number",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": "0",
+          "pk": false
+        },
+        {
+          "cid": 5,
+          "name": "position",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 6,
+          "name": "q1",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 7,
+          "name": "q2",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 8,
+          "name": "q3",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        }
+      ],
+      "foreign_keys": [
+        {
+          "from": "constructorId",
+          "to_table": "constructors",
+          "to_col": "constructorId"
+        },
+        {
+          "from": "driverId",
+          "to_table": "drivers",
+          "to_col": "driverId"
+        },
+        {
+          "from": "raceId",
+          "to_table": "races",
+          "to_col": "raceId"
+        }
+      ],
+      "row_count": 7397
+    },
+    {
+      "name": "races",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "raceId",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "year",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": "0",
+          "pk": false
+        },
+        {
+          "cid": 2,
+          "name": "round",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": "0",
+          "pk": false
+        },
+        {
+          "cid": 3,
+          "name": "circuitId",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": "0",
+          "pk": false
+        },
+        {
+          "cid": 4,
+          "name": "name",
+          "type": "TEXT",
+          "notnull": true,
+          "default": "''",
+          "pk": false
+        },
+        {
+          "cid": 5,
+          "name": "date",
+          "type": "DATE",
+          "notnull": true,
+          "default": "'0000-00-00'",
+          "pk": false
+        },
+        {
+          "cid": 6,
+          "name": "time",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 7,
+          "name": "url",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        }
+      ],
+      "foreign_keys": [
+        {
+          "from": "circuitId",
+          "to_table": "circuits",
+          "to_col": "circuitId"
+        },
+        {
+          "from": "year",
+          "to_table": "seasons",
+          "to_col": "year"
+        }
+      ],
+      "row_count": 976
+    },
+    {
+      "name": "results",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "resultId",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "raceId",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": "0",
+          "pk": false
+        },
+        {
+          "cid": 2,
+          "name": "driverId",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": "0",
+          "pk": false
+        },
+        {
+          "cid": 3,
+          "name": "constructorId",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": "0",
+          "pk": false
+        },
+        {
+          "cid": 4,
+          "name": "number",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 5,
+          "name": "grid",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": "0",
+          "pk": false
+        },
+        {
+          "cid": 6,
+          "name": "position",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 7,
+          "name": "positionText",
+          "type": "TEXT",
+          "notnull": true,
+          "default": "''",
+          "pk": false
+        },
+        {
+          "cid": 8,
+          "name": "positionOrder",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": "0",
+          "pk": false
+        },
+        {
+          "cid": 9,
+          "name": "points",
+          "type": "REAL",
+          "notnull": true,
+          "default": "0",
+          "pk": false
+        },
+        {
+          "cid": 10,
+          "name": "laps",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": "0",
+          "pk": false
+        },
+        {
+          "cid": 11,
+          "name": "time",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 12,
+          "name": "milliseconds",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 13,
+          "name": "fastestLap",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 14,
+          "name": "rank",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": "0",
+          "pk": false
+        },
+        {
+          "cid": 15,
+          "name": "fastestLapTime",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 16,
+          "name": "fastestLapSpeed",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 17,
+          "name": "statusId",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": "0",
+          "pk": false
+        }
+      ],
+      "foreign_keys": [
+        {
+          "from": "statusId",
+          "to_table": "status",
+          "to_col": "statusId"
+        },
+        {
+          "from": "constructorId",
+          "to_table": "constructors",
+          "to_col": "constructorId"
+        },
+        {
+          "from": "driverId",
+          "to_table": "drivers",
+          "to_col": "driverId"
+        },
+        {
+          "from": "raceId",
+          "to_table": "races",
+          "to_col": "raceId"
+        }
+      ],
+      "row_count": 23657
+    },
+    {
+      "name": "seasons",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "year",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": "0",
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "url",
+          "type": "TEXT",
+          "notnull": true,
+          "default": "''",
+          "pk": false
+        }
+      ],
+      "foreign_keys": [],
+      "row_count": 68
+    },
+    {
+      "name": "sqlite_sequence",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "name",
+          "type": "",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 1,
+          "name": "seq",
+          "type": "",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        }
+      ],
+      "foreign_keys": [],
+      "row_count": 10
+    },
+    {
+      "name": "status",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "statusId",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "status",
+          "type": "TEXT",
+          "notnull": true,
+          "default": "''",
+          "pk": false
+        }
+      ],
+      "foreign_keys": [],
+      "row_count": 134
+    }
+  ]
+}

@@ -1,0 +1,101 @@
+{
+  "database": "mental_health_survey",
+  "tables": [
+    {
+      "name": "Answer",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "AnswerText",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 1,
+          "name": "SurveyID",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 2,
+          "name": "UserID",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 3,
+          "name": "QuestionID",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": true
+        }
+      ],
+      "foreign_keys": [
+        {
+          "from": "QuestionID",
+          "to_table": "Question",
+          "to_col": null
+        },
+        {
+          "from": "SurveyID",
+          "to_table": "Survey",
+          "to_col": null
+        }
+      ],
+      "row_count": 234640
+    },
+    {
+      "name": "Question",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "questiontext",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 1,
+          "name": "questionid",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": true
+        }
+      ],
+      "foreign_keys": [],
+      "row_count": 105
+    },
+    {
+      "name": "Survey",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "SurveyID",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "Description",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        }
+      ],
+      "foreign_keys": [],
+      "row_count": 5
+    }
+  ]
+}

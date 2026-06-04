@@ -1,0 +1,977 @@
+{
+  "database": "soccer_2016",
+  "tables": [
+    {
+      "name": "Ball_by_Ball",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "Match_Id",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "Over_Id",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 2,
+          "name": "Ball_Id",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 3,
+          "name": "Innings_No",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 4,
+          "name": "Team_Batting",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 5,
+          "name": "Team_Bowling",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 6,
+          "name": "Striker_Batting_Position",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 7,
+          "name": "Striker",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 8,
+          "name": "Non_Striker",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 9,
+          "name": "Bowler",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        }
+      ],
+      "foreign_keys": [
+        {
+          "from": "Match_Id",
+          "to_table": "Match",
+          "to_col": "Match_Id"
+        }
+      ],
+      "row_count": 136590
+    },
+    {
+      "name": "Batsman_Scored",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "Match_Id",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "Over_Id",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 2,
+          "name": "Ball_Id",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 3,
+          "name": "Runs_Scored",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 4,
+          "name": "Innings_No",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": true
+        }
+      ],
+      "foreign_keys": [
+        {
+          "from": "Match_Id",
+          "to_table": "Match",
+          "to_col": "Match_Id"
+        }
+      ],
+      "row_count": 133097
+    },
+    {
+      "name": "Batting_Style",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "Batting_Id",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "Batting_hand",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        }
+      ],
+      "foreign_keys": [],
+      "row_count": 2
+    },
+    {
+      "name": "Bowling_Style",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "Bowling_Id",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "Bowling_skill",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        }
+      ],
+      "foreign_keys": [],
+      "row_count": 14
+    },
+    {
+      "name": "City",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "City_Id",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "City_Name",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 2,
+          "name": "Country_id",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        }
+      ],
+      "foreign_keys": [],
+      "row_count": 29
+    },
+    {
+      "name": "Country",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "Country_Id",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "Country_Name",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        }
+      ],
+      "foreign_keys": [
+        {
+          "from": "Country_Id",
+          "to_table": "Country",
+          "to_col": "Country_Id"
+        }
+      ],
+      "row_count": 12
+    },
+    {
+      "name": "Extra_Runs",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "Match_Id",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "Over_Id",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 2,
+          "name": "Ball_Id",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 3,
+          "name": "Extra_Type_Id",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 4,
+          "name": "Extra_Runs",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 5,
+          "name": "Innings_No",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": true
+        }
+      ],
+      "foreign_keys": [
+        {
+          "from": "Extra_Type_Id",
+          "to_table": "Extra_Type",
+          "to_col": "Extra_Id"
+        }
+      ],
+      "row_count": 7469
+    },
+    {
+      "name": "Extra_Type",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "Extra_Id",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "Extra_Name",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        }
+      ],
+      "foreign_keys": [],
+      "row_count": 5
+    },
+    {
+      "name": "Match",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "Match_Id",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "Team_1",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 2,
+          "name": "Team_2",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 3,
+          "name": "Match_Date",
+          "type": "DATE",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 4,
+          "name": "Season_Id",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 5,
+          "name": "Venue_Id",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 6,
+          "name": "Toss_Winner",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 7,
+          "name": "Toss_Decide",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 8,
+          "name": "Win_Type",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 9,
+          "name": "Win_Margin",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 10,
+          "name": "Outcome_type",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 11,
+          "name": "Match_Winner",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 12,
+          "name": "Man_of_the_Match",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        }
+      ],
+      "foreign_keys": [
+        {
+          "from": "Man_of_the_Match",
+          "to_table": "Player",
+          "to_col": "Player_Id"
+        },
+        {
+          "from": "Match_Winner",
+          "to_table": "Team",
+          "to_col": "Team_Id"
+        },
+        {
+          "from": "Outcome_type",
+          "to_table": "Out_Type",
+          "to_col": "Out_Id"
+        },
+        {
+          "from": "Win_Type",
+          "to_table": "Win_By",
+          "to_col": "Win_Id"
+        },
+        {
+          "from": "Toss_Decide",
+          "to_table": "Toss_Decision",
+          "to_col": "Toss_Id"
+        },
+        {
+          "from": "Toss_Winner",
+          "to_table": "Team",
+          "to_col": "Team_Id"
+        },
+        {
+          "from": "Venue_Id",
+          "to_table": "Venue",
+          "to_col": "Venue_Id"
+        },
+        {
+          "from": "Season_Id",
+          "to_table": "Season",
+          "to_col": "Season_Id"
+        },
+        {
+          "from": "Team_2",
+          "to_table": "Team",
+          "to_col": "Team_Id"
+        },
+        {
+          "from": "Team_1",
+          "to_table": "Team",
+          "to_col": "Team_Id"
+        }
+      ],
+      "row_count": 577
+    },
+    {
+      "name": "Out_Type",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "Out_Id",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "Out_Name",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        }
+      ],
+      "foreign_keys": [],
+      "row_count": 9
+    },
+    {
+      "name": "Outcome",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "Outcome_Id",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "Outcome_Type",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        }
+      ],
+      "foreign_keys": [],
+      "row_count": 3
+    },
+    {
+      "name": "Player",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "Player_Id",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "Player_Name",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 2,
+          "name": "DOB",
+          "type": "DATE",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 3,
+          "name": "Batting_hand",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 4,
+          "name": "Bowling_skill",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 5,
+          "name": "Country_Name",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        }
+      ],
+      "foreign_keys": [
+        {
+          "from": "Country_Name",
+          "to_table": "Country",
+          "to_col": "Country_Id"
+        },
+        {
+          "from": "Bowling_skill",
+          "to_table": "Bowling_Style",
+          "to_col": "Bowling_Id"
+        },
+        {
+          "from": "Batting_hand",
+          "to_table": "Batting_Style",
+          "to_col": "Batting_Id"
+        }
+      ],
+      "row_count": 469
+    },
+    {
+      "name": "Player_Match",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "Match_Id",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "Player_Id",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 2,
+          "name": "Role_Id",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 3,
+          "name": "Team_Id",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        }
+      ],
+      "foreign_keys": [
+        {
+          "from": "Role_Id",
+          "to_table": "Rolee",
+          "to_col": "Role_Id"
+        },
+        {
+          "from": "Team_Id",
+          "to_table": "Team",
+          "to_col": "Team_Id"
+        },
+        {
+          "from": "Player_Id",
+          "to_table": "Player",
+          "to_col": "Player_Id"
+        },
+        {
+          "from": "Match_Id",
+          "to_table": "Match",
+          "to_col": "Match_Id"
+        }
+      ],
+      "row_count": 12694
+    },
+    {
+      "name": "Rolee",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "Role_Id",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "Role_Desc",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        }
+      ],
+      "foreign_keys": [],
+      "row_count": 4
+    },
+    {
+      "name": "Season",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "Season_Id",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "Man_of_the_Series",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 2,
+          "name": "Orange_Cap",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 3,
+          "name": "Purple_Cap",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 4,
+          "name": "Season_Year",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        }
+      ],
+      "foreign_keys": [],
+      "row_count": 9
+    },
+    {
+      "name": "Team",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "Team_Id",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "Team_Name",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        }
+      ],
+      "foreign_keys": [],
+      "row_count": 13
+    },
+    {
+      "name": "Toss_Decision",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "Toss_Id",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "Toss_Name",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        }
+      ],
+      "foreign_keys": [],
+      "row_count": 2
+    },
+    {
+      "name": "Umpire",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "Umpire_Id",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "Umpire_Name",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 2,
+          "name": "Umpire_Country",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        }
+      ],
+      "foreign_keys": [
+        {
+          "from": "Umpire_Country",
+          "to_table": "Country",
+          "to_col": "Country_Id"
+        }
+      ],
+      "row_count": 52
+    },
+    {
+      "name": "Venue",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "Venue_Id",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "Venue_Name",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 2,
+          "name": "City_Id",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        }
+      ],
+      "foreign_keys": [
+        {
+          "from": "City_Id",
+          "to_table": "City",
+          "to_col": "City_Id"
+        }
+      ],
+      "row_count": 35
+    },
+    {
+      "name": "Wicket_Taken",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "Match_Id",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "Over_Id",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 2,
+          "name": "Ball_Id",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 3,
+          "name": "Player_Out",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 4,
+          "name": "Kind_Out",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 5,
+          "name": "Fielders",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "cid": 6,
+          "name": "Innings_No",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": true
+        }
+      ],
+      "foreign_keys": [
+        {
+          "from": "Fielders",
+          "to_table": "Player",
+          "to_col": "Player_Id"
+        },
+        {
+          "from": "Kind_Out",
+          "to_table": "Out_Type",
+          "to_col": "Out_Id"
+        },
+        {
+          "from": "Player_Out",
+          "to_table": "Player",
+          "to_col": "Player_Id"
+        },
+        {
+          "from": "Match_Id",
+          "to_table": "Match",
+          "to_col": "Match_Id"
+        }
+      ],
+      "row_count": 6727
+    },
+    {
+      "name": "Win_By",
+      "columns": [
+        {
+          "cid": 0,
+          "name": "Win_Id",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": true
+        },
+        {
+          "cid": 1,
+          "name": "Win_Type",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        }
+      ],
+      "foreign_keys": [],
+      "row_count": 4
+    }
+  ]
+}
