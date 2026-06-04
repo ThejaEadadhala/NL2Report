@@ -10,10 +10,11 @@ Usage:
         --split dev
 
     python pipeline/run_analysis.py \
-        --question "What is the most popular beer style?" \
-        --db craftbeer \
+        --question "Who won the most races?" \
+        --db formula_1 \
         --dataset bird \
-        --split train
+        --split dev \
+        --model ollama
 """
 
 import argparse
@@ -24,11 +25,25 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from models.ollama_model import OllamaModel
+from config import schema_path, DEFAULT_MODEL
+
+
+def get_model(model_name: str):
+    if model_name == "ollama":
+        from models.ollama_model import OllamaModel
+        return OllamaModel()
+    elif model_name == "openai":
+        from models.openai_model import OpenAIModel
+        return OpenAIModel()
+    elif model_name == "anthropic":
+        from models.anthropic_model import AnthropicModel
+        return AnthropicModel()
+    else:
+        raise ValueError(f"Unknown model '{model_name}'. Choose: ollama | openai | anthropic")
 
 
 def load_schema(dataset: str, db_name: str) -> dict:
-    path = Path("datasets") / dataset / "schema_json" / f"{db_name}_schema.json"
+    path = schema_path(dataset, db_name)
     if not path.exists():
         raise FileNotFoundError(f"Schema not found: {path}")
     return json.loads(path.read_text())
@@ -68,12 +83,13 @@ def print_results(columns: list, rows: list) -> None:
         print(f"... ({len(rows)} rows total, showing first 50)")
 
 
-def run(question: str, dataset: str, db_name: str, split: str) -> None:
+def run(question: str, dataset: str, db_name: str, split: str, model_name: str) -> None:
     print(f"\nQuestion : {question}")
-    print(f"Database : {db_name} ({dataset}/{split})\n")
+    print(f"Database : {db_name} ({dataset}/{split})")
+    print(f"Model    : {model_name}\n")
 
     schema = load_schema(dataset, db_name)
-    model = OllamaModel()
+    model = get_model(model_name)
 
     print("Generating SQL...")
     sql = model.generate_sql(question, schema)
@@ -91,10 +107,11 @@ def main():
     parser.add_argument("--question", required=True, help="Natural language question")
     parser.add_argument("--db", required=True, help="Database name (e.g. california_schools)")
     parser.add_argument("--dataset", default="bird", help="Dataset (default: bird)")
-    parser.add_argument("--split", default=None, help="Split: train | dev (auto-detected if omitted)")
+    parser.add_argument("--split", default="", help="Split: train | dev (auto-detected if omitted)")
+    parser.add_argument("--model", default=DEFAULT_MODEL, help="Model: ollama | openai | anthropic (default: ollama)")
     args = parser.parse_args()
 
-    run(args.question, args.dataset, args.db, args.split or "")
+    run(args.question, args.dataset, args.db, args.split, args.model)
 
 
 if __name__ == "__main__":
