@@ -1,0 +1,102 @@
+[
+  {
+    "db_id": "tpch",
+    "question": "How many orders were placed each year?",
+    "SQL": "SELECT o_year, COUNT(*) AS order_count FROM orders GROUP BY o_year ORDER BY o_year"
+  },
+  {
+    "db_id": "tpch",
+    "question": "How many orders have a status of open, fulfilled, or pending?",
+    "SQL": "SELECT o_orderstatus, COUNT(*) AS count FROM orders GROUP BY o_orderstatus ORDER BY count DESC"
+  },
+  {
+    "db_id": "tpch",
+    "question": "What is the average account balance of customers by market segment?",
+    "SQL": "SELECT c_mktsegment, ROUND(AVG(c_acctbal), 2) AS avg_balance FROM customer GROUP BY c_mktsegment ORDER BY avg_balance DESC"
+  },
+  {
+    "db_id": "tpch",
+    "question": "How many customers have a negative account balance?",
+    "SQL": "SELECT COUNT(*) AS customers_with_debt FROM customer WHERE c_acctbal < 0"
+  },
+  {
+    "db_id": "tpch",
+    "question": "What is the total revenue by ship mode?",
+    "SQL": "SELECT l_shipmode, ROUND(SUM(l_net_revenue), 2) AS total_revenue FROM lineitem GROUP BY l_shipmode ORDER BY total_revenue DESC"
+  },
+  {
+    "db_id": "tpch",
+    "question": "How many line items were returned versus accepted versus not returned?",
+    "SQL": "SELECT l_returnflag, COUNT(*) AS count FROM lineitem GROUP BY l_returnflag ORDER BY count DESC"
+  },
+  {
+    "db_id": "tpch",
+    "question": "What are the top 5 parts by highest retail price?",
+    "SQL": "SELECT p_partkey, p_name, p_retailprice FROM part ORDER BY p_retailprice DESC LIMIT 5"
+  },
+  {
+    "db_id": "tpch",
+    "question": "How many suppliers are there in each nation?",
+    "SQL": "SELECT n.n_name, COUNT(s.s_suppkey) AS supplier_count FROM supplier s JOIN nation n ON s.s_nationkey = n.n_nationkey GROUP BY n.n_name ORDER BY supplier_count DESC"
+  },
+  {
+    "db_id": "tpch",
+    "question": "What is the total revenue generated per region?",
+    "SQL": "SELECT r.r_name, ROUND(SUM(l.l_net_revenue), 2) AS total_revenue FROM lineitem l JOIN orders o ON l.l_orderkey = o.o_orderkey JOIN customer c ON o.o_custkey = c.c_custkey JOIN nation n ON c.c_nationkey = n.n_nationkey JOIN region r ON n.n_regionkey = r.r_regionkey GROUP BY r.r_name ORDER BY total_revenue DESC"
+  },
+  {
+    "db_id": "tpch",
+    "question": "What is the total revenue by quarter in 1993?",
+    "SQL": "SELECT o_quarter, ROUND(SUM(l.l_net_revenue), 2) AS revenue FROM orders o JOIN lineitem l ON o.o_orderkey = l.l_orderkey WHERE o.o_year = 1993 GROUP BY o_quarter ORDER BY o_quarter"
+  },
+  {
+    "db_id": "tpch",
+    "question": "Which 10 customers have placed the highest total order value?",
+    "SQL": "SELECT c.c_name, ROUND(SUM(o.o_totalprice), 2) AS total_spent FROM customer c JOIN orders o ON c.c_custkey = o.o_custkey GROUP BY c.c_custkey, c.c_name ORDER BY total_spent DESC LIMIT 10"
+  },
+  {
+    "db_id": "tpch",
+    "question": "How many parts does each supplier stock?",
+    "SQL": "SELECT s.s_name, COUNT(ps.ps_partkey) AS part_count FROM supplier s JOIN partsupp ps ON s.s_suppkey = ps.ps_suppkey GROUP BY s.s_suppkey, s.s_name ORDER BY part_count DESC LIMIT 20"
+  },
+  {
+    "db_id": "tpch",
+    "question": "What is the average discount given on line items by ship year?",
+    "SQL": "SELECT l_ship_year, ROUND(AVG(l_discount), 4) AS avg_discount FROM lineitem GROUP BY l_ship_year ORDER BY l_ship_year"
+  },
+  {
+    "db_id": "tpch",
+    "question": "What is the average order total price by order priority?",
+    "SQL": "SELECT o_orderpriority, ROUND(AVG(o_totalprice), 2) AS avg_order_value FROM orders GROUP BY o_orderpriority ORDER BY avg_order_value DESC"
+  },
+  {
+    "db_id": "tpch",
+    "question": "Which market segment generates the highest total revenue?",
+    "SQL": "SELECT c.c_mktsegment, ROUND(SUM(l.l_net_revenue), 2) AS total_revenue FROM customer c JOIN orders o ON c.c_custkey = o.o_custkey JOIN lineitem l ON o.o_orderkey = l.l_orderkey GROUP BY c.c_mktsegment ORDER BY total_revenue DESC"
+  },
+  {
+    "db_id": "tpch",
+    "question": "How many parts are available from more than 3 different suppliers?",
+    "SQL": "SELECT COUNT(*) AS part_count FROM (SELECT ps_partkey FROM partsupp GROUP BY ps_partkey HAVING COUNT(ps_suppkey) > 3)"
+  },
+  {
+    "db_id": "tpch",
+    "question": "What is the total available stock quantity per region?",
+    "SQL": "SELECT r.r_name, SUM(ps.ps_availqty) AS total_stock FROM partsupp ps JOIN supplier s ON ps.ps_suppkey = s.s_suppkey JOIN nation n ON s.s_nationkey = n.n_nationkey JOIN region r ON n.n_regionkey = r.r_regionkey GROUP BY r.r_name ORDER BY total_stock DESC"
+  },
+  {
+    "db_id": "tpch",
+    "question": "What is the total number of line items shipped per month in 1995?",
+    "SQL": "SELECT l_ship_month, COUNT(*) AS shipments FROM lineitem WHERE l_ship_year = 1995 GROUP BY l_ship_month ORDER BY l_ship_month"
+  },
+  {
+    "db_id": "tpch",
+    "question": "What is the average supply cost per part brand?",
+    "SQL": "SELECT p.p_brand, ROUND(AVG(ps.ps_supplycost), 2) AS avg_supply_cost FROM part p JOIN partsupp ps ON p.p_partkey = ps.ps_partkey GROUP BY p.p_brand ORDER BY avg_supply_cost DESC LIMIT 10"
+  },
+  {
+    "db_id": "tpch",
+    "question": "How many orders were placed by customers in the BUILDING market segment each year?",
+    "SQL": "SELECT o.o_year, COUNT(*) AS order_count FROM orders o JOIN customer c ON o.o_custkey = c.c_custkey WHERE c.c_mktsegment = 'BUILDING' GROUP BY o.o_year ORDER BY o.o_year"
+  }
+]

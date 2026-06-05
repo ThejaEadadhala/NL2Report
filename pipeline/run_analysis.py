@@ -50,7 +50,8 @@ def load_schema(dataset: str, db_name: str) -> dict:
 
 
 def find_db_path(dataset: str, db_name: str) -> Path:
-    base = Path("datasets") / dataset / "databases"
+    # Search entire dataset folder — handles both BIRD (databases/split/db/) and flat layouts (tpch.sqlite)
+    base = Path("datasets") / dataset
     matches = list(base.rglob(f"{db_name}.sqlite"))
     if not matches:
         raise FileNotFoundError(f"No SQLite file found for '{db_name}' under {base}")
