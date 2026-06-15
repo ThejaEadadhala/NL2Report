@@ -9,6 +9,10 @@ class BaseModel(ABC):
         """Given a natural language question and a schema dict, return a SQL query string."""
         ...
 
+    def _generate(self, system: str, user: str) -> str:
+        """Raw LLM call with a system prompt and user message. Implemented by each adapter."""
+        raise NotImplementedError(f"{type(self).__name__} does not implement _generate")
+
     @staticmethod
     def _quote(name: str) -> str:
         """Wrap column name in backticks if it contains spaces, parentheses, or %."""

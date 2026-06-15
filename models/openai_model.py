@@ -13,27 +13,26 @@ class OpenAIModel(BaseModel):
         self.client = OpenAI(api_key=api_key)
         self.model = model
 
-    def generate_sql(self, question: str, schema: dict) -> str:
-        schema_text = self.format_schema(schema)
+    def _generate(self, system: str, user: str) -> str:
         response = self.client.chat.completions.create(
             model=self.model,
             messages=[
-                {
-                    "role": "system",
-                    "content": (
-                        "You are an expert SQLite assistant. "
-                        "Given a database schema and a natural language question, "
-                        "return ONLY a valid SQLite SQL query with no explanation."
-                    ),
-                },
-                {
-                    "role": "user",
-                    "content": f"{schema_text}\n\nQuestion: {question}\nSQL:",
-                },
+                {"role": "system", "content": system},
+                {"role": "user",   "content": user},
             ],
             temperature=0,
         )
-        raw = response.choices[0].message.content.strip()
+        return response.choices[0].message.content.strip()
+
+    def generate_sql(self, question: str, schema: dict) -> str:
+        schema_text = self.format_schema(schema)
+        system = (
+            "You are an expert SQLite assistant. "
+            "Given a database schema and a natural language question, "
+            "return ONLY a valid SQLite SQL query with no explanation."
+        )
+        user = f"{schema_text}\n\nQuestion: {question}\nSQL:"
+        raw = self._generate(system, user)
 
         if raw.startswith("```"):
             lines = raw.splitlines()

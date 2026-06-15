@@ -9,9 +9,19 @@ class OllamaModel(BaseModel):
     def __init__(self, model: str = DEFAULT_MODEL):
         self.model = model
 
+    def _generate(self, system: str, user: str) -> str:
+        prompt = f"{system}\n\n{user}"
+        response = requests.post(
+            OLLAMA_URL,
+            json={"model": self.model, "prompt": prompt, "stream": False},
+            timeout=120,
+        )
+        response.raise_for_status()
+        return response.json()["response"].strip()
+
     def generate_sql(self, question: str, schema: dict) -> str:
         schema_text = self.format_schema(schema)
-        prompt = (
+        system = (
             "You are an expert SQLite assistant.\n"
             "Given the database schema and a natural language question, return ONLY a valid SQLite SQL query.\n\n"
             "STRICT RULES — violating any rule produces invalid SQL:\n"
@@ -21,21 +31,11 @@ class OllamaModel(BaseModel):
             "4. Before selecting any column, verify which table alias it belongs to. Never select a column from the wrong alias — e.g. if Phone is in the schools table aliased as T2, write T2.Phone not T1.Phone.\n"
             "5. NEVER prefix table names with the database name. Write FROM orders not FROM tpch.orders. Always define table aliases in the FROM clause before using them.\n"
             "6. Read the question carefully. Make sure your SELECT includes ALL columns the question asks for. Make sure GROUP BY matches exactly what the question wants to group by.\n"
-            "7. Return ONLY the raw SQL query. No explanation, no markdown, no code fences.\n\n"
-            f"{schema_text}\n\n"
-            f"Question: {question}\n"
-            "SQL:"
+            "7. Return ONLY the raw SQL query. No explanation, no markdown, no code fences."
         )
+        user = f"{schema_text}\n\nQuestion: {question}\nSQL:"
+        raw = self._generate(system, user)
 
-        response = requests.post(
-            OLLAMA_URL,
-            json={"model": self.model, "prompt": prompt, "stream": False},
-            timeout=120,
-        )
-        response.raise_for_status()
-        raw = response.json()["response"].strip()
-
-        # Strip markdown code fences if the model adds them
         if raw.startswith("```"):
             lines = raw.splitlines()
             raw = "\n".join(

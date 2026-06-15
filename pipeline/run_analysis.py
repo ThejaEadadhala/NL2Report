@@ -26,6 +26,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from config import schema_path, DEFAULT_MODEL
+from pipeline.planning_agent import PlanningAgent
 
 
 def get_model(model_name: str):
@@ -89,18 +90,40 @@ def run(question: str, dataset: str, db_name: str, split: str, model_name: str) 
     print(f"Database : {db_name} ({dataset}/{split})")
     print(f"Model    : {model_name}\n")
 
-    schema = load_schema(dataset, db_name)
-    model = get_model(model_name)
-
-    print("Generating SQL...")
-    sql = model.generate_sql(question, schema)
-    print(f"\nSQL:\n{sql}\n")
-
+    schema  = load_schema(dataset, db_name)
+    model   = get_model(model_name)
     db_path = find_db_path(dataset, db_name)
-    print("Executing...")
-    columns, rows = execute_sql(db_path, sql)
-    print(f"\nResults ({len(rows)} rows):")
-    print_results(columns, rows)
+
+    print("Planning...")
+    subtasks = PlanningAgent(model).plan(question, schema)
+
+    if len(subtasks) == 1:
+        # Simple question — identical output to original single-query flow
+        print("Generating SQL...")
+        sql = model.generate_sql(subtasks[0], schema)
+        print(f"\nSQL:\n{sql}\n")
+        print("Executing...")
+        columns, rows = execute_sql(db_path, sql)
+        print(f"\nResults ({len(rows)} rows):")
+        print_results(columns, rows)
+    else:
+        # Multi-part question — print plan then execute each subtask
+        print(f"Plan ({len(subtasks)} subtasks):")
+        for i, task in enumerate(subtasks, 1):
+            print(f"  {i}. {task}")
+
+        for i, task in enumerate(subtasks, 1):
+            print(f"\n--- Subtask {i}: {task} ---")
+            print("Generating SQL...")
+            sql = model.generate_sql(task, schema)
+            print(f"\nSQL:\n{sql}\n")
+            print("Executing...")
+            try:
+                columns, rows = execute_sql(db_path, sql)
+                print(f"\nResults ({len(rows)} rows):")
+                print_results(columns, rows)
+            except Exception as e:
+                print(f"Error: {e}")
 
 
 def main():

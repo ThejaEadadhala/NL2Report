@@ -13,24 +13,24 @@ class AnthropicModel(BaseModel):
         self.client = anthropic.Anthropic(api_key=api_key)
         self.model = model
 
-    def generate_sql(self, question: str, schema: dict) -> str:
-        schema_text = self.format_schema(schema)
+    def _generate(self, system: str, user: str) -> str:
         message = self.client.messages.create(
             model=self.model,
-            max_tokens=1024,
-            system=(
-                "You are an expert SQLite assistant. "
-                "Given a database schema and a natural language question, "
-                "return ONLY a valid SQLite SQL query with no explanation."
-            ),
-            messages=[
-                {
-                    "role": "user",
-                    "content": f"{schema_text}\n\nQuestion: {question}\nSQL:",
-                }
-            ],
+            max_tokens=512,
+            system=system,
+            messages=[{"role": "user", "content": user}],
         )
-        raw = message.content[0].text.strip()
+        return message.content[0].text.strip()
+
+    def generate_sql(self, question: str, schema: dict) -> str:
+        schema_text = self.format_schema(schema)
+        system = (
+            "You are an expert SQLite assistant. "
+            "Given a database schema and a natural language question, "
+            "return ONLY a valid SQLite SQL query with no explanation."
+        )
+        user = f"{schema_text}\n\nQuestion: {question}\nSQL:"
+        raw = self._generate(system, user)
 
         if raw.startswith("```"):
             lines = raw.splitlines()
