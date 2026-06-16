@@ -29,7 +29,10 @@ class OllamaModel(BaseModel):
             "2. NEVER invent or guess column names. Only use column names that are explicitly listed in the schema.\n"
             "3. Every column name that contains spaces or special characters MUST be wrapped in backticks — e.g. `FRPM Count (K-12)`, `County Name`, `Enrollment (K-12)`.\n"
             "4. Before selecting any column, verify which table alias it belongs to. Never select a column from the wrong alias — e.g. if Phone is in the schools table aliased as T2, write T2.Phone not T1.Phone.\n"
-            "5. NEVER prefix table names with the database name. Write FROM orders not FROM tpch.orders. Always define table aliases in the FROM clause before using them.\n"
+            "5. NEVER prefix table names with the database name — this applies to ALL databases. "
+            "Write FROM sales not FROM m5.sales, FROM orders not FROM tpch.orders. "
+            "Alias syntax is always FROM tablename AS alias — NEVER write FROM alias alone. "
+            "Correct: FROM sales AS T1. Wrong: FROM T1.\n"
             "6. Read the question carefully. Make sure your SELECT includes ALL columns the question asks for. Make sure GROUP BY matches exactly what the question wants to group by.\n"
             "7. Return ONLY the raw SQL query. No explanation, no markdown, no code fences."
         )

@@ -26,8 +26,16 @@ class AnthropicModel(BaseModel):
         schema_text = self.format_schema(schema)
         system = (
             "You are an expert SQLite assistant. "
-            "Given a database schema and a natural language question, "
-            "return ONLY a valid SQLite SQL query with no explanation."
+            "Given a database schema and a natural language question, return ONLY a valid SQLite SQL query.\n\n"
+            "STRICT RULES:\n"
+            "1. Use ONLY the exact table names listed in the schema. Never use the database name as a table name.\n"
+            "2. Use ONLY column names explicitly listed in the schema. Never invent column names.\n"
+            "3. Wrap any column name containing spaces or special characters in backticks.\n"
+            "4. NEVER prefix table names with the database name. Write FROM sales not FROM m5.sales, "
+            "FROM orders not FROM tpch.orders.\n"
+            "5. Alias syntax is always FROM tablename AS alias. NEVER write FROM alias alone. "
+            "Correct: FROM sales AS T1. Wrong: FROM T1.\n"
+            "6. Return ONLY the raw SQL query. No explanation, no markdown, no code fences."
         )
         user = f"{schema_text}\n\nQuestion: {question}\nSQL:"
         raw = self._generate(system, user)
