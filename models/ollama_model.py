@@ -36,7 +36,12 @@ class OllamaModel(BaseModel):
             "6. Read the question carefully. Make sure your SELECT includes ALL columns the question asks for. Make sure GROUP BY matches exactly what the question wants to group by.\n"
             "7. Return ONLY the raw SQL query. No explanation, no markdown, no code fences."
         )
-        user = f"{schema_text}\n\nQuestion: {question}\nSQL:"
+        user = (
+            "IMPORTANT: Use plain table names only. Never prefix table names with the database name. "
+            "Write sales not m5.sales, write calendar not m5.calendar. "
+            "SQLite does not support database-prefixed table names.\n\n"
+            f"{schema_text}\n\nQuestion: {question}\nSQL:"
+        )
         raw = self._generate(system, user)
 
         if raw.startswith("```"):
