@@ -3,9 +3,9 @@ extract_schema.py
 Reads any SQLite database and writes a schema JSON to the dataset's schema_json/ folder.
 
 Usage:
-    python pipeline/extract_schema.py --db datasets/bird/databases/dev/california_schools/california_schools.sqlite
-    python pipeline/extract_schema.py --dataset bird          # extract all splits (train + dev)
-    python pipeline/extract_schema.py --dataset bird --split dev   # extract one split only
+    python scripts/extract_schema.py --db datasets/bird/databases/dev/california_schools/california_schools.sqlite
+    python scripts/extract_schema.py --dataset bird          # extract all splits (train + dev)
+    python scripts/extract_schema.py --dataset bird --split dev   # extract one split only
 """
 
 import argparse

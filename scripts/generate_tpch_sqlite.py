@@ -10,7 +10,7 @@ Derived columns added:
   customer : c_has_debt
 
 Usage:
-    python generate_tpch_sqlite.py
+    python scripts/generate_tpch_sqlite.py
 
 Runtime: ~3-5 minutes at SF=1 (~6 million lineitem rows).
 """

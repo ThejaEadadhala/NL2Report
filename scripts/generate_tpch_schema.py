@@ -9,7 +9,7 @@ The output format matches exactly what base_model.py format_schema() expects:
       name, row_count, columns [{name, type, pk, description}], foreign_keys [{from, to_table, to_col}]
 
 Usage:
-    python generate_tpch_schema.py
+    python scripts/generate_tpch_schema.py
 """
 
 import json
