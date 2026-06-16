@@ -1,0 +1,218 @@
+{
+  "database": "m5",
+  "tables": [
+    {
+      "name": "calendar",
+      "row_count": 1969,
+      "columns": [
+        {
+          "name": "date",
+          "type": "VARCHAR",
+          "pk": false,
+          "description": "Calendar date (YYYY-MM-DD)"
+        },
+        {
+          "name": "wm_yr_wk",
+          "type": "BIGINT",
+          "pk": false,
+          "description": "Walmart week number (year + week, e.g. 11101)"
+        },
+        {
+          "name": "weekday",
+          "type": "VARCHAR",
+          "pk": false,
+          "description": "Day of week name (Saturday, Sunday, ...)"
+        },
+        {
+          "name": "wday",
+          "type": "BIGINT",
+          "pk": false,
+          "description": "Day of week number (1=Saturday, 7=Friday)"
+        },
+        {
+          "name": "month",
+          "type": "BIGINT",
+          "pk": false,
+          "description": "Month number (1\u201312)"
+        },
+        {
+          "name": "year",
+          "type": "BIGINT",
+          "pk": false,
+          "description": "Calendar year (2011\u20132016)"
+        },
+        {
+          "name": "d",
+          "type": "VARCHAR",
+          "pk": false,
+          "description": "Day identifier matching the d column in sales table (d_1 .. d_1941)"
+        },
+        {
+          "name": "event_name_1",
+          "type": "VARCHAR",
+          "pk": false,
+          "description": "Name of primary event on this date (e.g. SuperBowl, Christmas)"
+        },
+        {
+          "name": "event_type_1",
+          "type": "VARCHAR",
+          "pk": false,
+          "description": "Type of primary event (Sporting, Cultural, National, Religious)"
+        },
+        {
+          "name": "event_name_2",
+          "type": "VARCHAR",
+          "pk": false,
+          "description": "Name of secondary event on this date (if any)"
+        },
+        {
+          "name": "event_type_2",
+          "type": "VARCHAR",
+          "pk": false,
+          "description": "Type of secondary event (if any)"
+        },
+        {
+          "name": "snap_CA",
+          "type": "BIGINT",
+          "pk": false,
+          "description": "1 if SNAP benefits can be used in California on this date, else 0"
+        },
+        {
+          "name": "snap_TX",
+          "type": "BIGINT",
+          "pk": false,
+          "description": "1 if SNAP benefits can be used in Texas on this date, else 0"
+        },
+        {
+          "name": "snap_WI",
+          "type": "BIGINT",
+          "pk": false,
+          "description": "1 if SNAP benefits can be used in Wisconsin on this date, else 0"
+        }
+      ],
+      "foreign_keys": []
+    },
+    {
+      "name": "sales",
+      "row_count": 58327370,
+      "columns": [
+        {
+          "name": "id",
+          "type": "VARCHAR",
+          "pk": false,
+          "description": "Unique item-store identifier (e.g. HOBBIES_1_001_CA_1_validation)"
+        },
+        {
+          "name": "item_id",
+          "type": "VARCHAR",
+          "pk": false,
+          "description": "Item identifier (e.g. HOBBIES_1_001)"
+        },
+        {
+          "name": "dept_id",
+          "type": "VARCHAR",
+          "pk": false,
+          "description": "Department identifier (HOBBIES_1, FOODS_3, HOUSEHOLD_2, etc.)"
+        },
+        {
+          "name": "cat_id",
+          "type": "VARCHAR",
+          "pk": false,
+          "description": "Category identifier (HOBBIES, FOODS, HOUSEHOLD)"
+        },
+        {
+          "name": "store_id",
+          "type": "VARCHAR",
+          "pk": false,
+          "description": "Store identifier (CA_1, TX_2, WI_3, etc.)"
+        },
+        {
+          "name": "state_id",
+          "type": "VARCHAR",
+          "pk": false,
+          "description": "State identifier (CA=California, TX=Texas, WI=Wisconsin)"
+        },
+        {
+          "name": "d",
+          "type": "VARCHAR",
+          "pk": false,
+          "description": "Day identifier (d_1 = 2011-01-29, d_1913 = 2016-06-19)"
+        },
+        {
+          "name": "sales",
+          "type": "BIGINT",
+          "pk": false,
+          "description": "Number of units sold on this day at this store for this item"
+        }
+      ],
+      "foreign_keys": [
+        {
+          "from": "d",
+          "to_table": "calendar",
+          "to_col": "d"
+        }
+      ]
+    },
+    {
+      "name": "sales_evaluation",
+      "row_count": 59181090,
+      "columns": [
+        {
+          "name": "id",
+          "type": "VARCHAR",
+          "pk": false,
+          "description": "Unique item-store identifier"
+        },
+        {
+          "name": "item_id",
+          "type": "VARCHAR",
+          "pk": false,
+          "description": "Item identifier"
+        },
+        {
+          "name": "dept_id",
+          "type": "VARCHAR",
+          "pk": false,
+          "description": "Department identifier"
+        },
+        {
+          "name": "cat_id",
+          "type": "VARCHAR",
+          "pk": false,
+          "description": "Category identifier"
+        },
+        {
+          "name": "store_id",
+          "type": "VARCHAR",
+          "pk": false,
+          "description": "Store identifier"
+        },
+        {
+          "name": "state_id",
+          "type": "VARCHAR",
+          "pk": false,
+          "description": "State identifier"
+        },
+        {
+          "name": "d",
+          "type": "VARCHAR",
+          "pk": false,
+          "description": "Day identifier (d_1 = 2011-01-29, d_1941 = 2016-07-17, extends validation by 28 days)"
+        },
+        {
+          "name": "sales",
+          "type": "BIGINT",
+          "pk": false,
+          "description": "Number of units sold on this day"
+        }
+      ],
+      "foreign_keys": [
+        {
+          "from": "d",
+          "to_table": "calendar",
+          "to_col": "d"
+        }
+      ]
+    }
+  ]
+}
