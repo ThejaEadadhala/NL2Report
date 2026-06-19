@@ -13,7 +13,8 @@ class OllamaModel(BaseModel):
         prompt = f"{system}\n\n{user}"
         response = requests.post(
             OLLAMA_URL,
-            json={"model": self.model, "prompt": prompt, "stream": False},
+            json={"model": self.model, "prompt": prompt, "stream": False,
+                  "options": {"temperature": 0}},
             timeout=120,
         )
         response.raise_for_status()
@@ -33,14 +34,19 @@ class OllamaModel(BaseModel):
             "Write FROM sales not FROM m5.sales, FROM orders not FROM tpch.orders. "
             "Alias syntax is always FROM tablename AS alias — NEVER write FROM alias alone. "
             "Correct: FROM sales AS T1. Wrong: FROM T1.\n"
-            "6. Read the question carefully. Make sure your SELECT includes ALL columns the question asks for. Make sure GROUP BY matches exactly what the question wants to group by.\n"
-            "7. Return ONLY the raw SQL query. No explanation, no markdown, no code fences."
+            "6. Before writing any JOIN, check: do ALL the columns you need already exist in one table? If yes, use ONLY that table — no JOIN needed. Never join two tables just to get a column that already exists in the first table.\n"
+            "7. Read the question carefully. Make sure your SELECT includes ALL columns the question asks for. Make sure GROUP BY matches exactly what the question wants to group by.\n"
+            "8. Return ONLY the raw SQL query. No explanation, no markdown, no code fences."
         )
+        db_name = schema.get("database", "")
         user = (
-            "IMPORTANT: Use plain table names only. Never prefix table names with the database name. "
-            "Write sales not m5.sales, write calendar not m5.calendar. "
-            "SQLite does not support database-prefixed table names.\n\n"
-            f"{schema_text}\n\nQuestion: {question}\nSQL:"
+            f"{schema_text}\n\n"
+            f"Question: {question}\n\n"
+            f"IMPORTANT: Write plain table names only. NEVER prefix with the database name. "
+            f"Wrong: FROM {db_name}.sales — Correct: FROM sales. "
+            f"Wrong: FROM {db_name}.calendar — Correct: FROM calendar. "
+            "SQLite does not support schema-prefixed table names.\n"
+            "SQL:"
         )
         raw = self._generate(system, user)
 

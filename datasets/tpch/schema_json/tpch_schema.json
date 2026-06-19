@@ -1,0 +1,520 @@
+{
+  "database": "tpch",
+  "tables": [
+    {
+      "name": "customer",
+      "row_count": 150000,
+      "columns": [
+        {
+          "name": "c_custkey",
+          "type": "BIGINT",
+          "pk": false,
+          "description": "Unique customer identifier"
+        },
+        {
+          "name": "c_name",
+          "type": "VARCHAR",
+          "pk": false,
+          "description": "Customer name (e.g., Customer#000000001)"
+        },
+        {
+          "name": "c_address",
+          "type": "VARCHAR",
+          "pk": false,
+          "description": "Customer mailing address"
+        },
+        {
+          "name": "c_nationkey",
+          "type": "BIGINT",
+          "pk": false,
+          "description": "FK \u2014 nation where customer is located"
+        },
+        {
+          "name": "c_phone",
+          "type": "VARCHAR",
+          "pk": false,
+          "description": "Customer contact phone number"
+        },
+        {
+          "name": "c_acctbal",
+          "type": "VARCHAR",
+          "pk": false,
+          "description": "Customer account balance (negative means outstanding debt)"
+        },
+        {
+          "name": "c_mktsegment",
+          "type": "VARCHAR",
+          "pk": false,
+          "description": "Market segment (AUTOMOBILE, BUILDING, FURNITURE, HOUSEHOLD, MACHINERY)"
+        },
+        {
+          "name": "c_comment",
+          "type": "VARCHAR",
+          "pk": false,
+          "description": "Miscellaneous comment"
+        },
+        {
+          "name": "c_has_debt",
+          "type": "BIGINT",
+          "pk": false,
+          "description": "Derived \u2014 1 if c_acctbal < 0 (customer has debt), else 0"
+        }
+      ],
+      "foreign_keys": [
+        {
+          "from": "c_nationkey",
+          "to_table": "nation",
+          "to_col": "n_nationkey"
+        }
+      ]
+    },
+    {
+      "name": "lineitem",
+      "row_count": 6001215,
+      "columns": [
+        {
+          "name": "l_orderkey",
+          "type": "BIGINT",
+          "pk": false,
+          "description": "FK \u2014 order this line item belongs to"
+        },
+        {
+          "name": "l_partkey",
+          "type": "BIGINT",
+          "pk": false,
+          "description": "FK \u2014 part ordered (also FK to partsupp via l_suppkey)"
+        },
+        {
+          "name": "l_suppkey",
+          "type": "BIGINT",
+          "pk": false,
+          "description": "FK \u2014 supplier fulfilling this line item"
+        },
+        {
+          "name": "l_linenumber",
+          "type": "BIGINT",
+          "pk": false,
+          "description": "Line number within the order (1-based)"
+        },
+        {
+          "name": "l_quantity",
+          "type": "VARCHAR",
+          "pk": false,
+          "description": "Quantity of parts ordered on this line"
+        },
+        {
+          "name": "l_extendedprice",
+          "type": "VARCHAR",
+          "pk": false,
+          "description": "Base price for this line (quantity \u00d7 part retail price, before discounts/tax)"
+        },
+        {
+          "name": "l_discount",
+          "type": "VARCHAR",
+          "pk": false,
+          "description": "Discount fraction applied to extended price (0.00\u20130.10)"
+        },
+        {
+          "name": "l_tax",
+          "type": "VARCHAR",
+          "pk": false,
+          "description": "Tax fraction applied after discount (0.00\u20130.08)"
+        },
+        {
+          "name": "l_returnflag",
+          "type": "VARCHAR",
+          "pk": false,
+          "description": "Return status: R=returned, A=accepted return, N=not returned"
+        },
+        {
+          "name": "l_linestatus",
+          "type": "VARCHAR",
+          "pk": false,
+          "description": "Line status: O=open (order not fulfilled), F=fulfilled"
+        },
+        {
+          "name": "l_shipdate",
+          "type": "VARCHAR",
+          "pk": false,
+          "description": "Date the item was shipped"
+        },
+        {
+          "name": "l_commitdate",
+          "type": "VARCHAR",
+          "pk": false,
+          "description": "Committed delivery date agreed with customer"
+        },
+        {
+          "name": "l_receiptdate",
+          "type": "VARCHAR",
+          "pk": false,
+          "description": "Date the item was actually received by the customer"
+        },
+        {
+          "name": "l_shipinstruct",
+          "type": "VARCHAR",
+          "pk": false,
+          "description": "Shipping instructions (DELIVER IN PERSON, COLLECT COD, NONE, TAKE BACK RETURN)"
+        },
+        {
+          "name": "l_shipmode",
+          "type": "VARCHAR",
+          "pk": false,
+          "description": "Shipping mode (AIR, FOB, MAIL, RAIL, REG AIR, SHIP, TRUCK)"
+        },
+        {
+          "name": "l_comment",
+          "type": "VARCHAR",
+          "pk": false,
+          "description": "Miscellaneous comment"
+        },
+        {
+          "name": "l_net_revenue",
+          "type": "VARCHAR",
+          "pk": false,
+          "description": "Derived \u2014 net revenue: l_extendedprice \u00d7 (1 - l_discount) \u00d7 (1 + l_tax)"
+        },
+        {
+          "name": "l_ship_year",
+          "type": "BIGINT",
+          "pk": false,
+          "description": "Derived \u2014 calendar year extracted from l_shipdate"
+        },
+        {
+          "name": "l_ship_month",
+          "type": "BIGINT",
+          "pk": false,
+          "description": "Derived \u2014 calendar month (1\u201312) extracted from l_shipdate"
+        }
+      ],
+      "foreign_keys": [
+        {
+          "from": "l_orderkey",
+          "to_table": "orders",
+          "to_col": "o_orderkey"
+        },
+        {
+          "from": "l_partkey",
+          "to_table": "part",
+          "to_col": "p_partkey"
+        },
+        {
+          "from": "l_suppkey",
+          "to_table": "supplier",
+          "to_col": "s_suppkey"
+        }
+      ]
+    },
+    {
+      "name": "nation",
+      "row_count": 25,
+      "columns": [
+        {
+          "name": "n_nationkey",
+          "type": "BIGINT",
+          "pk": false,
+          "description": "Unique nation identifier (0\u201324)"
+        },
+        {
+          "name": "n_name",
+          "type": "VARCHAR",
+          "pk": false,
+          "description": "Nation name (e.g., GERMANY, FRANCE, BRAZIL)"
+        },
+        {
+          "name": "n_regionkey",
+          "type": "BIGINT",
+          "pk": false,
+          "description": "FK \u2014 region this nation belongs to"
+        },
+        {
+          "name": "n_comment",
+          "type": "VARCHAR",
+          "pk": false,
+          "description": "Miscellaneous comment"
+        }
+      ],
+      "foreign_keys": [
+        {
+          "from": "n_regionkey",
+          "to_table": "region",
+          "to_col": "r_regionkey"
+        }
+      ]
+    },
+    {
+      "name": "orders",
+      "row_count": 1500000,
+      "columns": [
+        {
+          "name": "o_orderkey",
+          "type": "BIGINT",
+          "pk": false,
+          "description": "Unique order identifier"
+        },
+        {
+          "name": "o_custkey",
+          "type": "BIGINT",
+          "pk": false,
+          "description": "FK \u2014 customer who placed the order"
+        },
+        {
+          "name": "o_orderstatus",
+          "type": "VARCHAR",
+          "pk": false,
+          "description": "Order status: F=fully fulfilled, O=open/pending, P=partially fulfilled"
+        },
+        {
+          "name": "o_totalprice",
+          "type": "VARCHAR",
+          "pk": false,
+          "description": "Total monetary value of the order"
+        },
+        {
+          "name": "o_orderdate",
+          "type": "VARCHAR",
+          "pk": false,
+          "description": "Date the order was placed"
+        },
+        {
+          "name": "o_orderpriority",
+          "type": "VARCHAR",
+          "pk": false,
+          "description": "Order priority level (1-URGENT, 2-HIGH, 3-MEDIUM, 4-NOT SPECIFIED, 5-LOW)"
+        },
+        {
+          "name": "o_clerk",
+          "type": "VARCHAR",
+          "pk": false,
+          "description": "Clerk responsible for the order (e.g., Clerk#000000001)"
+        },
+        {
+          "name": "o_shippriority",
+          "type": "BIGINT",
+          "pk": false,
+          "description": "Shipping priority flag (0 = normal)"
+        },
+        {
+          "name": "o_comment",
+          "type": "VARCHAR",
+          "pk": false,
+          "description": "Miscellaneous comment"
+        },
+        {
+          "name": "o_year",
+          "type": "BIGINT",
+          "pk": false,
+          "description": "Derived \u2014 calendar year extracted from o_orderdate"
+        },
+        {
+          "name": "o_month",
+          "type": "BIGINT",
+          "pk": false,
+          "description": "Derived \u2014 calendar month (1\u201312) extracted from o_orderdate"
+        },
+        {
+          "name": "o_quarter",
+          "type": "BIGINT",
+          "pk": false,
+          "description": "Derived \u2014 calendar quarter (1\u20134) extracted from o_orderdate"
+        }
+      ],
+      "foreign_keys": [
+        {
+          "from": "o_custkey",
+          "to_table": "customer",
+          "to_col": "c_custkey"
+        }
+      ]
+    },
+    {
+      "name": "part",
+      "row_count": 200000,
+      "columns": [
+        {
+          "name": "p_partkey",
+          "type": "BIGINT",
+          "pk": false,
+          "description": "Unique part identifier"
+        },
+        {
+          "name": "p_name",
+          "type": "VARCHAR",
+          "pk": false,
+          "description": "Part name (descriptive phrase)"
+        },
+        {
+          "name": "p_mfgr",
+          "type": "VARCHAR",
+          "pk": false,
+          "description": "Manufacturer (e.g., Manufacturer#1)"
+        },
+        {
+          "name": "p_brand",
+          "type": "VARCHAR",
+          "pk": false,
+          "description": "Brand name (e.g., Brand#13)"
+        },
+        {
+          "name": "p_type",
+          "type": "VARCHAR",
+          "pk": false,
+          "description": "Part type description (e.g., SMALL BURNISHED COPPER)"
+        },
+        {
+          "name": "p_size",
+          "type": "BIGINT",
+          "pk": false,
+          "description": "Part size (integer, 1\u201350)"
+        },
+        {
+          "name": "p_container",
+          "type": "VARCHAR",
+          "pk": false,
+          "description": "Container type (e.g., SM BOX, LG DRUM, JUMBO BAG)"
+        },
+        {
+          "name": "p_retailprice",
+          "type": "VARCHAR",
+          "pk": false,
+          "description": "Retail price of the part"
+        },
+        {
+          "name": "p_comment",
+          "type": "VARCHAR",
+          "pk": false,
+          "description": "Miscellaneous comment"
+        }
+      ],
+      "foreign_keys": []
+    },
+    {
+      "name": "partsupp",
+      "row_count": 800000,
+      "columns": [
+        {
+          "name": "ps_partkey",
+          "type": "BIGINT",
+          "pk": false,
+          "description": "FK \u2014 part supplied"
+        },
+        {
+          "name": "ps_suppkey",
+          "type": "BIGINT",
+          "pk": false,
+          "description": "FK \u2014 supplier providing the part"
+        },
+        {
+          "name": "ps_availqty",
+          "type": "BIGINT",
+          "pk": false,
+          "description": "Available quantity in stock for this supplier-part pair"
+        },
+        {
+          "name": "ps_supplycost",
+          "type": "VARCHAR",
+          "pk": false,
+          "description": "Cost to procure one unit from this supplier"
+        },
+        {
+          "name": "ps_comment",
+          "type": "VARCHAR",
+          "pk": false,
+          "description": "Miscellaneous comment"
+        }
+      ],
+      "foreign_keys": [
+        {
+          "from": "ps_partkey",
+          "to_table": "part",
+          "to_col": "p_partkey"
+        },
+        {
+          "from": "ps_suppkey",
+          "to_table": "supplier",
+          "to_col": "s_suppkey"
+        }
+      ]
+    },
+    {
+      "name": "region",
+      "row_count": 5,
+      "columns": [
+        {
+          "name": "r_regionkey",
+          "type": "BIGINT",
+          "pk": false,
+          "description": "Unique region identifier (0\u20134)"
+        },
+        {
+          "name": "r_name",
+          "type": "VARCHAR",
+          "pk": false,
+          "description": "Region name (AFRICA, AMERICA, ASIA, EUROPE, MIDDLE EAST)"
+        },
+        {
+          "name": "r_comment",
+          "type": "VARCHAR",
+          "pk": false,
+          "description": "Miscellaneous comment"
+        }
+      ],
+      "foreign_keys": []
+    },
+    {
+      "name": "supplier",
+      "row_count": 10000,
+      "columns": [
+        {
+          "name": "s_suppkey",
+          "type": "BIGINT",
+          "pk": false,
+          "description": "Unique supplier identifier"
+        },
+        {
+          "name": "s_name",
+          "type": "VARCHAR",
+          "pk": false,
+          "description": "Supplier name (e.g., Supplier#000000001)"
+        },
+        {
+          "name": "s_address",
+          "type": "VARCHAR",
+          "pk": false,
+          "description": "Supplier mailing address"
+        },
+        {
+          "name": "s_nationkey",
+          "type": "BIGINT",
+          "pk": false,
+          "description": "FK \u2014 nation where supplier is located"
+        },
+        {
+          "name": "s_phone",
+          "type": "VARCHAR",
+          "pk": false,
+          "description": "Supplier contact phone number"
+        },
+        {
+          "name": "s_acctbal",
+          "type": "VARCHAR",
+          "pk": false,
+          "description": "Supplier account balance"
+        },
+        {
+          "name": "s_comment",
+          "type": "VARCHAR",
+          "pk": false,
+          "description": "Miscellaneous comment"
+        }
+      ],
+      "foreign_keys": [
+        {
+          "from": "s_nationkey",
+          "to_table": "nation",
+          "to_col": "n_nationkey"
+        }
+      ]
+    }
+  ]
+}

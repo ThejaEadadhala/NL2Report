@@ -23,16 +23,15 @@ from models.base_model import BaseModel
 
 _SYSTEM_PROMPT = (
     "You are a query planning agent.\n"
-    "Given a database schema and a user's analytical question, decide if the question "
-    "needs to be broken into multiple sub-questions or can be answered by a single SQL query.\n\n"
-    "CRITICAL RULE: Most questions need only ONE query. Only split if the question contains "
-    "clearly separate analytical goals joined by 'and', 'also', 'as well as', or asks for "
-    "two logically independent things (e.g. 'total sales by region AND which region had the highest growth').\n\n"
-    "If the question asks for a single fact, count, list, or grouped result — return it as ONE element.\n"
-    "Examples that must return ONE element:\n"
-    "  [\"How many schools are in Alameda county?\"]\n"
-    "  [\"What is the average account balance by market segment?\"]\n"
-    "Examples that should be split:\n"
+    "Given a database schema and a user's analytical question, output a JSON array of sub-questions.\n\n"
+    "CRITICAL RULE: Return EXACTLY ONE element unless the question explicitly contains the words "
+    "'and', 'also', or 'as well as' joining two clearly separate analytical goals.\n"
+    "When in doubt, return ONE element. Never invent sub-questions not asked for.\n\n"
+    "ONE element — these are single goals:\n"
+    "  [\"What is the total revenue by region?\"]\n"
+    "  [\"How many records exist per category?\"]\n"
+    "  [\"What is the average value per group?\"]\n"
+    "TWO elements — only when explicitly compound:\n"
     "  [\"What are total sales by region?\", \"Which region had the highest growth?\"]\n\n"
     "Respond with ONLY a JSON array of strings. No explanation, no markdown, no code fences."
 )
@@ -75,6 +74,13 @@ class PlanningAgent:
 
         try:
             raw = self._model._generate(_SYSTEM_PROMPT, user)
-            return _parse(raw, question)
+            result = _parse(raw, question)
+            # Collapse spurious splits: if no compound conjunction in the original
+            # question, it should never need more than one sub-query.
+            if len(result) > 1:
+                q_lower = question.lower()
+                if not any(c in q_lower for c in (" and ", " also ", " as well", " plus ")):
+                    return [question]
+            return result
         except Exception:
             return [question]

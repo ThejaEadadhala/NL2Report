@@ -1,0 +1,26 @@
+[
+  {
+    "index": 0,
+    "db": "m5",
+    "question": "What are the total sales by product category?",
+    "gold_sql": "SELECT cat_id, SUM(sales) AS total_sales FROM sales GROUP BY cat_id ORDER BY total_sales DESC",
+    "pred_sql": "SELECT T1.cat_id, SUM(T1.sales) AS total_sales \nFROM sales AS T1 \nGROUP BY T1.cat_id",
+    "match": true,
+    "valid": true,
+    "pred_error": null,
+    "gold_row_count": 3,
+    "pred_row_count": 3
+  },
+  {
+    "index": 1,
+    "db": "m5",
+    "question": "Which store had the highest total sales across all time?",
+    "gold_sql": "SELECT store_id, SUM(sales) AS total_sales FROM sales GROUP BY store_id ORDER BY total_sales DESC LIMIT 1",
+    "pred_sql": "SELECT T1.store_id FROM sales AS T1 GROUP BY T1.store_id ORDER BY SUM(T1.sales) DESC LIMIT 1",
+    "match": false,
+    "valid": true,
+    "pred_error": null,
+    "gold_row_count": 1,
+    "pred_row_count": 1
+  }
+]

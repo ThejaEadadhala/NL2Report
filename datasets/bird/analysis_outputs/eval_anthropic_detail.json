@@ -1,0 +1,122 @@
+[
+  {
+    "index": 0,
+    "db": "student_club",
+    "question": "How many members are enrolled in each college?",
+    "gold_sql": "SELECT T2.college, COUNT(*) AS num_members FROM member AS T1 JOIN major AS T2 ON T1.link_to_major = T2.major_id GROUP BY T2.college",
+    "pred_sql": "SELECT T2.college, COUNT(T1.member_id) AS member_count\nFROM member AS T1\nJOIN major AS T2 ON T1.link_to_major = T2.major_id\nGROUP BY T2.college",
+    "match": true,
+    "valid": true,
+    "pred_error": null,
+    "gold_row_count": 8,
+    "pred_row_count": 8
+  },
+  {
+    "index": 1,
+    "db": "student_club",
+    "question": "List the top 5 positions held by the most members.",
+    "gold_sql": "SELECT position FROM member GROUP BY position ORDER BY COUNT(*) DESC LIMIT 5",
+    "pred_sql": "SELECT position, COUNT(member_id) AS member_count\nFROM member\nGROUP BY position\nORDER BY member_count DESC\nLIMIT 5",
+    "match": false,
+    "valid": true,
+    "pred_error": null,
+    "gold_row_count": 5,
+    "pred_row_count": 5
+  },
+  {
+    "index": 2,
+    "db": "student_club",
+    "question": "How many members are there per department?",
+    "gold_sql": "SELECT COUNT(*) AS num_members, T2.department FROM member AS T1 JOIN major AS T2 ON T1.link_to_major = T2.major_id GROUP BY T2.department",
+    "pred_sql": "SELECT T2.department, COUNT(T1.member_id) AS member_count\nFROM member AS T1\nJOIN major AS T2 ON T1.link_to_major = T2.major_id\nGROUP BY T2.department",
+    "match": false,
+    "valid": true,
+    "pred_error": null,
+    "gold_row_count": 16,
+    "pred_row_count": 16
+  },
+  {
+    "index": 3,
+    "db": "student_club",
+    "question": "Which events have more than 5 attendees?",
+    "gold_sql": "SELECT T2.event_name FROM attendance AS T1 JOIN event AS T2 ON T1.link_to_event = T2.event_id GROUP BY T2.event_name HAVING COUNT(*) > 5",
+    "pred_sql": "SELECT link_to_event\nFROM attendance\nGROUP BY link_to_event\nHAVING COUNT(link_to_member) > 5",
+    "match": false,
+    "valid": true,
+    "pred_error": null,
+    "gold_row_count": 14,
+    "pred_row_count": 15
+  },
+  {
+    "index": 4,
+    "db": "human_resources",
+    "question": "How many employees work in each position?",
+    "gold_sql": "SELECT T2.positiontitle, COUNT(*) AS num_employees FROM employee AS T1 JOIN position AS T2 ON T1.positionID = T2.positionID GROUP BY T2.positiontitle",
+    "pred_sql": "SELECT p.positiontitle, COUNT(e.ssn) AS employee_count\nFROM position AS p\nLEFT JOIN employee AS e ON p.positionID = e.positionID\nGROUP BY p.positionID, p.positiontitle",
+    "match": true,
+    "valid": true,
+    "pred_error": null,
+    "gold_row_count": 4,
+    "pred_row_count": 4
+  },
+  {
+    "index": 5,
+    "db": "human_resources",
+    "question": "What is the total salary expenditure per position?",
+    "gold_sql": "SELECT T2.positiontitle, SUM(CAST(T1.salary AS REAL)) AS total_salary FROM employee AS T1 JOIN position AS T2 ON T1.positionID = T2.positionID GROUP BY T2.positiontitle ORDER BY total_salary DESC",
+    "pred_sql": "SELECT p.positiontitle, SUM(CAST(e.salary AS REAL)) AS total_salary_expenditure\nFROM employee AS e\nJOIN position AS p ON e.positionID = p.positionID\nGROUP BY p.positionID, p.positiontitle",
+    "match": true,
+    "valid": true,
+    "pred_error": null,
+    "gold_row_count": 4,
+    "pred_row_count": 4
+  },
+  {
+    "index": 6,
+    "db": "airline",
+    "question": "List the top 10 airports by number of flight departures.",
+    "gold_sql": "SELECT ORIGIN, COUNT(*) AS num_departures FROM Airlines GROUP BY ORIGIN ORDER BY num_departures DESC LIMIT 10",
+    "pred_sql": "SELECT ORIGIN, COUNT(*) AS num_departures\nFROM Airlines AS T1\nGROUP BY ORIGIN\nORDER BY num_departures DESC\nLIMIT 10",
+    "match": true,
+    "valid": true,
+    "pred_error": null,
+    "gold_row_count": 10,
+    "pred_row_count": 10
+  },
+  {
+    "index": 7,
+    "db": "airline",
+    "question": "Which airlines had the highest average departure delay?",
+    "gold_sql": "SELECT T2.Description, ROUND(AVG(T1.DEP_DELAY), 2) AS avg_delay FROM Airlines AS T1 JOIN \"Air Carriers\" AS T2 ON T1.OP_CARRIER_AIRLINE_ID = T2.Code GROUP BY T2.Description ORDER BY avg_delay DESC LIMIT 5",
+    "pred_sql": "SELECT T2.Description, AVG(T1.DEP_DELAY) AS avg_dep_delay\nFROM Airlines AS T1\nJOIN `Air Carriers` AS T2 ON T1.OP_CARRIER_AIRLINE_ID = T2.Code\nGROUP BY T1.OP_CARRIER_AIRLINE_ID, T2.Description\nORDER BY avg_dep_delay DESC\nLIMIT 1",
+    "match": false,
+    "valid": true,
+    "pred_error": null,
+    "gold_row_count": 5,
+    "pred_row_count": 1
+  },
+  {
+    "index": 8,
+    "db": "financial",
+    "question": "How many transactions are there for each operation type in the trans table?",
+    "gold_sql": "SELECT operation, COUNT(*) AS num_transactions FROM trans GROUP BY operation ORDER BY num_transactions DESC",
+    "pred_sql": "SELECT operation, COUNT(*) AS transaction_count\nFROM trans\nGROUP BY operation",
+    "match": true,
+    "valid": true,
+    "pred_error": null,
+    "gold_row_count": 6,
+    "pred_row_count": 6
+  },
+  {
+    "index": 9,
+    "db": "superstore",
+    "question": "What is the total revenue generated per product category?",
+    "gold_sql": "SELECT T2.Category, ROUND(SUM(T1.Sales), 2) AS total_revenue FROM central_superstore AS T1 JOIN product AS T2 ON T1.\"Product ID\" = T2.\"Product ID\" GROUP BY T2.Category ORDER BY total_revenue DESC",
+    "pred_sql": "SELECT p.Category, SUM(s.Sales) AS total_revenue\nFROM (\n    SELECT `Product ID`, Region, Sales FROM central_superstore\n    UNION ALL\n    SELECT `Product ID`, Region, Sales FROM east_superstore\n    UNION ALL\n    SELECT `Product ID`, Region, Sales FROM south_superstore\n    UNION ALL\n    SELECT `Product ID`, Region, Sales FROM west_superstore\n) AS s\nJOIN product AS p ON s.`Product ID` = p.`Product ID` AND s.Region = p.Region\nGROUP BY p.Category",
+    "match": false,
+    "valid": true,
+    "pred_error": null,
+    "gold_row_count": 3,
+    "pred_row_count": 3
+  }
+]

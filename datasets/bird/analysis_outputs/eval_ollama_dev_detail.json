@@ -1,0 +1,62 @@
+[
+  {
+    "index": 0,
+    "db": "student_club",
+    "question": "How many members are enrolled in each college?",
+    "gold_sql": "SELECT T2.college, COUNT(*) AS num_members FROM member AS T1 JOIN major AS T2 ON T1.link_to_major = T2.major_id GROUP BY T2.college",
+    "pred_sql": "SELECT T1.college, COUNT(T1.member_id) FROM member AS T1 GROUP BY T1.college",
+    "match": false,
+    "valid": false,
+    "pred_error": "no such column: T1.college",
+    "gold_row_count": 8,
+    "pred_row_count": 0
+  },
+  {
+    "index": 1,
+    "db": "student_club",
+    "question": "List the top 5 positions held by the most members.",
+    "gold_sql": "SELECT position FROM member GROUP BY position ORDER BY COUNT(*) DESC LIMIT 5",
+    "pred_sql": "SELECT T1.position FROM member AS T1 GROUP BY T1.position ORDER BY COUNT(T1.member_id) DESC LIMIT 5",
+    "match": true,
+    "valid": true,
+    "pred_error": null,
+    "gold_row_count": 5,
+    "pred_row_count": 5
+  },
+  {
+    "index": 2,
+    "db": "student_club",
+    "question": "How many members are there per department?",
+    "gold_sql": "SELECT T2.department, COUNT(*) AS num_members FROM member AS T1 JOIN major AS T2 ON T1.link_to_major = T2.major_id GROUP BY T2.department",
+    "pred_sql": "SELECT COUNT(T1.member_id) , T2.department FROM member AS T1 INNER JOIN major AS T2 ON T1.link_to_major = T2.major_id GROUP BY T2.department",
+    "match": false,
+    "valid": true,
+    "pred_error": null,
+    "gold_row_count": 16,
+    "pred_row_count": 16
+  },
+  {
+    "index": 3,
+    "db": "student_club",
+    "question": "Which events have more than 5 attendees?",
+    "gold_sql": "SELECT T2.event_name FROM attendance AS T1 JOIN event AS T2 ON T1.link_to_event = T2.event_id GROUP BY T2.event_name HAVING COUNT(*) > 5",
+    "pred_sql": "SELECT event_name \nFROM event AS T1 \nJOIN attendance AS T2 ON T1.event_id = T2.link_to_event \nGROUP BY event_name \nHAVING COUNT(link_to_member) > 5",
+    "match": true,
+    "valid": true,
+    "pred_error": null,
+    "gold_row_count": 14,
+    "pred_row_count": 14
+  },
+  {
+    "index": 8,
+    "db": "financial",
+    "question": "How many transactions were made per payment operation type?",
+    "gold_sql": "SELECT operation, COUNT(*) AS num_transactions FROM trans GROUP BY operation ORDER BY num_transactions DESC",
+    "pred_sql": "SELECT COUNT(*) , `type` FROM trans GROUP BY `type`",
+    "match": false,
+    "valid": true,
+    "pred_error": null,
+    "gold_row_count": 6,
+    "pred_row_count": 3
+  }
+]

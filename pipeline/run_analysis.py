@@ -22,6 +22,8 @@ import json
 import sqlite3
 import sys
 from pathlib import Path
+from dotenv import load_dotenv
+load_dotenv()
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
@@ -39,8 +41,11 @@ def get_model(model_name: str):
     elif model_name == "anthropic":
         from models.anthropic_model import AnthropicModel
         return AnthropicModel()
+    elif model_name == "gemini":
+        from models.gemini_model import GeminiModel
+        return GeminiModel()
     else:
-        raise ValueError(f"Unknown model '{model_name}'. Choose: ollama | openai | anthropic")
+        raise ValueError(f"Unknown model '{model_name}'. Choose: ollama | openai | anthropic | gemini")
 
 
 def load_schema(dataset: str, db_name: str) -> dict:
@@ -103,9 +108,12 @@ def run(question: str, dataset: str, db_name: str, split: str, model_name: str) 
         sql = model.generate_sql(subtasks[0], schema)
         print(f"\nSQL:\n{sql}\n")
         print("Executing...")
-        columns, rows = execute_sql(db_path, sql)
-        print(f"\nResults ({len(rows)} rows):")
-        print_results(columns, rows)
+        try:
+            columns, rows = execute_sql(db_path, sql)
+            print(f"\nResults ({len(rows)} rows):")
+            print_results(columns, rows)
+        except Exception as e:
+            print(f"Error: {e}")
     else:
         # Multi-part question — print plan then execute each subtask
         print(f"Plan ({len(subtasks)} subtasks):")

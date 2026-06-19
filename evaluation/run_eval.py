@@ -17,16 +17,18 @@ import json
 import sys
 import time
 from pathlib import Path
+from dotenv import load_dotenv
+load_dotenv()
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from evaluation.sql_evaluator import evaluate_dataset
 
 
-def load_questions(dataset: str, split: str | None) -> list[dict]:
-    # With split: datasets/bird/dev.json
-    # Without split: datasets/tpch/questions.json
-    if split:
+def load_questions(dataset: str, split: str | None, questions_file: str | None = None) -> list[dict]:
+    if questions_file:
+        path = Path("datasets") / dataset / questions_file
+    elif split:
         path = Path("datasets") / dataset / f"{split}.json"
     else:
         path = Path("datasets") / dataset / "questions.json"
@@ -66,8 +68,11 @@ def get_model(model_name: str):
     elif model_name == "anthropic":
         from models.anthropic_model import AnthropicModel
         return AnthropicModel()
+    elif model_name == "gemini":
+        from models.gemini_model import GeminiModel
+        return GeminiModel()
     else:
-        raise ValueError(f"Unknown model: {model_name}. Choose from: ollama, openai, anthropic")
+        raise ValueError(f"Unknown model: {model_name}. Choose from: ollama, openai, anthropic, gemini")
 
 
 def print_summary(results: dict, model_name: str, dataset: str, split: str | None, elapsed: float) -> None:
@@ -93,15 +98,17 @@ def main():
     parser.add_argument("--split", default=None, help="Split: dev | train — omit for datasets with no split (e.g. tpch)")
     parser.add_argument("--model", default="ollama", help="Model: ollama | openai | anthropic (default: ollama)")
     parser.add_argument("--limit", type=int, default=None, help="Limit number of questions for quick tests")
+    parser.add_argument("--questions", default=None, help="Custom questions filename (e.g. sample_questions.json)")
     args = parser.parse_args()
 
-    # Default split for BIRD
-    if args.dataset == "bird" and args.split is None:
+    # Default split for BIRD — but not when using a custom questions file
+    # (custom file may reference databases from both dev and train)
+    if args.dataset == "bird" and args.split is None and args.questions is None:
         args.split = "dev"
 
-    label = f"{args.split}.json" if args.split else "questions.json"
+    label = args.questions or (f"{args.split}.json" if args.split else "questions.json")
     print(f"\nLoading {label}...")
-    questions = load_questions(args.dataset, args.split)
+    questions = load_questions(args.dataset, args.split, args.questions)
     print(f"Loaded {len(questions)} questions")
 
     if args.limit:

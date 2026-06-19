@@ -1,11 +1,15 @@
-# API clients
+# HTTP / API clients
 requests>=2.31.0
 openai>=1.30.0
 anthropic>=0.28.0
+google-genai>=1.0.0
 
-# Evaluation
+# Data loading / setup scripts
+duckdb>=0.10.0
+
+# Evaluation metrics
 nltk>=3.8.0
 rouge-score>=0.1.2
 
-# Environment
+# Environment / config
 python-dotenv>=1.0.0

@@ -26,6 +26,7 @@ class BaseModel(ABC):
         for table in schema["tables"]:
             cols = ", ".join(
                 f"{self._quote(c['name'])} {c['type']}{'(PK)' if c['pk'] else ''}"
+                + (f" [{c['description']}]" if c.get("description") else "")
                 for c in table["columns"]
             )
             lines.append(f"Table {table['name']}: {cols}")

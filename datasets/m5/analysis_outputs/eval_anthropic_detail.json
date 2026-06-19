@@ -1,0 +1,38 @@
+[
+  {
+    "index": 0,
+    "db": "m5",
+    "question": "What are the total sales by product category?",
+    "gold_sql": "SELECT cat_id, SUM(sales) AS total_sales FROM sales GROUP BY cat_id ORDER BY total_sales DESC",
+    "pred_sql": "SELECT cat_id, SUM(sales) AS total_sales\nFROM sales\nGROUP BY cat_id\nORDER BY total_sales DESC",
+    "match": true,
+    "valid": true,
+    "pred_error": null,
+    "gold_row_count": 3,
+    "pred_row_count": 3
+  },
+  {
+    "index": 1,
+    "db": "m5",
+    "question": "Which store had the highest total sales across all time?",
+    "gold_sql": "SELECT store_id, SUM(sales) AS total_sales FROM sales GROUP BY store_id ORDER BY total_sales DESC LIMIT 1",
+    "pred_sql": "SELECT store_id, SUM(sales) AS total_sales\nFROM sales\nGROUP BY store_id\nORDER BY total_sales DESC\nLIMIT 1",
+    "match": true,
+    "valid": true,
+    "pred_error": null,
+    "gold_row_count": 1,
+    "pred_row_count": 1
+  },
+  {
+    "index": 2,
+    "db": "m5",
+    "question": "What are the total sales per state?",
+    "gold_sql": "SELECT state_id, SUM(sales) AS total_sales FROM sales GROUP BY state_id ORDER BY total_sales DESC",
+    "pred_sql": "SELECT state_id, SUM(sales) AS total_sales\nFROM sales AS T1\nGROUP BY state_id",
+    "match": true,
+    "valid": true,
+    "pred_error": null,
+    "gold_row_count": 3,
+    "pred_row_count": 3
+  }
+]
