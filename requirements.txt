@@ -6,6 +6,7 @@ google-genai>=1.0.0
 
 # Data loading / setup scripts
 duckdb>=0.10.0
+mysql-connector-python>=8.4.0
 
 # Evaluation metrics
 nltk>=3.8.0

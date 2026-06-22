@@ -22,9 +22,10 @@ class OllamaModel(BaseModel):
 
     def generate_sql(self, question: str, schema: dict) -> str:
         schema_text = self.format_schema(schema)
+        dialect = "MySQL" if schema.get("engine") == "mysql" else "SQLite"
         system = (
-            "You are an expert SQLite assistant.\n"
-            "Given the database schema and a natural language question, return ONLY a valid SQLite SQL query.\n\n"
+            f"You are an expert {dialect} assistant.\n"
+            f"Given the database schema and a natural language question, return ONLY a valid {dialect} SQL query.\n\n"
             "STRICT RULES — violating any rule produces invalid SQL:\n"
             "1. NEVER use the database name as a table name. Only use the exact table names listed in the schema.\n"
             "2. NEVER invent or guess column names. Only use column names that are explicitly listed in the schema.\n"
@@ -38,14 +39,13 @@ class OllamaModel(BaseModel):
             "7. Read the question carefully. Make sure your SELECT includes ALL columns the question asks for. Make sure GROUP BY matches exactly what the question wants to group by.\n"
             "8. Return ONLY the raw SQL query. No explanation, no markdown, no code fences."
         )
-        db_name = schema.get("database", "")
+        db_name = schema.get("database") or schema.get("db_id", "")
         user = (
             f"{schema_text}\n\n"
             f"Question: {question}\n\n"
             f"IMPORTANT: Write plain table names only. NEVER prefix with the database name. "
             f"Wrong: FROM {db_name}.sales — Correct: FROM sales. "
             f"Wrong: FROM {db_name}.calendar — Correct: FROM calendar. "
-            "SQLite does not support schema-prefixed table names.\n"
             "SQL:"
         )
         raw = self._generate(system, user)
