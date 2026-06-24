@@ -24,9 +24,10 @@ class AnthropicModel(BaseModel):
 
     def generate_sql(self, question: str, schema: dict) -> str:
         schema_text = self.format_schema(schema)
+        dialect = "MySQL" if schema.get("engine") == "mysql" else "SQLite"
         system = (
-            "You are an expert SQLite assistant. "
-            "Given a database schema and a natural language question, return ONLY a valid SQLite SQL query.\n\n"
+            f"You are an expert {dialect} assistant. "
+            f"Given a database schema and a natural language question, return ONLY a valid {dialect} SQL query.\n\n"
             "STRICT RULES:\n"
             "1. Use ONLY the exact table names listed in the schema. Never use the database name as a table name.\n"
             "2. Use ONLY column names explicitly listed in the schema. Never invent column names.\n"

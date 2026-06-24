@@ -19,16 +19,31 @@ Usage:
 
 import argparse
 import json
+import os
+import re
 import sqlite3
 import sys
+from datetime import date, datetime
+from decimal import Decimal
 from pathlib import Path
-from dotenv import load_dotenv
-load_dotenv()
+
+try:
+    from dotenv import load_dotenv
+except ImportError:
+    load_dotenv = None
+
+if load_dotenv:
+    load_dotenv()
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from config import schema_path, DEFAULT_MODEL
 from pipeline.planning_agent import PlanningAgent
+
+FORBIDDEN_SQL_PATTERN = re.compile(
+    r"\b(ALTER|ATTACH|CREATE|DELETE|DETACH|DROP|INSERT|PRAGMA|REINDEX|REPLACE|UPDATE|VACUUM)\b",
+    re.IGNORECASE,
+)
 
 
 def get_model(model_name: str):
@@ -64,7 +79,53 @@ def find_db_path(dataset: str, db_name: str) -> Path:
     return matches[0]
 
 
-def execute_sql(db_path: Path, sql: str) -> tuple[list, list]:
+def schema_engine(schema: dict) -> str:
+    return schema.get("engine", "sqlite")
+
+
+def find_database_ref(dataset: str, db_name: str, schema: dict) -> Path | str:
+    if schema_engine(schema) == "mysql":
+        return schema.get("mysql_database") or schema.get("db_id") or db_name
+    return find_db_path(dataset, db_name)
+
+
+def mysql_connect(database: str):
+    try:
+        import mysql.connector
+    except ImportError as exc:
+        raise RuntimeError(
+            "Missing dependency `mysql-connector-python`. Install requirements or run: "
+            "python3 -m pip install mysql-connector-python"
+        ) from exc
+
+    return mysql.connector.connect(
+        host=os.getenv("MYSQL_HOST", "127.0.0.1"),
+        port=int(os.getenv("MYSQL_PORT", "3306")),
+        user=os.getenv("MYSQL_USER", "root"),
+        password=os.getenv("MYSQL_PASSWORD", ""),
+        database=database,
+    )
+
+
+def normalize_value(value):
+    if isinstance(value, Decimal):
+        return float(value)
+    if isinstance(value, (date, datetime)):
+        return value.isoformat()
+    return value
+
+
+def validate_read_only_sql(sql: str) -> str:
+    stripped = sql.strip().rstrip(";")
+    first_word = stripped.split(None, 1)[0].upper() if stripped else ""
+    if first_word not in {"SELECT", "WITH"}:
+        raise ValueError("Only SELECT or WITH statements are allowed.")
+    if ";" in stripped or FORBIDDEN_SQL_PATTERN.search(stripped):
+        raise ValueError("Only one read-only SQL statement is allowed.")
+    return stripped
+
+
+def execute_sqlite(db_path: Path, sql: str) -> tuple[list, list]:
     conn = sqlite3.connect(db_path)
     conn.row_factory = sqlite3.Row
     cursor = conn.cursor()
@@ -73,6 +134,27 @@ def execute_sql(db_path: Path, sql: str) -> tuple[list, list]:
     columns = [desc[0] for desc in cursor.description] if cursor.description else []
     conn.close()
     return columns, [list(r) for r in rows]
+
+
+def execute_mysql(database: str, sql: str) -> tuple[list, list]:
+    conn = mysql_connect(database)
+    cursor = conn.cursor()
+    try:
+        cursor.execute("SET SESSION TRANSACTION READ ONLY")
+        cursor.execute(sql)
+        rows = cursor.fetchall()
+        columns = [desc[0] for desc in cursor.description] if cursor.description else []
+        return columns, [[normalize_value(v) for v in row] for row in rows]
+    finally:
+        cursor.close()
+        conn.close()
+
+
+def execute_sql(database_ref: Path | str, sql: str, engine: str) -> tuple[list, list]:
+    sql = validate_read_only_sql(sql)
+    if engine == "mysql":
+        return execute_mysql(str(database_ref), sql)
+    return execute_sqlite(Path(database_ref), sql)
 
 
 def print_results(columns: list, rows: list) -> None:
@@ -97,7 +179,8 @@ def run(question: str, dataset: str, db_name: str, split: str, model_name: str) 
 
     schema  = load_schema(dataset, db_name)
     model   = get_model(model_name)
-    db_path = find_db_path(dataset, db_name)
+    engine = schema_engine(schema)
+    database_ref = find_database_ref(dataset, db_name, schema)
 
     print("Planning...")
     subtasks = PlanningAgent(model).plan(question, schema)
@@ -109,7 +192,7 @@ def run(question: str, dataset: str, db_name: str, split: str, model_name: str) 
         print(f"\nSQL:\n{sql}\n")
         print("Executing...")
         try:
-            columns, rows = execute_sql(db_path, sql)
+            columns, rows = execute_sql(database_ref, sql, engine)
             print(f"\nResults ({len(rows)} rows):")
             print_results(columns, rows)
         except Exception as e:
@@ -127,7 +210,7 @@ def run(question: str, dataset: str, db_name: str, split: str, model_name: str) 
             print(f"\nSQL:\n{sql}\n")
             print("Executing...")
             try:
-                columns, rows = execute_sql(db_path, sql)
+                columns, rows = execute_sql(database_ref, sql, engine)
                 print(f"\nResults ({len(rows)} rows):")
                 print_results(columns, rows)
             except Exception as e:

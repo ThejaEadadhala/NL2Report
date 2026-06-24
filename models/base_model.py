@@ -15,24 +15,33 @@ class BaseModel(ABC):
 
     @staticmethod
     def _quote(name: str) -> str:
-        """Wrap column name in backticks if it contains spaces, parentheses, or %."""
-        if any(ch in name for ch in (" ", "(", ")", "%")):
+        """Wrap identifiers in backticks when they need quoting."""
+        if any(ch in name for ch in (" ", "(", ")", "%", "-")):
             return f"`{name}`"
         return name
 
     def format_schema(self, schema: dict) -> str:
         """Convert a schema dict (from extract_schema.py) into a compact text representation."""
-        lines = [f"Database: {schema['database']}\n"]
+        database = schema.get("database") or schema.get("db_id") or schema.get("mysql_database")
+        engine = schema.get("engine", "sqlite")
+        dialect = "MySQL" if engine == "mysql" else "SQLite"
+        lines = [f"Database: {database}", f"Dialect: {dialect}\n"]
         for table in schema["tables"]:
             cols = ", ".join(
-                f"{self._quote(c['name'])} {c['type']}{'(PK)' if c['pk'] else ''}"
-                + (f" [{c['description']}]" if c.get("description") else "")
+                f"{self._quote(c['name'])} {c.get('type', '')}"
+                + ("(PK)" if c.get("pk") or c.get("primary_key_position") else "")
+                + (
+                    f" [{c.get('description') or c.get('beaver_description', {}).get('description')}]"
+                    if c.get("description") or c.get("beaver_description", {}).get("description")
+                    else ""
+                )
                 for c in table["columns"]
             )
             lines.append(f"Table {table['name']}: {cols}")
             if table["foreign_keys"]:
                 fks = ", ".join(
-                    f"{self._quote(fk['from'])} -> {fk['to_table']}.{self._quote(fk['to_col'])}"
+                    f"{self._quote(fk.get('from') or fk.get('from_column'))} -> "
+                    f"{fk['to_table']}.{self._quote(fk.get('to_col') or fk.get('to_column'))}"
                     for fk in table["foreign_keys"]
                 )
                 lines.append(f"  FK: {fks}")
