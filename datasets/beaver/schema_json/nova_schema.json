@@ -8,7 +8,7 @@
       "name": "agent_builds",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 0,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -171,7 +171,7 @@
       "name": "aggregate_hosts",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 584,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -290,7 +290,7 @@
       "name": "aggregate_metadata",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 38,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -423,7 +423,7 @@
       "name": "aggregates",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 21,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -530,7 +530,7 @@
       "name": "all_instances",
       "type": "view",
       "create_sql": "",
-      "row_count": 717814,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -1281,7 +1281,7 @@
       "name": "allocations",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 0,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -1360,7 +1360,7 @@
       "name": "block_device_mapping",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 16798,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -1661,7 +1661,7 @@
       "name": "bw_usage_cache",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 0,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -1852,7 +1852,7 @@
       "name": "cells",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 0,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -2015,7 +2015,7 @@
       "name": "certificates",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 127,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -2136,7 +2136,7 @@
       "name": "compute_nodes",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 139,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -2607,7 +2607,7 @@
       "name": "console_pools",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 0,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -2784,7 +2784,7 @@
       "name": "consoles",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 0,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -2956,7 +2956,7 @@
       "name": "dns_domains",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 0,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -3077,7 +3077,7 @@
       "name": "fixed_ips",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 63724,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -3280,7 +3280,7 @@
       "name": "floating_ips",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 8190,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -3457,7 +3457,7 @@
       "name": "instance_actions",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 27472,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -3660,7 +3660,7 @@
       "name": "instance_actions_events",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 41690,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -3863,7 +3863,7 @@
       "name": "instance_extra",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 7253,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -4038,7 +4038,7 @@
       "name": "instance_faults",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 5624,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -4199,7 +4199,7 @@
       "name": "instance_group_member",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 4085,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -4318,7 +4318,7 @@
       "name": "instance_group_policy",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 228,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -4437,7 +4437,7 @@
       "name": "instance_groups",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 230,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -4572,7 +4572,7 @@
       "name": "instance_id_mappings",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 277653,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -4665,7 +4665,7 @@
       "name": "instance_info_caches",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 7226,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -4784,7 +4784,7 @@
       "name": "instance_metadata",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 36,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -4917,7 +4917,7 @@
       "name": "instance_system_metadata",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 76723,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -5050,7 +5050,7 @@
       "name": "instance_type_extra_specs",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 135,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -5183,7 +5183,7 @@
       "name": "instance_type_projects",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 232,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -5302,7 +5302,7 @@
       "name": "instance_types",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 190,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -5535,7 +5535,7 @@
       "name": "instances",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 7922,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -6286,7 +6286,7 @@
       "name": "inventories",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 0,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -6421,7 +6421,7 @@
       "name": "key_pairs",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 3132,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -6570,7 +6570,7 @@
       "name": "migrate_version",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 1,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -6621,7 +6621,7 @@
       "name": "migrations",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 3555,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -6950,7 +6950,7 @@
       "name": "networks",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 1,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -7421,7 +7421,7 @@
       "name": "pci_devices",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 16,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -7694,7 +7694,7 @@
       "name": "project_user_quotas",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 0,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -7829,7 +7829,7 @@
       "name": "provider_fw_rules",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 0,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -7964,7 +7964,7 @@
       "name": "quota_classes",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 13,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -8085,7 +8085,7 @@
       "name": "quota_usages",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 3619,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -8248,7 +8248,7 @@
       "name": "quotas",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 3579,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -8369,7 +8369,7 @@
       "name": "reservations",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 42003,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -8558,7 +8558,7 @@
       "name": "resource_provider_aggregates",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 0,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -8595,7 +8595,7 @@
       "name": "resource_providers",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 0,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -8674,7 +8674,7 @@
       "name": "s3_images",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 2419,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -8767,7 +8767,7 @@
       "name": "security_group_default_rules",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 0,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -8902,7 +8902,7 @@
       "name": "security_group_instance_association",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 0,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -9032,7 +9032,7 @@
       "name": "security_group_rules",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 152,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -9218,7 +9218,7 @@
       "name": "security_groups",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 601,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -9353,7 +9353,7 @@
       "name": "services",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 149,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -9558,7 +9558,7 @@
       "name": "shadow_agent_builds",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 0,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -9721,7 +9721,7 @@
       "name": "shadow_aggregate_hosts",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 516,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -9828,7 +9828,7 @@
       "name": "shadow_aggregate_metadata",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 4,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -9949,7 +9949,7 @@
       "name": "shadow_aggregates",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 0,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -10056,7 +10056,7 @@
       "name": "shadow_block_device_mapping",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 212755,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -10345,7 +10345,7 @@
       "name": "shadow_bw_usage_cache",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 0,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -10536,7 +10536,7 @@
       "name": "shadow_cells",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 0,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -10699,7 +10699,7 @@
       "name": "shadow_certificates",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 0,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -10820,7 +10820,7 @@
       "name": "shadow_compute_nodes",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 3,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -11291,7 +11291,7 @@
       "name": "shadow_console_pools",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 0,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -11468,7 +11468,7 @@
       "name": "shadow_consoles",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 0,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -11617,7 +11617,7 @@
       "name": "shadow_dns_domains",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 0,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -11738,7 +11738,7 @@
       "name": "shadow_fixed_ips",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 15,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -11929,7 +11929,7 @@
       "name": "shadow_floating_ips",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 0,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -12106,7 +12106,7 @@
       "name": "shadow_instance_actions",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 523265,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -12297,7 +12297,7 @@
       "name": "shadow_instance_actions_events",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 663442,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -12488,7 +12488,7 @@
       "name": "shadow_instance_extra",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 179772,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -12651,7 +12651,7 @@
       "name": "shadow_instance_faults",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 201285,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -12800,7 +12800,7 @@
       "name": "shadow_instance_group_member",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 84,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -12907,7 +12907,7 @@
       "name": "shadow_instance_group_policy",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 2,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -13014,7 +13014,7 @@
       "name": "shadow_instance_groups",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 0,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -13149,7 +13149,7 @@
       "name": "shadow_instance_id_mappings",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 0,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -13242,7 +13242,7 @@
       "name": "shadow_instance_info_caches",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 263732,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -13349,7 +13349,7 @@
       "name": "shadow_instance_metadata",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 1554,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -13470,7 +13470,7 @@
       "name": "shadow_instance_system_metadata",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 4879813,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -13591,7 +13591,7 @@
       "name": "shadow_instance_type_extra_specs",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 53,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -13712,7 +13712,7 @@
       "name": "shadow_instance_type_projects",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 104,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -13819,7 +13819,7 @@
       "name": "shadow_instance_types",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 0,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -14052,7 +14052,7 @@
       "name": "shadow_instances",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 709892,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -14803,7 +14803,7 @@
       "name": "shadow_key_pairs",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 51,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -14952,7 +14952,7 @@
       "name": "shadow_migrate_version",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 0,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -15003,7 +15003,7 @@
       "name": "shadow_migrations",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 2112,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -15320,7 +15320,7 @@
       "name": "shadow_networks",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 0,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -15791,7 +15791,7 @@
       "name": "shadow_pci_devices",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 8,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -16052,7 +16052,7 @@
       "name": "shadow_project_user_quotas",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 0,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -16187,7 +16187,7 @@
       "name": "shadow_provider_fw_rules",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 0,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -16322,7 +16322,7 @@
       "name": "shadow_quota_classes",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 0,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -16443,7 +16443,7 @@
       "name": "shadow_quota_usages",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 0,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -16606,7 +16606,7 @@
       "name": "shadow_quotas",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 0,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -16727,7 +16727,7 @@
       "name": "shadow_reservations",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 1297676,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -16904,7 +16904,7 @@
       "name": "shadow_s3_images",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 0,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -16997,7 +16997,7 @@
       "name": "shadow_security_group_default_rules",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 0,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -17132,7 +17132,7 @@
       "name": "shadow_security_group_instance_association",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 0,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -17239,7 +17239,7 @@
       "name": "shadow_security_group_rules",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 40,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -17402,7 +17402,7 @@
       "name": "shadow_security_groups",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 0,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -17537,7 +17537,7 @@
       "name": "shadow_services",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 110,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -17742,7 +17742,7 @@
       "name": "shadow_snapshot_id_mappings",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 0,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -17835,7 +17835,7 @@
       "name": "shadow_snapshots",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 1,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -18040,7 +18040,7 @@
       "name": "shadow_task_log",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 0,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -18231,7 +18231,7 @@
       "name": "shadow_virtual_interfaces",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 742,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -18366,7 +18366,7 @@
       "name": "shadow_volume_id_mappings",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 0,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -18459,7 +18459,7 @@
       "name": "shadow_volume_usage_cache",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 0,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -18748,7 +18748,7 @@
       "name": "snapshot_id_mappings",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 1,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -18841,7 +18841,7 @@
       "name": "snapshots",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 1,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -19046,7 +19046,7 @@
       "name": "tags",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 0,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -19083,7 +19083,7 @@
       "name": "task_log",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 0,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -19274,7 +19274,7 @@
       "name": "virtual_interfaces",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 0,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -19421,7 +19421,7 @@
       "name": "volume_id_mappings",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 65,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -19514,7 +19514,7 @@
       "name": "volume_usage_cache",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 0,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,

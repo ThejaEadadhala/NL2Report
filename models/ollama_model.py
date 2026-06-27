@@ -15,7 +15,7 @@ class OllamaModel(BaseModel):
             OLLAMA_URL,
             json={"model": self.model, "prompt": prompt, "stream": False,
                   "options": {"temperature": 0}},
-            timeout=120,
+            timeout=300,
         )
         response.raise_for_status()
         return response.json()["response"].strip()

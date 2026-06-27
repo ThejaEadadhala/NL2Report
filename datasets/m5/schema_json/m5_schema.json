@@ -161,37 +161,37 @@
           "name": "id",
           "type": "VARCHAR",
           "pk": false,
-          "description": "Unique item-store identifier"
+          "description": "Unique item-store identifier (e.g. HOBBIES_1_001_CA_1_evaluation)"
         },
         {
           "name": "item_id",
           "type": "VARCHAR",
           "pk": false,
-          "description": "Item identifier"
+          "description": "Item identifier (e.g. HOBBIES_1_001)"
         },
         {
           "name": "dept_id",
           "type": "VARCHAR",
           "pk": false,
-          "description": "Department identifier"
+          "description": "Department identifier (HOBBIES_1, FOODS_3, HOUSEHOLD_2, etc.)"
         },
         {
           "name": "cat_id",
           "type": "VARCHAR",
           "pk": false,
-          "description": "Category identifier"
+          "description": "Category identifier (HOBBIES, FOODS, HOUSEHOLD)"
         },
         {
           "name": "store_id",
           "type": "VARCHAR",
           "pk": false,
-          "description": "Store identifier"
+          "description": "Store identifier (CA_1, TX_2, WI_3, etc.)"
         },
         {
           "name": "state_id",
           "type": "VARCHAR",
           "pk": false,
-          "description": "State identifier"
+          "description": "State identifier (CA=California, TX=Texas, WI=Wisconsin)"
         },
         {
           "name": "d",

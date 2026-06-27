@@ -1,0 +1,286 @@
+"""
+batch_eval.py
+Batch evaluation pipeline: planning → SQL generation → execution → comparison.
+
+Resumes from existing output file if interrupted. Saves after every question.
+
+Usage:
+    python pipeline/batch_eval.py --dataset tpch --model ollama --questions datasets/tpch/tpch_questions.json
+    python pipeline/batch_eval.py --dataset bird --model anthropic --questions datasets/bird/sample_questions.json
+    python pipeline/batch_eval.py --dataset tpch --model anthropic --questions datasets/tpch/tpch_questions.json --output results/tpch_anthropic.json
+"""
+
+import argparse
+import json
+import os
+import sqlite3
+import sys
+import time
+from concurrent.futures import ThreadPoolExecutor, TimeoutError as FuturesTimeoutError
+from pathlib import Path
+
+try:
+    from dotenv import load_dotenv
+except ImportError:
+    load_dotenv = None
+
+if load_dotenv:
+    load_dotenv()
+
+sys.path.insert(0, str(Path(__file__).parent.parent))
+
+from config import DEFAULT_MODEL
+from pipeline.planning_agent import PlanningAgent
+from pipeline.run_analysis import get_model, load_schema, schema_engine, find_database_ref, execute_sql
+from pipeline.vector_filter import apply_vector_filter
+
+QUERY_TIMEOUT = 300
+
+
+def load_questions(path: Path) -> list[dict]:
+    """Load questions JSON. Accepts both db_id/SQL and db/gold_sql field names."""
+    items = json.loads(path.read_text(encoding="utf-8"))
+    normalized = []
+    for i, item in enumerate(items):
+        normalized.append({
+            "index": item.get("index", i),
+            "db": item.get("db") or item.get("db_id"),
+            "question": item["question"],
+            "gold_sql": item.get("gold_sql") or item.get("SQL"),
+        })
+    return normalized
+
+
+def load_existing_results(output_path: Path) -> dict[int, dict]:
+    if not output_path.exists():
+        return {}
+    try:
+        results = json.loads(output_path.read_text(encoding="utf-8"))
+        return {r["index"]: r for r in results}
+    except Exception:
+        return {}
+
+
+def save_results(results: list[dict], output_path: Path) -> None:
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    output_path.write_text(json.dumps(results, indent=2, ensure_ascii=False) + "\n")
+
+
+def _execute_raw(db_ref, sql: str, engine: str) -> list[tuple]:
+    """Execute SQL without read-only validation (used for trusted gold SQL)."""
+    if engine == "mysql":
+        import mysql.connector
+        conn = mysql.connector.connect(
+            host=os.getenv("MYSQL_HOST", "127.0.0.1"),
+            port=int(os.getenv("MYSQL_PORT", "3306")),
+            user=os.getenv("MYSQL_USER", "root"),
+            password=os.getenv("MYSQL_PASSWORD", ""),
+            database=str(db_ref),
+        )
+        cursor = conn.cursor()
+        try:
+            cursor.execute(sql)
+            return list(cursor.fetchall())
+        finally:
+            cursor.close()
+            conn.close()
+    else:
+        conn = sqlite3.connect(str(db_ref))
+        try:
+            cursor = conn.cursor()
+            cursor.execute(sql)
+            return cursor.fetchall()
+        finally:
+            conn.close()
+
+
+def rows_match(gold_rows: list, pred_rows: list) -> bool:
+    normalize = lambda rows: sorted([tuple(str(v) for v in row) for row in rows])
+    return normalize(gold_rows) == normalize(pred_rows)
+
+
+def process_question(item: dict, dataset: str, model, schema: dict, db_ref, engine: str) -> dict:
+    """Run full pipeline for one question. Returns result dict."""
+    question = item["question"]
+    gold_sql = item["gold_sql"]
+
+    subtasks = PlanningAgent(model).plan(question, schema)
+    pred_sql = model.generate_sql(subtasks[0], schema)
+
+    try:
+        gold_rows = _execute_raw(db_ref, gold_sql, engine)
+        gold_row_count = len(gold_rows)
+        gold_error = None
+    except Exception as e:
+        gold_rows = []
+        gold_row_count = 0
+        gold_error = str(e)
+
+    try:
+        _, pred_rows_raw = execute_sql(db_ref, pred_sql, engine)
+        pred_rows = [tuple(r) for r in pred_rows_raw]
+        pred_row_count = len(pred_rows)
+        pred_error = None
+        valid = True
+    except Exception as e:
+        pred_rows = []
+        pred_row_count = 0
+        pred_error = str(e)
+        valid = False
+
+    match = rows_match(gold_rows, pred_rows) if valid and gold_error is None else False
+
+    return {
+        "index": item["index"],
+        "db": item["db"],
+        "question": question,
+        "gold_sql": gold_sql,
+        "pred_sql": pred_sql,
+        "valid": valid,
+        "match": match,
+        "pred_error": pred_error,
+        "gold_row_count": gold_row_count,
+        "pred_row_count": pred_row_count,
+    }
+
+
+def run_with_timeout(fn, timeout: int) -> dict:
+    with ThreadPoolExecutor(max_workers=1) as executor:
+        future = executor.submit(fn)
+        try:
+            return future.result(timeout=timeout)
+        except FuturesTimeoutError:
+            raise TimeoutError(f"timed out after {timeout}s")
+
+
+def print_live(i: int, total: int, result: dict, correct: int, valid_count: int) -> None:
+    status = "MATCH" if result["match"] else ("VALID" if result["valid"] else "ERROR")
+    acc = correct / (i + 1) * 100
+    print(
+        f"  [{i+1:>3}/{total}] {status:<5}  "
+        f"gold={result['gold_row_count']} pred={result['pred_row_count']}  "
+        f"running EX={acc:.1f}%  — {result['question'][:60]}"
+    )
+
+
+def print_final(results: list[dict], elapsed: float) -> None:
+    total = len(results)
+    if not total:
+        print("No results.")
+        return
+
+    correct = sum(1 for r in results if r["match"])
+    valid_count = sum(1 for r in results if r["valid"])
+    timeouts = sum(1 for r in results if r.get("pred_error") and "timed out" in str(r["pred_error"]))
+    near_miss = sum(
+        1 for r in results
+        if r["valid"] and not r["match"]
+        and r["gold_row_count"] is not None
+        and r["gold_row_count"] == r["pred_row_count"]
+        and r["gold_row_count"] > 0
+    )
+    exec_times = [r["execution_time_seconds"] for r in results if r.get("execution_time_seconds")]
+    avg_time = sum(exec_times) / len(exec_times) if exec_times else 0
+
+    print("\n" + "=" * 55)
+    print("  Final Evaluation Summary")
+    print("=" * 55)
+    print(f"  Total questions   : {total}")
+    print(f"  Valid SQL Rate    : {valid_count}/{total} ({100*valid_count/total:.1f}%)")
+    print(f"  Execution Accuracy: {correct}/{total} ({100*correct/total:.1f}%)")
+    print(f"  Near-miss (rows=) : {near_miss}")
+    print(f"  Timeouts          : {timeouts}")
+    print(f"  Avg time/question : {avg_time:.1f}s")
+    print(f"  Total time        : {elapsed:.1f}s")
+    print("=" * 55)
+
+
+def main():
+    parser = argparse.ArgumentParser(description="NL2Report batch evaluator")
+    parser.add_argument("--dataset", required=True, help="Dataset: bird | tpch | m5 | beaver")
+    parser.add_argument("--model", default=DEFAULT_MODEL, help="Model: ollama | anthropic | openai | gemini")
+    parser.add_argument("--questions", required=True, help="Path to questions JSON file")
+    parser.add_argument(
+        "--output", default=None,
+        help="Output JSON path (default: results/<dataset>_<model>_results.json)"
+    )
+    args = parser.parse_args()
+
+    questions_path = Path(args.questions)
+    if not questions_path.exists():
+        print(f"Questions file not found: {questions_path}")
+        sys.exit(1)
+
+    output_path = Path(args.output) if args.output else Path(f"results/{args.dataset}_{args.model}_results.json")
+
+    questions = load_questions(questions_path)
+    existing = load_existing_results(output_path)
+
+    skipped = len([q for q in questions if q["index"] in existing])
+    if skipped:
+        print(f"Resuming — skipping {skipped} already completed questions.")
+
+    model = get_model(args.model)
+    results: list[dict] = list(existing.values())
+
+    total = len(questions)
+    correct = sum(1 for r in results if r["match"])
+    valid_count = sum(1 for r in results if r["valid"])
+
+    print(f"\nDataset : {args.dataset}")
+    print(f"Model   : {args.model}")
+    print(f"Output  : {output_path}")
+    print(f"Total   : {total} questions\n")
+
+    global_start = time.time()
+
+    for item in questions:
+        idx = item["index"]
+        if idx in existing:
+            continue
+
+        db_name = item["db"]
+        t_start = time.time()
+
+        try:
+            schema = load_schema(args.dataset, db_name)
+            schema = apply_vector_filter(schema, args.dataset, db_name, item["question"])
+            engine = schema_engine(schema)
+            db_ref = find_database_ref(args.dataset, db_name, schema)
+
+            result = run_with_timeout(
+                lambda: process_question(item, args.dataset, model, schema, db_ref, engine),
+                QUERY_TIMEOUT,
+            )
+        except Exception as e:
+            result = {
+                "index": idx,
+                "db": db_name,
+                "question": item["question"],
+                "gold_sql": item["gold_sql"],
+                "pred_sql": None,
+                "valid": False,
+                "match": False,
+                "pred_error": str(e),
+                "gold_row_count": None,
+                "pred_row_count": None,
+            }
+
+        result["execution_time_seconds"] = round(time.time() - t_start, 2)
+
+        results.append(result)
+        if result["match"]:
+            correct += 1
+        if result["valid"]:
+            valid_count += 1
+
+        save_results(results, output_path)
+        i_done = len(results) - 1
+        print_live(i_done, total, result, correct, valid_count)
+
+    print_final(results, time.time() - global_start)
+    print(f"\n  Results saved to {output_path}")
+
+
+if __name__ == "__main__":
+    main()

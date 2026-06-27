@@ -10,6 +10,12 @@ Usage:
         --split dev
 
     python pipeline/run_analysis.py \
+        --question "What is the total revenue by order quarter?" \
+        --db tpch \
+        --dataset tpch \
+        --model ollama
+
+    python pipeline/run_analysis.py \
         --question "Who won the most races?" \
         --db formula_1 \
         --dataset bird \
@@ -39,12 +45,15 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from config import schema_path, DEFAULT_MODEL
 from pipeline.planning_agent import PlanningAgent
+from pipeline.vector_filter import apply_vector_filter
 
 FORBIDDEN_SQL_PATTERN = re.compile(
     r"\b(ALTER|ATTACH|CREATE|DELETE|DETACH|DROP|INSERT|PRAGMA|REINDEX|REPLACE|UPDATE|VACUUM)\b",
     re.IGNORECASE,
 )
 
+
+# ── Model factory ──────────────────────────────────────────────────────────────
 
 def get_model(model_name: str):
     if model_name == "ollama":
@@ -63,6 +72,40 @@ def get_model(model_name: str):
         raise ValueError(f"Unknown model '{model_name}'. Choose: ollama | openai | anthropic | gemini")
 
 
+# ── Engine factory ─────────────────────────────────────────────────────────────
+
+def load_engine_config() -> dict:
+    path = Path("config/engine_config.json")
+    if path.exists():
+        return json.loads(path.read_text())
+    return {}
+
+
+def resolve_engine_name(dataset: str, cli_engine: str | None, schema: dict) -> str:
+    """Return the engine name to use. MySQL schemas always use 'mysql'."""
+    if schema_engine(schema) == "mysql":
+        return "mysql"
+    if cli_engine:
+        return cli_engine
+    ds_cfg = load_engine_config().get(dataset, "sqlite")
+    if isinstance(ds_cfg, dict):
+        return ds_cfg.get("engine", "sqlite")
+    return ds_cfg
+
+
+def get_engine(engine_name: str, dataset: str, db_path: Path):
+    """Return an engine instance for sqlite or duckdb. Returns None for mysql (handled separately)."""
+    if engine_name == "sqlite":
+        from engines.sqlite_engine import SQLiteEngine
+        return SQLiteEngine(db_path)
+    elif engine_name == "duckdb":
+        from engines.duckdb_engine import DuckDBEngine
+        return DuckDBEngine(dataset=dataset)
+    return None
+
+
+# ── Schema / DB helpers ────────────────────────────────────────────────────────
+
 def load_schema(dataset: str, db_name: str) -> dict:
     path = schema_path(dataset, db_name)
     if not path.exists():
@@ -71,7 +114,6 @@ def load_schema(dataset: str, db_name: str) -> dict:
 
 
 def find_db_path(dataset: str, db_name: str) -> Path:
-    # Search entire dataset folder — handles both BIRD (databases/split/db/) and flat layouts (tpch.sqlite)
     base = Path("datasets") / dataset
     matches = list(base.rglob(f"{db_name}.sqlite"))
     if not matches:
@@ -89,15 +131,16 @@ def find_database_ref(dataset: str, db_name: str, schema: dict) -> Path | str:
     return find_db_path(dataset, db_name)
 
 
+# ── MySQL execution (Beaver) ───────────────────────────────────────────────────
+
 def mysql_connect(database: str):
     try:
         import mysql.connector
     except ImportError as exc:
         raise RuntimeError(
-            "Missing dependency `mysql-connector-python`. Install requirements or run: "
-            "python3 -m pip install mysql-connector-python"
+            "Missing dependency `mysql-connector-python`. "
+            "Install requirements or run: python3 -m pip install mysql-connector-python"
         ) from exc
-
     return mysql.connector.connect(
         host=os.getenv("MYSQL_HOST", "127.0.0.1"),
         port=int(os.getenv("MYSQL_PORT", "3306")),
@@ -151,11 +194,14 @@ def execute_mysql(database: str, sql: str) -> tuple[list, list]:
 
 
 def execute_sql(database_ref: Path | str, sql: str, engine: str) -> tuple[list, list]:
+    """Legacy executor used for MySQL (Beaver). SQLite/DuckDB use engine objects instead."""
     sql = validate_read_only_sql(sql)
     if engine == "mysql":
         return execute_mysql(str(database_ref), sql)
     return execute_sqlite(Path(database_ref), sql)
 
+
+# ── Output ─────────────────────────────────────────────────────────────────────
 
 def print_results(columns: list, rows: list) -> None:
     if not rows:
@@ -172,33 +218,53 @@ def print_results(columns: list, rows: list) -> None:
         print(f"... ({len(rows)} rows total, showing first 50)")
 
 
-def run(question: str, dataset: str, db_name: str, split: str, model_name: str) -> None:
+# ── Main pipeline ──────────────────────────────────────────────────────────────
+
+def run(question: str, dataset: str, db_name: str, split: str, model_name: str,
+        cli_engine: str | None = None) -> None:
+
+    schema = load_schema(dataset, db_name)
+    schema = apply_vector_filter(schema, dataset, db_name, question)
+    model = get_model(model_name)
+    db_schema_engine = schema_engine(schema)
+    database_ref = find_database_ref(dataset, db_name, schema)
+    engine_name = resolve_engine_name(dataset, cli_engine, schema)
+
     print(f"\nQuestion : {question}")
     print(f"Database : {db_name} ({dataset}/{split})")
-    print(f"Model    : {model_name}\n")
+    print(f"Model    : {model_name}")
+    print(f"Engine   : {engine_name}\n")
 
-    schema  = load_schema(dataset, db_name)
-    model   = get_model(model_name)
-    engine = schema_engine(schema)
-    database_ref = find_database_ref(dataset, db_name, schema)
+    # Build a unified execute callable
+    if db_schema_engine == "mysql":
+        def do_execute(sql: str) -> tuple[list, list, str | None]:
+            try:
+                sql = validate_read_only_sql(sql)
+                cols, rows = execute_mysql(str(database_ref), sql)
+                return cols, rows, None
+            except Exception as e:
+                return [], [], str(e)
+    else:
+        engine_obj = get_engine(engine_name, dataset, database_ref)
+
+        def do_execute(sql: str) -> tuple[list, list, str | None]:
+            return engine_obj.execute_sql(sql)
 
     print("Planning...")
     subtasks = PlanningAgent(model).plan(question, schema)
 
     if len(subtasks) == 1:
-        # Simple question — identical output to original single-query flow
         print("Generating SQL...")
         sql = model.generate_sql(subtasks[0], schema)
         print(f"\nSQL:\n{sql}\n")
         print("Executing...")
-        try:
-            columns, rows = execute_sql(database_ref, sql, engine)
+        columns, rows, error = do_execute(sql)
+        if error:
+            print(f"Error: {error}")
+        else:
             print(f"\nResults ({len(rows)} rows):")
             print_results(columns, rows)
-        except Exception as e:
-            print(f"Error: {e}")
     else:
-        # Multi-part question — print plan then execute each subtask
         print(f"Plan ({len(subtasks)} subtasks):")
         for i, task in enumerate(subtasks, 1):
             print(f"  {i}. {task}")
@@ -209,12 +275,12 @@ def run(question: str, dataset: str, db_name: str, split: str, model_name: str) 
             sql = model.generate_sql(task, schema)
             print(f"\nSQL:\n{sql}\n")
             print("Executing...")
-            try:
-                columns, rows = execute_sql(database_ref, sql, engine)
+            columns, rows, error = do_execute(sql)
+            if error:
+                print(f"Error: {error}")
+            else:
                 print(f"\nResults ({len(rows)} rows):")
                 print_results(columns, rows)
-            except Exception as e:
-                print(f"Error: {e}")
 
 
 def main():
@@ -223,10 +289,13 @@ def main():
     parser.add_argument("--db", required=True, help="Database name (e.g. california_schools)")
     parser.add_argument("--dataset", default="bird", help="Dataset (default: bird)")
     parser.add_argument("--split", default="", help="Split: train | dev (auto-detected if omitted)")
-    parser.add_argument("--model", default=DEFAULT_MODEL, help="Model: ollama | openai | anthropic (default: ollama)")
+    parser.add_argument("--model", default=DEFAULT_MODEL,
+                        help="Model: ollama | openai | anthropic | gemini (default: ollama)")
+    parser.add_argument("--engine", default=None, choices=["sqlite", "duckdb"],
+                        help="Execution engine (default: from config/engine_config.json)")
     args = parser.parse_args()
 
-    run(args.question, args.dataset, args.db, args.split, args.model)
+    run(args.question, args.dataset, args.db, args.split, args.model, args.engine)
 
 
 if __name__ == "__main__":

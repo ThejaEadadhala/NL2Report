@@ -23,6 +23,7 @@ load_dotenv()
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from evaluation.sql_evaluator import evaluate_dataset
+from pipeline.vector_filter import apply_vector_filter
 
 
 def load_questions(dataset: str, split: str | None, questions_file: str | None = None) -> list[dict]:
@@ -117,6 +118,7 @@ def main():
     db_finder     = make_db_finder(args.dataset, args.split)
     model         = get_model(args.model)
     schema_loader = lambda db_name: load_schema(args.dataset, db_name)
+    schema_filter = lambda schema, db_name, q: apply_vector_filter(schema, args.dataset, db_name, q)
 
     print(f"\nRunning evaluation with [{args.model}]...\n")
     start = time.time()
@@ -127,6 +129,7 @@ def main():
         model=model,
         schema_loader=schema_loader,
         max_questions=args.limit,
+        schema_filter=schema_filter,
     )
 
     elapsed = time.time() - start

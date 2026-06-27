@@ -5,7 +5,7 @@
     "mysql_database": "dw",
     "table_count": 97,
     "foreign_key_count": 0,
-    "schema_json": "datasets/beaver/schema_json/dw_schema.json"
+    "schema_json": "datasets\\beaver\\schema_json\\dw_schema.json"
   },
   {
     "db_id": "neutron",
@@ -13,7 +13,7 @@
     "mysql_database": "neutron",
     "table_count": 175,
     "foreign_key_count": 163,
-    "schema_json": "datasets/beaver/schema_json/neutron_schema.json"
+    "schema_json": "datasets\\beaver\\schema_json\\neutron_schema.json"
   },
   {
     "db_id": "nova",
@@ -21,6 +21,6 @@
     "mysql_database": "nova",
     "table_count": 110,
     "foreign_key_count": 25,
-    "schema_json": "datasets/beaver/schema_json/nova_schema.json"
+    "schema_json": "datasets\\beaver\\schema_json\\nova_schema.json"
   }
 ]

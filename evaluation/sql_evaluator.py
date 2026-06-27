@@ -43,14 +43,17 @@ def evaluate_dataset(
     model,
     schema_loader,
     max_questions: int | None = None,
+    schema_filter=None,
 ) -> dict:
     """
     Run execution accuracy over a list of BIRD-format question dicts.
 
-    questions  : list of dicts with keys: db_id, question, SQL
-    db_finder  : callable(db_name) -> Path to .sqlite file
-    model      : any BaseModel instance
-    schema_loader: callable(db_name) -> schema dict
+    questions     : list of dicts with keys: db_id, question, SQL
+    db_finder     : callable(db_name) -> Path to .sqlite file
+    model         : any BaseModel instance
+    schema_loader : callable(db_name) -> schema dict
+    schema_filter : optional callable(schema, db_name, question) -> schema dict
+                    Used for large schemas (e.g. Beaver) to select relevant tables.
     """
     total = 0
     correct = 0
@@ -83,6 +86,8 @@ def evaluate_dataset(
 
         try:
             schema = schema_loader(db_name)
+            if schema_filter:
+                schema = schema_filter(schema, db_name, question)
             pred_sql = model.generate_sql(question, schema)
             result = execution_accuracy(gold_sql, pred_sql, db_path)
 

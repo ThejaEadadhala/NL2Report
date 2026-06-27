@@ -5,10 +5,10 @@
   "source": "mysql-information-schema",
   "tables": [
     {
-      "name": "ACADEMIC_TERM_PARAMETER",
+      "name": "academic_term_parameter",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 3,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -126,10 +126,10 @@
       "foreign_keys": []
     },
     {
-      "name": "ACADEMIC_TERMS",
+      "name": "academic_terms",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 144,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -471,10 +471,10 @@
       "foreign_keys": []
     },
     {
-      "name": "ACADEMIC_TERMS_ALL",
+      "name": "academic_terms_all",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 300,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -760,10 +760,10 @@
       "foreign_keys": []
     },
     {
-      "name": "BUILDINGS",
+      "name": "buildings",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 211,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -895,10 +895,10 @@
       "foreign_keys": []
     },
     {
-      "name": "CIP",
+      "name": "cip",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 3059,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -1030,10 +1030,10 @@
       "foreign_keys": []
     },
     {
-      "name": "CIP_WITH_VERSION",
+      "name": "cip_with_version",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 6350,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -1165,10 +1165,10 @@
       "foreign_keys": []
     },
     {
-      "name": "CIS_COURSE_CATALOG",
+      "name": "cis_course_catalog",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 10000,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -1986,10 +1986,10 @@
       "foreign_keys": []
     },
     {
-      "name": "CIS_HASS_ATTRIBUTE",
+      "name": "cis_hass_attribute",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 17,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -2149,10 +2149,10 @@
       "foreign_keys": []
     },
     {
-      "name": "COURSE_CATALOG_SUBJECT_OFFERED",
+      "name": "course_catalog_subject_offered",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 10000,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -3124,10 +3124,10 @@
       "foreign_keys": []
     },
     {
-      "name": "DRUPAL_COURSE_CATALOG",
+      "name": "drupal_course_catalog",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 10000,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -4141,10 +4141,10 @@
       "foreign_keys": []
     },
     {
-      "name": "DRUPAL_EMPLOYEE_DIRECTORY",
+      "name": "drupal_employee_directory",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 10000,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -4402,10 +4402,10 @@
       "foreign_keys": []
     },
     {
-      "name": "EMPLOYEE_DIRECTORY",
+      "name": "employee_directory",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 10000,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -4747,10 +4747,10 @@
       "foreign_keys": []
     },
     {
-      "name": "ESTIMATED_SURCHARGES_ESTONLY",
+      "name": "estimated_surcharges_estonly",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 0,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -5064,10 +5064,10 @@
       "foreign_keys": []
     },
     {
-      "name": "FAC_BUILDING",
+      "name": "fac_building",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 242,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -5521,10 +5521,10 @@
       "foreign_keys": []
     },
     {
-      "name": "FAC_BUILDING_ADDRESS",
+      "name": "fac_building_address",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 785,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -5740,10 +5740,10 @@
       "foreign_keys": []
     },
     {
-      "name": "FAC_FLOOR",
+      "name": "fac_floor",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 1079,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -5903,10 +5903,10 @@
       "foreign_keys": []
     },
     {
-      "name": "FAC_MAJOR_USE",
+      "name": "fac_major_use",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 14,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -5982,10 +5982,10 @@
       "foreign_keys": []
     },
     {
-      "name": "FAC_ORGANIZATION",
+      "name": "fac_organization",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 169,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -6257,10 +6257,10 @@
       "foreign_keys": []
     },
     {
-      "name": "FAC_ROOMS",
+      "name": "fac_rooms",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 10000,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -6616,10 +6616,10 @@
       "foreign_keys": []
     },
     {
-      "name": "FCLT_BUILDING",
+      "name": "fclt_building",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 242,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -7073,10 +7073,10 @@
       "foreign_keys": []
     },
     {
-      "name": "FCLT_BUILDING_ADDRESS",
+      "name": "fclt_building_address",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 785,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -7306,10 +7306,10 @@
       "foreign_keys": []
     },
     {
-      "name": "FCLT_BUILDING_ADDRESS_HIST",
+      "name": "fclt_building_address_hist",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 10000,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -7567,10 +7567,10 @@
       "foreign_keys": []
     },
     {
-      "name": "FCLT_BUILDING_HIST",
+      "name": "fclt_building_hist",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 10000,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -8052,10 +8052,10 @@
       "foreign_keys": []
     },
     {
-      "name": "FCLT_BUILDING_HIST_1",
+      "name": "fclt_building_hist_1",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 10000,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -8537,10 +8537,10 @@
       "foreign_keys": []
     },
     {
-      "name": "FCLT_FLOOR",
+      "name": "fclt_floor",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 1079,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -8700,10 +8700,10 @@
       "foreign_keys": []
     },
     {
-      "name": "FCLT_FLOOR_HIST",
+      "name": "fclt_floor_hist",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 10000,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -8891,10 +8891,10 @@
       "foreign_keys": []
     },
     {
-      "name": "FCLT_MAJOR_USE",
+      "name": "fclt_major_use",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 14,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -8970,10 +8970,10 @@
       "foreign_keys": []
     },
     {
-      "name": "FCLT_MAJOR_USE_HIST",
+      "name": "fclt_major_use_hist",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 1680,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -9077,10 +9077,10 @@
       "foreign_keys": []
     },
     {
-      "name": "FCLT_ORG_DLC_KEY",
+      "name": "fclt_org_dlc_key",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 168,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -9114,10 +9114,10 @@
       "foreign_keys": []
     },
     {
-      "name": "FCLT_ORGANIZATION",
+      "name": "fclt_organization",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 180,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -9403,10 +9403,10 @@
       "foreign_keys": []
     },
     {
-      "name": "FCLT_ORGANIZATION_HIST",
+      "name": "fclt_organization_hist",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 10000,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -9720,10 +9720,10 @@
       "foreign_keys": []
     },
     {
-      "name": "FCLT_ROOMS",
+      "name": "fclt_rooms",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 10000,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -10093,10 +10093,10 @@
       "foreign_keys": []
     },
     {
-      "name": "FCLT_ROOMS_HIST",
+      "name": "fclt_rooms_hist",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 10000,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -10494,10 +10494,10 @@
       "foreign_keys": []
     },
     {
-      "name": "FRC_FISCAL_PERIODS",
+      "name": "frc_fiscal_periods",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 10,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -10545,10 +10545,10 @@
       "foreign_keys": []
     },
     {
-      "name": "FUND_CENTER_HIERARCHY",
+      "name": "fund_center_hierarchy",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 0,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -10890,10 +10890,10 @@
       "foreign_keys": []
     },
     {
-      "name": "HR_FACULTY_ROSTER",
+      "name": "hr_faculty_roster",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 681,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -11123,10 +11123,10 @@
       "foreign_keys": []
     },
     {
-      "name": "HR_ORG_UNIT",
+      "name": "hr_org_unit",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 641,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -11650,10 +11650,10 @@
       "foreign_keys": []
     },
     {
-      "name": "HR_ORG_UNIT_NEW",
+      "name": "hr_org_unit_new",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 691,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -12079,10 +12079,10 @@
       "foreign_keys": []
     },
     {
-      "name": "IAP_SUBJECT_CATEGORY",
+      "name": "iap_subject_category",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 49,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -12144,10 +12144,10 @@
       "foreign_keys": []
     },
     {
-      "name": "IAP_SUBJECT_DETAIL",
+      "name": "iap_subject_detail",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 465,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -12419,10 +12419,10 @@
       "foreign_keys": []
     },
     {
-      "name": "IAP_SUBJECT_PERSON",
+      "name": "iap_subject_person",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 1113,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -12554,10 +12554,10 @@
       "foreign_keys": []
     },
     {
-      "name": "IAP_SUBJECT_SESSION",
+      "name": "iap_subject_session",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 1199,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -12703,10 +12703,10 @@
       "foreign_keys": []
     },
     {
-      "name": "IAP_SUBJECT_SPONSOR",
+      "name": "iap_subject_sponsor",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 68,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -12768,10 +12768,10 @@
       "foreign_keys": []
     },
     {
-      "name": "IR_INSTITUTION",
+      "name": "ir_institution",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 10000,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -12959,10 +12959,10 @@
       "foreign_keys": []
     },
     {
-      "name": "LIBRARY_COURSE_INSTRUCTOR",
+      "name": "library_course_instructor",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 10000,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -13094,10 +13094,10 @@
       "foreign_keys": []
     },
     {
-      "name": "LIBRARY_MATERIAL_STATUS",
+      "name": "library_material_status",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 6,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -13159,10 +13159,10 @@
       "foreign_keys": []
     },
     {
-      "name": "LIBRARY_RESERVE_CATALOG",
+      "name": "library_reserve_catalog",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 10000,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -13336,10 +13336,10 @@
       "foreign_keys": []
     },
     {
-      "name": "LIBRARY_RESERVE_MATRL_DETAIL",
+      "name": "library_reserve_matrl_detail",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 10000,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -13443,10 +13443,10 @@
       "foreign_keys": []
     },
     {
-      "name": "LIBRARY_SUBJECT_OFFERED",
+      "name": "library_subject_offered",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 10000,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -13732,10 +13732,10 @@
       "foreign_keys": []
     },
     {
-      "name": "MASTER_DEPT_DCODE_PARENT",
+      "name": "master_dept_dcode_parent",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 340,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -13839,10 +13839,10 @@
       "foreign_keys": []
     },
     {
-      "name": "MASTER_DEPT_HIERARCHY",
+      "name": "master_dept_hierarchy",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 310,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -14044,10 +14044,10 @@
       "foreign_keys": []
     },
     {
-      "name": "MASTER_DEPT_HIERARCHY_LINKS",
+      "name": "master_dept_hierarchy_links",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 10000,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -14151,10 +14151,10 @@
       "foreign_keys": []
     },
     {
-      "name": "MIT_HOLIDAY_CLOSING_CALENDAR",
+      "name": "mit_holiday_closing_calendar",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 580,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -14216,10 +14216,10 @@
       "foreign_keys": []
     },
     {
-      "name": "MIT_STUDENT_DIRECTORY",
+      "name": "mit_student_directory",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 10000,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -14393,10 +14393,10 @@
       "foreign_keys": []
     },
     {
-      "name": "MOIRA_LIST",
+      "name": "moira_list",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 10000,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -14528,10 +14528,10 @@
       "foreign_keys": []
     },
     {
-      "name": "MOIRA_LIST_DETAIL",
+      "name": "moira_list_detail",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 10000,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -14649,10 +14649,10 @@
       "foreign_keys": []
     },
     {
-      "name": "MOIRA_LIST_OWNER",
+      "name": "moira_list_owner",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 10000,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -14714,10 +14714,10 @@
       "foreign_keys": []
     },
     {
-      "name": "OPA_PERSON_CURRENT",
+      "name": "opa_person_current",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 0,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -15157,10 +15157,10 @@
       "foreign_keys": []
     },
     {
-      "name": "PERSON_AUTH_AREA",
+      "name": "person_auth_area",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 10000,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -15250,10 +15250,10 @@
       "foreign_keys": []
     },
     {
-      "name": "PROFIT_CENTER_GROUP",
+      "name": "profit_center_group",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 0,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -15595,10 +15595,10 @@
       "foreign_keys": []
     },
     {
-      "name": "ROLES_FIN_PA",
+      "name": "roles_fin_pa",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 1395,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -15632,10 +15632,10 @@
       "foreign_keys": []
     },
     {
-      "name": "SE_PERSON",
+      "name": "se_person",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 10000,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -15809,10 +15809,10 @@
       "foreign_keys": []
     },
     {
-      "name": "SIS_ADMIN_DEPARTMENT",
+      "name": "sis_admin_department",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 179,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -15916,10 +15916,10 @@
       "foreign_keys": []
     },
     {
-      "name": "SIS_COURSE_DESCRIPTION",
+      "name": "sis_course_description",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 695,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -16233,10 +16233,10 @@
       "foreign_keys": []
     },
     {
-      "name": "SIS_DEPARTMENT",
+      "name": "sis_department",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 128,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -16424,10 +16424,10 @@
       "foreign_keys": []
     },
     {
-      "name": "SIS_LOOKUP",
+      "name": "sis_lookup",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 67,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -16489,10 +16489,10 @@
       "foreign_keys": []
     },
     {
-      "name": "SIS_SUBJECT_CODE",
+      "name": "sis_subject_code",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 221,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -16610,10 +16610,10 @@
       "foreign_keys": []
     },
     {
-      "name": "SIS_TERM_ADDRESS_CATEGORY",
+      "name": "sis_term_address_category",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 112,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -16731,10 +16731,10 @@
       "foreign_keys": []
     },
     {
-      "name": "SPACE_DETAIL",
+      "name": "space_detail",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 10000,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -16894,10 +16894,10 @@
       "foreign_keys": []
     },
     {
-      "name": "SPACE_FLOOR",
+      "name": "space_floor",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 49,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -16959,10 +16959,10 @@
       "foreign_keys": []
     },
     {
-      "name": "SPACE_SUPERVISOR_USAGE",
+      "name": "space_supervisor_usage",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 2135,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -17094,10 +17094,10 @@
       "foreign_keys": []
     },
     {
-      "name": "SPACE_UNIT",
+      "name": "space_unit",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 150,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -17187,10 +17187,10 @@
       "foreign_keys": []
     },
     {
-      "name": "SPACE_UNIT2",
+      "name": "space_unit2",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 139,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -17266,10 +17266,10 @@
       "foreign_keys": []
     },
     {
-      "name": "SPACE_USAGE",
+      "name": "space_usage",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 88,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -17317,10 +17317,10 @@
       "foreign_keys": []
     },
     {
-      "name": "STUDENT_DEGREE_PROGRAM",
+      "name": "student_degree_program",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 1202,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -17592,10 +17592,10 @@
       "foreign_keys": []
     },
     {
-      "name": "STUDENT_DEPARTMENT",
+      "name": "student_department",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 79,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -17671,10 +17671,10 @@
       "foreign_keys": []
     },
     {
-      "name": "STUDENT_ETHNIC_SUBGROUP",
+      "name": "student_ethnic_subgroup",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 46,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -17764,10 +17764,10 @@
       "foreign_keys": []
     },
     {
-      "name": "SUBJECT_ATTRIBUTE",
+      "name": "subject_attribute",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 104,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -17871,10 +17871,10 @@
       "foreign_keys": []
     },
     {
-      "name": "SUBJECT_ENROLLABLE",
+      "name": "subject_enrollable",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 10000,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -18034,10 +18034,10 @@
       "foreign_keys": []
     },
     {
-      "name": "SUBJECT_GROUPING",
+      "name": "subject_grouping",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 10000,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -18141,10 +18141,10 @@
       "foreign_keys": []
     },
     {
-      "name": "SUBJECT_IAP_SCHEDULE",
+      "name": "subject_iap_schedule",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 1199,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -18290,10 +18290,10 @@
       "foreign_keys": []
     },
     {
-      "name": "SUBJECT_OFFERED",
+      "name": "subject_offered",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 10000,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -18957,10 +18957,10 @@
       "foreign_keys": []
     },
     {
-      "name": "SUBJECT_OFFERED_SUMMARY",
+      "name": "subject_offered_summary",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 10000,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -19372,10 +19372,10 @@
       "foreign_keys": []
     },
     {
-      "name": "SUBJECT_SELECTOR",
+      "name": "subject_selector",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 0,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -19605,10 +19605,10 @@
       "foreign_keys": []
     },
     {
-      "name": "SUBJECT_SUMMARY",
+      "name": "subject_summary",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 10000,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -20188,10 +20188,10 @@
       "foreign_keys": []
     },
     {
-      "name": "TIME_DAY",
+      "name": "time_day",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 10000,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -20407,10 +20407,10 @@
       "foreign_keys": []
     },
     {
-      "name": "TIME_MONTH",
+      "name": "time_month",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 640,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -20738,10 +20738,10 @@
       "foreign_keys": []
     },
     {
-      "name": "TIME_QUARTER",
+      "name": "time_quarter",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 144,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -21027,10 +21027,10 @@
       "foreign_keys": []
     },
     {
-      "name": "TIP_DETAIL",
+      "name": "tip_detail",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 10000,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -21148,10 +21148,10 @@
       "foreign_keys": []
     },
     {
-      "name": "TIP_MATERIAL",
+      "name": "tip_material",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 10000,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -21325,10 +21325,10 @@
       "foreign_keys": []
     },
     {
-      "name": "TIP_MATERIAL_STATUS",
+      "name": "tip_material_status",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 12,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -21390,10 +21390,10 @@
       "foreign_keys": []
     },
     {
-      "name": "TIP_SUBJECT_OFFERED",
+      "name": "tip_subject_offered",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 10000,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -21693,10 +21693,10 @@
       "foreign_keys": []
     },
     {
-      "name": "TOP_LEVEL_DOMAIN",
+      "name": "top_level_domain",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 249,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -21758,10 +21758,10 @@
       "foreign_keys": []
     },
     {
-      "name": "WAREHOUSE_USERS",
+      "name": "warehouse_users",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 10000,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -21977,10 +21977,10 @@
       "foreign_keys": []
     },
     {
-      "name": "ZIP_CANADA",
+      "name": "zip_canada",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 10000,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -22070,10 +22070,10 @@
       "foreign_keys": []
     },
     {
-      "name": "ZIP_USA",
+      "name": "zip_usa",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 10000,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -22191,10 +22191,10 @@
       "foreign_keys": []
     },
     {
-      "name": "ZPM_ROOMS_LOAD",
+      "name": "zpm_rooms_load",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 10000,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,

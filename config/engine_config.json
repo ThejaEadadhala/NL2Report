@@ -1,0 +1,17 @@
+{
+  "tpch": {
+    "engine": "duckdb",
+    "file": "datasets/tpch/tpch.duckdb",
+    "fallback": "datasets/tpch/tpch.sqlite"
+  },
+  "m5": {
+    "engine": "duckdb",
+    "file": "datasets/m5/m5.duckdb",
+    "fallback": "datasets/m5/m5.sqlite"
+  },
+  "bird": {
+    "engine": "sqlite",
+    "file": null,
+    "fallback": null
+  }
+}

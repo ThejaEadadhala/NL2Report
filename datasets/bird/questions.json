@@ -1,0 +1,52 @@
+[
+  {
+    "db_id": "student_club",
+    "question": "How many members are enrolled in each college?",
+    "SQL": "SELECT T2.college, COUNT(*) AS num_members FROM member AS T1 JOIN major AS T2 ON T1.link_to_major = T2.major_id GROUP BY T2.college"
+  },
+  {
+    "db_id": "student_club",
+    "question": "List the top 5 positions held by the most members.",
+    "SQL": "SELECT position, COUNT(*) AS num_members FROM member GROUP BY position ORDER BY num_members DESC LIMIT 5"
+  },
+  {
+    "db_id": "student_club",
+    "question": "How many members are there per department?",
+    "SQL": "SELECT T2.department, COUNT(*) AS num_members FROM member AS T1 JOIN major AS T2 ON T1.link_to_major = T2.major_id GROUP BY T2.department"
+  },
+  {
+    "db_id": "student_club",
+    "question": "Which events have more than 5 attendees?",
+    "SQL": "SELECT T2.event_name, COUNT(*) AS num_attendees FROM attendance AS T1 JOIN event AS T2 ON T1.link_to_event = T2.event_id GROUP BY T2.event_name HAVING COUNT(*) > 5"
+  },
+  {
+    "db_id": "human_resources",
+    "question": "How many employees work in each position?",
+    "SQL": "SELECT T2.positiontitle, COUNT(*) AS num_employees FROM employee AS T1 JOIN position AS T2 ON T1.positionID = T2.positionID GROUP BY T2.positiontitle"
+  },
+  {
+    "db_id": "human_resources",
+    "question": "What is the total salary expenditure per position?",
+    "SQL": "SELECT T2.positiontitle, SUM(CAST(T1.salary AS REAL)) AS total_salary FROM employee AS T1 JOIN position AS T2 ON T1.positionID = T2.positionID GROUP BY T2.positiontitle ORDER BY total_salary DESC"
+  },
+  {
+    "db_id": "airline",
+    "question": "List the top 10 airports by number of flight departures.",
+    "SQL": "SELECT ORIGIN, COUNT(*) AS num_departures FROM Airlines GROUP BY ORIGIN ORDER BY num_departures DESC LIMIT 10"
+  },
+  {
+    "db_id": "airline",
+    "question": "Which airlines had the highest average departure delay?",
+    "SQL": "SELECT T2.Description, ROUND(AVG(T1.DEP_DELAY), 2) AS avg_delay FROM Airlines AS T1 JOIN \"Air Carriers\" AS T2 ON T1.OP_CARRIER_AIRLINE_ID = T2.Code GROUP BY T2.Description ORDER BY avg_delay DESC LIMIT 5"
+  },
+  {
+    "db_id": "financial",
+    "question": "How many transactions were made per payment operation type?",
+    "SQL": "SELECT operation, COUNT(*) AS num_transactions FROM trans GROUP BY operation ORDER BY num_transactions DESC"
+  },
+  {
+    "db_id": "superstore",
+    "question": "What is the total revenue generated per product category?",
+    "SQL": "SELECT T2.Category, ROUND(SUM(T1.Sales), 2) AS total_revenue FROM central_superstore AS T1 JOIN product AS T2 ON T1.\"Product ID\" = T2.\"Product ID\" GROUP BY T2.Category ORDER BY total_revenue DESC"
+  }
+]

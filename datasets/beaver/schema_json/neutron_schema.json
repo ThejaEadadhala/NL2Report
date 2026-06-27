@@ -8,7 +8,7 @@
       "name": "address_scopes",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 0,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -87,7 +87,7 @@
       "name": "agents",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 129,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -292,7 +292,7 @@
       "name": "alembic_version",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 1,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -315,7 +315,7 @@
       "name": "alembic_version_fwaas",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 2,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -338,7 +338,7 @@
       "name": "alembic_version_lbaas",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 2,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -361,7 +361,7 @@
       "name": "allowedaddresspairs",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 1,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -424,7 +424,7 @@
       "name": "arista_provisioned_nets",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 0,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -489,7 +489,7 @@
       "name": "arista_provisioned_tenants",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 0,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -526,7 +526,7 @@
       "name": "arista_provisioned_vms",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 0,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -619,7 +619,7 @@
       "name": "auto_allocated_topologies",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 0,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -693,7 +693,7 @@
       "name": "bgp_peers",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 0,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -800,7 +800,7 @@
       "name": "bgp_speaker_dragent_bindings",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 0,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -860,7 +860,7 @@
       "name": "bgp_speaker_network_bindings",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 0,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -934,7 +934,7 @@
       "name": "bgp_speaker_peer_bindings",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 0,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -994,7 +994,7 @@
       "name": "bgp_speakers",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 0,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -1101,7 +1101,7 @@
       "name": "brocadenetworks",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 0,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -1138,7 +1138,7 @@
       "name": "brocadeports",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 0,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -1243,7 +1243,7 @@
       "name": "cisco_csr_identifier_map",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 0,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -1334,7 +1334,7 @@
       "name": "cisco_firewall_associations",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 0,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -1436,7 +1436,7 @@
       "name": "cisco_hosting_devices",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 0,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -1608,7 +1608,7 @@
       "name": "cisco_ml2_apic_contracts",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 0,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -1657,7 +1657,7 @@
       "name": "cisco_ml2_apic_host_links",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 0,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -1750,7 +1750,7 @@
       "name": "cisco_ml2_apic_names",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 0,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -1801,7 +1801,7 @@
       "name": "cisco_ml2_n1kv_network_bindings",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 0,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -1889,7 +1889,7 @@
       "name": "cisco_ml2_n1kv_network_profiles",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 0,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -2010,7 +2010,7 @@
       "name": "cisco_ml2_n1kv_policy_profiles",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 0,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -2061,7 +2061,7 @@
       "name": "cisco_ml2_n1kv_port_bindings",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 0,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -2110,7 +2110,7 @@
       "name": "cisco_ml2_n1kv_profile_bindings",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 0,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -2161,7 +2161,7 @@
       "name": "cisco_ml2_n1kv_vlan_allocations",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 0,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -2238,7 +2238,7 @@
       "name": "cisco_ml2_n1kv_vxlan_allocations",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 0,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -2301,7 +2301,7 @@
       "name": "cisco_ml2_nexus_nve",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 0,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -2366,7 +2366,7 @@
       "name": "cisco_ml2_nexusport_bindings",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 0,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -2473,7 +2473,7 @@
       "name": "cisco_port_mappings",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 0,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -2589,7 +2589,7 @@
       "name": "cisco_router_mappings",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 0,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -2663,7 +2663,7 @@
       "name": "consistencyhashes",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 0,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -2700,7 +2700,7 @@
       "name": "default_security_group",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 804,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -2749,7 +2749,7 @@
       "name": "dnsnameservers",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 65,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -2812,7 +2812,7 @@
       "name": "dvr_host_macs",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 0,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -2849,7 +2849,7 @@
       "name": "externalnetworks",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 1,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -2898,7 +2898,7 @@
       "name": "extradhcpopts",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 0,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -2989,7 +2989,7 @@
       "name": "firewall_policies",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 0,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -3082,7 +3082,7 @@
       "name": "firewall_router_associations",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 0,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -3142,7 +3142,7 @@
       "name": "firewall_rules",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 0,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -3401,7 +3401,7 @@
       "name": "firewalls",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 0,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -3534,7 +3534,7 @@
       "name": "flavors",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 0,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -3613,7 +3613,7 @@
       "name": "flavorserviceprofilebindings",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 0,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -3673,7 +3673,7 @@
       "name": "floatingipdnses",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 0,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -3764,7 +3764,7 @@
       "name": "floatingips",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 23,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -3972,7 +3972,7 @@
       "name": "ha_router_agent_port_bindings",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 0,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -4071,7 +4071,7 @@
       "name": "ha_router_networks",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 0,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -4120,7 +4120,7 @@
       "name": "ha_router_vrid_allocations",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 0,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -4169,7 +4169,7 @@
       "name": "healthmonitors",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 3,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -4318,7 +4318,7 @@
       "name": "ikepolicies",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 0,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -4481,7 +4481,7 @@
       "name": "ipallocationpools",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 49,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -4558,7 +4558,7 @@
       "name": "ipallocations",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 3779,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -4657,7 +4657,7 @@
       "name": "ipamallocationpools",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 0,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -4734,7 +4734,7 @@
       "name": "ipamallocations",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 0,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -4797,7 +4797,7 @@
       "name": "ipamavailabilityranges",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 0,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -4860,7 +4860,7 @@
       "name": "ipamsubnets",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 0,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -4897,7 +4897,7 @@
       "name": "ipavailabilityranges",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 184,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -4960,7 +4960,7 @@
       "name": "ipsec_site_connections",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 0,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -5269,7 +5269,7 @@
       "name": "ipsecpeercidrs",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 0,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -5318,7 +5318,7 @@
       "name": "ipsecpolicies",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 0,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -5481,7 +5481,7 @@
       "name": "lbaas_healthmonitors",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 0,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -5658,7 +5658,7 @@
       "name": "lbaas_l7policies",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 0,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -5844,7 +5844,7 @@
       "name": "lbaas_l7rules",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 0,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -6005,7 +6005,7 @@
       "name": "lbaas_listeners",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 5,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -6219,7 +6219,7 @@
       "name": "lbaas_loadbalancer_statistics",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 6,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -6310,7 +6310,7 @@
       "name": "lbaas_loadbalanceragentbindings",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 6,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -6370,7 +6370,7 @@
       "name": "lbaas_loadbalancers",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 6,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -6556,7 +6556,7 @@
       "name": "lbaas_members",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 22,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -6731,7 +6731,7 @@
       "name": "lbaas_pools",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 5,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -6917,7 +6917,7 @@
       "name": "lbaas_sessionpersistences",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 0,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -6980,7 +6980,7 @@
       "name": "lbaas_sni",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 0,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -7043,7 +7043,7 @@
       "name": "lsn",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 0,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -7080,7 +7080,7 @@
       "name": "lsn_port",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 0,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -7157,7 +7157,7 @@
       "name": "maclearningstates",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 0,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -7206,7 +7206,7 @@
       "name": "members",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 4,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -7353,7 +7353,7 @@
       "name": "meteringlabelrules",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 0,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -7444,7 +7444,7 @@
       "name": "meteringlabels",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 0,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -7523,7 +7523,7 @@
       "name": "ml2_brocadenetworks",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 0,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -7602,7 +7602,7 @@
       "name": "ml2_brocadeports",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 0,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -7707,7 +7707,7 @@
       "name": "ml2_dvr_port_bindings",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 0,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -7840,7 +7840,7 @@
       "name": "ml2_flat_allocations",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 0,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -7863,7 +7863,7 @@
       "name": "ml2_geneve_allocations",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 0,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -7900,7 +7900,7 @@
       "name": "ml2_geneve_endpoints",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 0,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -7937,7 +7937,7 @@
       "name": "ml2_gre_allocations",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 1000,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -7974,7 +7974,7 @@
       "name": "ml2_gre_endpoints",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 124,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -8011,7 +8011,7 @@
       "name": "ml2_network_segments",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 49,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -8130,7 +8130,7 @@
       "name": "ml2_nexus_vxlan_allocations",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 0,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -8167,7 +8167,7 @@
       "name": "ml2_nexus_vxlan_mcast_groups",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 0,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -8230,7 +8230,7 @@
       "name": "ml2_port_binding_levels",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 3692,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -8332,7 +8332,7 @@
       "name": "ml2_port_bindings",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 3730,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -8437,7 +8437,7 @@
       "name": "ml2_ucsm_port_profiles",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 0,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -8488,7 +8488,7 @@
       "name": "ml2_vlan_allocations",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 9,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -8539,7 +8539,7 @@
       "name": "ml2_vxlan_allocations",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 0,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -8576,7 +8576,7 @@
       "name": "ml2_vxlan_endpoints",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 0,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -8627,7 +8627,7 @@
       "name": "multi_provider_networks",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 0,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -8662,7 +8662,7 @@
       "name": "networkconnections",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 0,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -8789,7 +8789,7 @@
       "name": "networkdhcpagentbindings",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 45,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -8849,7 +8849,7 @@
       "name": "networkdnsdomains",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 0,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -8898,7 +8898,7 @@
       "name": "networkgatewaydevicereferences",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 0,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -8961,7 +8961,7 @@
       "name": "networkgatewaydevices",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 0,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -9068,7 +9068,7 @@
       "name": "networkgateways",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 0,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -9133,7 +9133,7 @@
       "name": "networkqueuemappings",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 0,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -9193,7 +9193,7 @@
       "name": "networkrbacs",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 14,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -9284,7 +9284,7 @@
       "name": "networks",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 49,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -9431,7 +9431,7 @@
       "name": "networksecuritybindings",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 36,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -9480,7 +9480,7 @@
       "name": "neutron_nsx_network_mappings",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 0,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -9529,7 +9529,7 @@
       "name": "neutron_nsx_port_mappings",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 0,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -9592,7 +9592,7 @@
       "name": "neutron_nsx_router_mappings",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 0,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -9641,7 +9641,7 @@
       "name": "neutron_nsx_security_group_mappings",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 0,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -9690,7 +9690,7 @@
       "name": "nexthops",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 0,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -9739,7 +9739,7 @@
       "name": "nsxv_edge_dhcp_static_bindings",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 0,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -9790,7 +9790,7 @@
       "name": "nsxv_edge_monitor_mappings",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 0,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -9853,7 +9853,7 @@
       "name": "nsxv_edge_pool_mappings",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 0,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -9916,7 +9916,7 @@
       "name": "nsxv_edge_vip_mappings",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 0,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -10007,7 +10007,7 @@
       "name": "nsxv_edge_vnic_bindings",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 0,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -10072,7 +10072,7 @@
       "name": "nsxv_firewall_rule_bindings",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 0,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -10123,7 +10123,7 @@
       "name": "nsxv_internal_edges",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 0,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -10174,7 +10174,7 @@
       "name": "nsxv_internal_networks",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 0,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -10223,7 +10223,7 @@
       "name": "nsxv_port_index_mappings",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 0,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -10286,7 +10286,7 @@
       "name": "nsxv_port_vnic_mappings",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 0,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -10335,7 +10335,7 @@
       "name": "nsxv_router_bindings",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 0,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -10442,7 +10442,7 @@
       "name": "nsxv_router_ext_attributes",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 0,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -10519,7 +10519,7 @@
       "name": "nsxv_rule_mappings",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 0,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -10568,7 +10568,7 @@
       "name": "nsxv_security_group_section_mappings",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 0,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -10617,7 +10617,7 @@
       "name": "nsxv_spoofguard_policy_network_mappings",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 0,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -10666,7 +10666,7 @@
       "name": "nsxv_tz_network_bindings",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 0,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -10743,7 +10743,7 @@
       "name": "nsxv_vdr_dhcp_bindings",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 0,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -10794,7 +10794,7 @@
       "name": "nuage_net_partition_router_mapping",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 0,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -10896,7 +10896,7 @@
       "name": "nuage_net_partitions",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 0,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -10989,7 +10989,7 @@
       "name": "nuage_provider_net_bindings",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 0,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -11066,7 +11066,7 @@
       "name": "nuage_subnet_l2dom_mapping",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 0,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -11196,7 +11196,7 @@
       "name": "poolloadbalanceragentbindings",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 0,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -11256,7 +11256,7 @@
       "name": "poolmonitorassociations",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 1,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -11344,7 +11344,7 @@
       "name": "pools",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 2,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -11519,7 +11519,7 @@
       "name": "poolstatisticss",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 2,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -11610,7 +11610,7 @@
       "name": "portbindingports",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 0,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -11659,7 +11659,7 @@
       "name": "portdnses",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 0,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -11750,7 +11750,7 @@
       "name": "portqueuemappings",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 0,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -11810,7 +11810,7 @@
       "name": "ports",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 3775,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -11996,7 +11996,7 @@
       "name": "portsecuritybindings",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 3194,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -12045,7 +12045,7 @@
       "name": "providerresourceassociations",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 38,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -12082,7 +12082,7 @@
       "name": "qos_bandwidth_limit_rules",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 0,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -12159,7 +12159,7 @@
       "name": "qos_network_policy_bindings",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 0,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -12219,7 +12219,7 @@
       "name": "qos_policies",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 0,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -12284,7 +12284,7 @@
       "name": "qos_port_policy_bindings",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 0,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -12344,7 +12344,7 @@
       "name": "qospolicyrbacs",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 0,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -12435,7 +12435,7 @@
       "name": "qosqueues",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 0,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -12556,7 +12556,7 @@
       "name": "quotas",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 1521,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -12621,7 +12621,7 @@
       "name": "quotausages",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 810,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -12700,7 +12700,7 @@
       "name": "reservations",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 5,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -12751,7 +12751,7 @@
       "name": "resourcedeltas",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 5,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -12814,7 +12814,7 @@
       "name": "router_extra_attributes",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 27,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -12919,7 +12919,7 @@
       "name": "routerl3agentbindings",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 27,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -12979,7 +12979,7 @@
       "name": "routerports",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 35,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -13053,7 +13053,7 @@
       "name": "routerroutes",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 0,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -13116,7 +13116,7 @@
       "name": "routerrules",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 0,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -13207,7 +13207,7 @@
       "name": "routers",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 27,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -13351,7 +13351,7 @@
       "name": "securitygroupportbindings",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 5921,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -13411,7 +13411,7 @@
       "name": "securitygrouprules",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 9004,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -13608,7 +13608,7 @@
       "name": "securitygroups",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 1798,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -13685,7 +13685,7 @@
       "name": "serviceprofiles",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 0,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -13764,7 +13764,7 @@
       "name": "sessionpersistences",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 1,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -13827,7 +13827,7 @@
       "name": "standardattributes",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 14725,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -13906,7 +13906,7 @@
       "name": "subnetpoolprefixes",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 0,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -13955,7 +13955,7 @@
       "name": "subnetpools",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 0,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -14158,7 +14158,7 @@
       "name": "subnetroutes",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 6,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -14221,7 +14221,7 @@
       "name": "subnets",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 49,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -14421,7 +14421,7 @@
       "name": "tags",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 0,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -14470,7 +14470,7 @@
       "name": "tz_network_bindings",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 0,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -14547,7 +14547,7 @@
       "name": "vcns_router_bindings",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 0,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -14626,7 +14626,7 @@
       "name": "vips",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 1,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,
@@ -14815,7 +14815,7 @@
       "name": "vpnservices",
       "type": "base_table",
       "create_sql": "",
-      "row_count": 0,
+      "row_count": null,
       "columns": [
         {
           "cid": 0,

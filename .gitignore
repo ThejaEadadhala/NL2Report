@@ -5,8 +5,11 @@ __pycache__/
 venv/
 .env
 
-# Datasets — SQLite files are too large for git
+# Datasets — large binary/data files not tracked in git
 datasets/**/*.sqlite
+datasets/**/*.duckdb
+datasets/m5/*.csv
+datasets/beaver/databases/
 
 # Large data folders
 raw/
