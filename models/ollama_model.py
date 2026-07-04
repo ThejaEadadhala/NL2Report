@@ -1,5 +1,6 @@
 import requests
 from models.base_model import BaseModel
+from models.anthropic_model import _sql_system_prompt
 
 OLLAMA_URL = "http://localhost:11434/api/generate"
 DEFAULT_MODEL = "llama3.1:8b"
@@ -22,38 +23,16 @@ class OllamaModel(BaseModel):
 
     def generate_sql(self, question: str, schema: dict) -> str:
         schema_text = self.format_schema(schema)
-        dialect = "MySQL" if schema.get("engine") == "mysql" else "SQLite"
-        system = (
-            f"You are an expert {dialect} assistant.\n"
-            f"Given the database schema and a natural language question, return ONLY a valid {dialect} SQL query.\n\n"
-            "STRICT RULES — violating any rule produces invalid SQL:\n"
-            "1. NEVER use the database name as a table name. Only use the exact table names listed in the schema.\n"
-            "2. NEVER invent or guess column names. Only use column names that are explicitly listed in the schema.\n"
-            "3. Every column name that contains spaces or special characters MUST be wrapped in backticks — e.g. `FRPM Count (K-12)`, `County Name`, `Enrollment (K-12)`.\n"
-            "4. Before selecting any column, verify which table alias it belongs to. Never select a column from the wrong alias — e.g. if Phone is in the schools table aliased as T2, write T2.Phone not T1.Phone.\n"
-            "5. NEVER prefix table names with the database name — this applies to ALL databases. "
-            "Write FROM sales not FROM m5.sales, FROM orders not FROM tpch.orders. "
-            "Alias syntax is always FROM tablename AS alias — NEVER write FROM alias alone. "
-            "Correct: FROM sales AS T1. Wrong: FROM T1.\n"
-            "6. Before writing any JOIN, check: do ALL the columns you need already exist in one table? If yes, use ONLY that table — no JOIN needed. Never join two tables just to get a column that already exists in the first table.\n"
-            "7. Read the question carefully. Make sure your SELECT includes ALL columns the question asks for. Make sure GROUP BY matches exactly what the question wants to group by.\n"
-            "8. Return ONLY the raw SQL query. No explanation, no markdown, no code fences."
-        )
+        engine = schema.get("engine", "sqlite")
+        dialect = "MySQL" if engine == "mysql" else "DuckDB" if engine == "duckdb" else "SQLite"
+        system = _sql_system_prompt(dialect)
         db_name = schema.get("database") or schema.get("db_id", "")
         user = (
             f"{schema_text}\n\n"
             f"Question: {question}\n\n"
             f"IMPORTANT: Write plain table names only. NEVER prefix with the database name. "
             f"Wrong: FROM {db_name}.sales — Correct: FROM sales. "
-            f"Wrong: FROM {db_name}.calendar — Correct: FROM calendar. "
             "SQL:"
         )
         raw = self._generate(system, user)
-
-        if raw.startswith("```"):
-            lines = raw.splitlines()
-            raw = "\n".join(
-                l for l in lines if not l.startswith("```")
-            ).strip()
-
-        return raw
+        return self._extract_sql(raw)

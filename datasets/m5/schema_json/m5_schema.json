@@ -1,5 +1,6 @@
 {
   "database": "m5",
+  "engine": "duckdb",
   "tables": [
     {
       "name": "calendar",

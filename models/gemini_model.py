@@ -2,6 +2,7 @@ import os
 from google import genai
 from google.genai import types
 from models.base_model import BaseModel
+from models.anthropic_model import _sql_system_prompt
 
 DEFAULT_MODEL = "gemini-2.0-flash"
 
@@ -27,25 +28,9 @@ class GeminiModel(BaseModel):
 
     def generate_sql(self, question: str, schema: dict) -> str:
         schema_text = self.format_schema(schema)
-        dialect = "MySQL" if schema.get("engine") == "mysql" else "SQLite"
-        system = (
-            f"You are an expert {dialect} assistant. "
-            f"Given a database schema and a natural language question, return ONLY a valid {dialect} SQL query.\n\n"
-            "STRICT RULES:\n"
-            "1. Use ONLY the exact table names listed in the schema. Never use the database name as a table name.\n"
-            "2. Use ONLY column names explicitly listed in the schema. Never invent column names.\n"
-            "3. Wrap any column name containing spaces or special characters in backticks.\n"
-            "4. NEVER prefix table names with the database name. Write FROM sales not FROM m5.sales, "
-            "FROM orders not FROM tpch.orders.\n"
-            "5. Alias syntax is always FROM tablename AS alias. NEVER write FROM alias alone. "
-            "Correct: FROM sales AS T1. Wrong: FROM T1.\n"
-            "6. Return ONLY the raw SQL query. No explanation, no markdown, no code fences."
-        )
+        engine = schema.get("engine", "sqlite")
+        dialect = "MySQL" if engine == "mysql" else "DuckDB" if engine == "duckdb" else "SQLite"
+        system = _sql_system_prompt(dialect)
         user = f"{schema_text}\n\nQuestion: {question}\nSQL:"
         raw = self._generate(system, user)
-
-        if raw.startswith("```"):
-            lines = raw.splitlines()
-            raw = "\n".join(l for l in lines if not l.startswith("```")).strip()
-
-        return raw
+        return self._extract_sql(raw)

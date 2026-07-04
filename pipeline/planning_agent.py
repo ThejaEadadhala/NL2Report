@@ -27,12 +27,15 @@ _SYSTEM_PROMPT = (
     "CRITICAL RULE: Return EXACTLY ONE element unless the question explicitly contains the words "
     "'and', 'also', or 'as well as' joining two clearly separate analytical goals.\n"
     "When in doubt, return ONE element. Never invent sub-questions not asked for.\n\n"
+    "AGGREGATION RULE: If all metrics in the question are grouped by the SAME dimension "
+    "(e.g., all 'per department', all 'per region', all 'per category'), always return ONE element — "
+    "even if the question uses 'and' or 'also'. These can be combined into one SQL query with a CTE.\n\n"
     "ONE element — these are single goals:\n"
     "  [\"What is the total revenue by region?\"]\n"
     "  [\"How many records exist per category?\"]\n"
-    "  [\"What is the average value per group?\"]\n"
-    "TWO elements — only when explicitly compound:\n"
-    "  [\"What are total sales by region?\", \"Which region had the highest growth?\"]\n\n"
+    "  [\"For each department, show the average supervisees, total sqft, and total research volume.\"]\n"
+    "TWO elements — only when the two goals have DIFFERENT grouping dimensions or require separate queries:\n"
+    "  [\"What are total sales by region?\", \"Which individual customer had the highest single purchase?\"]\n\n"
     "Respond with ONLY a JSON array of strings. No explanation, no markdown, no code fences."
 )
 
@@ -75,6 +78,10 @@ class PlanningAgent:
         try:
             raw = self._model._generate(_SYSTEM_PROMPT, user)
             result = _parse(raw, question)
+            # Never allow more than 2 subtasks — anything beyond that
+            # indicates over-decomposition; collapse to the original question.
+            if len(result) > 2:
+                return [question]
             # Collapse spurious splits: if no compound conjunction in the original
             # question, it should never need more than one sub-query.
             if len(result) > 1:

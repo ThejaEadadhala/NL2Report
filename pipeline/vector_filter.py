@@ -18,7 +18,7 @@ from pathlib import Path
 
 _TOKEN_RE = re.compile(r"[A-Za-z0-9_]+")
 _DEFAULT_DIM = 384
-DEFAULT_TOP_K = 10
+DEFAULT_TOP_K = 20
 
 
 def _tokenize(text: str) -> list[str]:
