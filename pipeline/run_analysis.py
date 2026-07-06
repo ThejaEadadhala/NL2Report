@@ -55,13 +55,13 @@ FORBIDDEN_SQL_PATTERN = re.compile(
 
 # ── Model factory ──────────────────────────────────────────────────────────────
 
-def get_model(model_name: str):
+def get_model(model_name: str, openai_mode: str = "library"):
     if model_name == "ollama":
         from models.ollama_model import OllamaModel
         return OllamaModel()
     elif model_name == "openai":
         from models.openai_model import OpenAIModel
-        return OpenAIModel()
+        return OpenAIModel(use_api=openai_mode == "api")
     elif model_name == "anthropic":
         from models.anthropic_model import AnthropicModel
         return AnthropicModel()
@@ -235,11 +235,12 @@ def print_results(columns: list, rows: list) -> None:
 # ── Main pipeline ──────────────────────────────────────────────────────────────
 
 def run(question: str, dataset: str, db_name: str, split: str, model_name: str,
+        openai_mode: str = "library",
         cli_engine: str | None = None) -> None:
 
     schema = load_schema(dataset, db_name)
     schema = apply_vector_filter(schema, dataset, db_name, question)
-    model = get_model(model_name)
+    model = get_model(model_name, openai_mode)
     db_schema_engine = schema_engine(schema)
     database_ref = find_database_ref(dataset, db_name, schema)
     engine_name = resolve_engine_name(dataset, cli_engine, schema)
@@ -247,6 +248,8 @@ def run(question: str, dataset: str, db_name: str, split: str, model_name: str,
     print(f"\nQuestion : {question}")
     print(f"Database : {db_name} ({dataset}/{split})")
     print(f"Model    : {model_name}")
+    if model_name == "openai":
+        print(f"OpenAI   : {openai_mode}")
     print(f"Engine   : {engine_name}\n")
 
     # Build a unified execute callable
@@ -264,8 +267,12 @@ def run(question: str, dataset: str, db_name: str, split: str, model_name: str,
         def do_execute(sql: str) -> tuple[list, list, str | None]:
             return engine_obj.execute_sql(sql)
 
-    print("Planning...")
-    subtasks = PlanningAgent(model).plan(question, schema)
+    if dataset == "beaver":
+        print("Planning bypassed for Beaver test run.")
+        subtasks = [question]
+    else:
+        print("Planning...")
+        subtasks = PlanningAgent(model).plan(question, schema)
 
     if len(subtasks) == 1:
         print("Generating SQL...")
@@ -305,11 +312,13 @@ def main():
     parser.add_argument("--split", default="", help="Split: train | dev (auto-detected if omitted)")
     parser.add_argument("--model", default=DEFAULT_MODEL,
                         help="Model: ollama | openai | anthropic | gemini (default: ollama)")
+    parser.add_argument("--openai-mode", default="library", choices=["library", "api"],
+                        help="OpenAI adapter mode: library uses OPENAI_API_KEY; api uses OpenAI-compatible API env vars")
     parser.add_argument("--engine", default=None, choices=["sqlite", "duckdb"],
                         help="Execution engine (default: from config/engine_config.json)")
     args = parser.parse_args()
 
-    run(args.question, args.dataset, args.db, args.split, args.model, args.engine)
+    run(args.question, args.dataset, args.db, args.split, args.model, args.openai_mode, args.engine)
 
 
 if __name__ == "__main__":

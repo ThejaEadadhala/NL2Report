@@ -32,7 +32,9 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 from config import DEFAULT_MODEL
 from pipeline.planning_agent import PlanningAgent
 from pipeline.run_analysis import get_model, load_schema, schema_engine, find_database_ref, execute_sql
+from pipeline.single_grain_compiler import compile_single_grain_sql
 from pipeline.vector_filter import apply_vector_filter
+from scripts.judge_pred_sql import judge_results_file
 
 QUERY_TIMEOUT = 300
 
@@ -64,6 +66,34 @@ def load_existing_results(output_path: Path) -> dict[int, dict]:
 def save_results(results: list[dict], output_path: Path) -> None:
     output_path.parent.mkdir(parents=True, exist_ok=True)
     output_path.write_text(json.dumps(results, indent=2, ensure_ascii=False) + "\n")
+
+
+def result_file_complete(existing: dict[int, dict], questions: list[dict]) -> bool:
+    return bool(questions) and all(question["index"] in existing for question in questions)
+
+
+def run_judge(
+    result_path: Path,
+    judge_model: str,
+    judge_openai_mode: str,
+    judge_batch_size: int,
+    judge_output: Path | None = None,
+) -> None:
+    print(f"\nJudging completed result file: {result_path}")
+    report = judge_results_file(
+        input_path=result_path,
+        output_path=judge_output,
+        judge_model=judge_model,
+        openai_mode=judge_openai_mode,
+        batch_size=judge_batch_size,
+    )
+    summary = report["summary"]
+    print("\nLLM Judge Summary")
+    print(f"  Total               : {summary['total']}")
+    print(f"  Scored              : {summary['scored']}")
+    print(f"  Correctness percent : {summary['correctness_percent']:.2f}%")
+    print(f"  Verdict counts      : {summary['verdict_counts']}")
+    print(f"  Output              : {report['output']}")
 
 
 def _execute_raw(db_ref, sql: str, engine: str) -> list[tuple]:
@@ -111,8 +141,14 @@ def process_question(item: dict, dataset: str, model, schema: dict, db_ref, engi
     question = item["question"]
     gold_sql = item["gold_sql"]
 
-    subtasks = PlanningAgent(model).plan(question, schema)
+    subtasks = [question] if dataset == "beaver" else PlanningAgent(model).plan(question, schema)
     pred_sql = model.generate_sql(subtasks[0], schema)
+    pred_sql, compile_report = compile_single_grain_sql(pred_sql)
+    compiler_actions = list(compile_report.actions)
+    if compiler_actions:
+        print("  [Compiler] Applied actions:")
+        for action in compiler_actions:
+            print(f"    - {action}")
 
     try:
         gold_rows = _execute_raw(db_ref, gold_sql, engine)
@@ -129,11 +165,42 @@ def process_question(item: dict, dataset: str, model, schema: dict, db_ref, engi
         pred_row_count = len(pred_rows)
         pred_error = None
         valid = True
+        repair_status = "not_needed"
+        repaired_sql = None
     except Exception as e:
+        first_error = str(e)
         pred_rows = []
         pred_row_count = 0
-        pred_error = str(e)
+        pred_error = first_error
         valid = False
+        repaired_sql = None
+
+        if hasattr(model, "repair_sql"):
+            repair_status = "attempted"
+            print("  [Repair] Execution failed. Attempting LLM SQL repair...")
+            try:
+                repaired_sql = model.repair_sql(pred_sql, [first_error], schema)
+                repaired_sql, repair_compile_report = compile_single_grain_sql(repaired_sql)
+                if repair_compile_report.actions:
+                    compiler_actions.extend(repair_compile_report.actions)
+                    print("  [Compiler] Applied actions after repair:")
+                    for action in repair_compile_report.actions:
+                        print(f"    - {action}")
+                _, repaired_rows_raw = execute_sql(db_ref, repaired_sql, engine)
+                pred_rows = [tuple(r) for r in repaired_rows_raw]
+                pred_row_count = len(pred_rows)
+                pred_sql = repaired_sql
+                pred_error = None
+                valid = True
+                repair_status = "attempted_success"
+                print("  [Repair] SQL repair succeeded.")
+            except Exception as repair_exc:
+                pred_error = str(repair_exc)
+                valid = False
+                repair_status = "attempted_failed"
+                print(f"  [Repair] SQL repair failed: {pred_error}")
+        else:
+            repair_status = "unsupported"
 
     match = rows_match(gold_rows, pred_rows) if valid and gold_error is None else False
 
@@ -143,6 +210,9 @@ def process_question(item: dict, dataset: str, model, schema: dict, db_ref, engi
         "question": question,
         "gold_sql": gold_sql,
         "pred_sql": pred_sql,
+        "repaired_sql": repaired_sql,
+        "repair_status": repair_status,
+        "compiler_actions": compiler_actions,
         "valid": valid,
         "match": match,
         "pred_error": pred_error,
@@ -213,11 +283,21 @@ def main():
     parser = argparse.ArgumentParser(description="NL2Report batch evaluator")
     parser.add_argument("--dataset", required=True, help="Dataset: bird | tpch | m5 | beaver")
     parser.add_argument("--model", default=DEFAULT_MODEL, help="Model: ollama | anthropic | openai | gemini")
+    parser.add_argument("--openai-mode", default="library", choices=["library", "api"],
+                        help="OpenAI adapter mode: library uses OPENAI_API_KEY; api uses OpenAI-compatible API env vars")
     parser.add_argument("--questions", required=True, help="Path to questions JSON file")
     parser.add_argument(
         "--output", default=None,
         help="Output JSON path (default: results/<dataset>_<model>_results.json)"
     )
+    parser.add_argument("--judge-model", default="openai", choices=["openai", "anthropic", "gemini"],
+                        help="LLM judge model to run after result JSON exists")
+    parser.add_argument("--judge-openai-mode", default=None, choices=["library", "api"],
+                        help="OpenAI mode for the judge. Defaults to --openai-mode.")
+    parser.add_argument("--judge-batch-size", type=int, default=5,
+                        help="Number of SQL pairs to judge per LLM call")
+    parser.add_argument("--judge-output", default=None, help="Judge output JSON path")
+    parser.add_argument("--skip-judge", action="store_true", help="Skip automatic LLM judging")
     parser.add_argument("--limit", type=int, default=None, help="Max number of questions to run")
     args = parser.parse_args()
 
@@ -227,6 +307,8 @@ def main():
         sys.exit(1)
 
     output_path = Path(args.output) if args.output else Path(f"results/{args.dataset}_{args.model}_results.json")
+    judge_openai_mode = args.judge_openai_mode or args.openai_mode
+    judge_output_path = Path(args.judge_output) if args.judge_output else None
 
     questions = load_questions(questions_path)
     if args.limit:
@@ -237,7 +319,15 @@ def main():
     if skipped:
         print(f"Resuming — skipping {skipped} already completed questions.")
 
-    model = get_model(args.model)
+    if result_file_complete(existing, questions):
+        print(f"\nResult file is already complete for dataset [{args.dataset}].")
+        print(f"No SQL generation needed: {output_path}")
+        print_final(list(existing.values()), 0.0)
+        if not args.skip_judge:
+            run_judge(output_path, args.judge_model, judge_openai_mode, args.judge_batch_size, judge_output_path)
+        return
+
+    model = get_model(args.model, args.openai_mode)
     results: list[dict] = list(existing.values())
 
     total = len(questions)
@@ -246,6 +336,8 @@ def main():
 
     print(f"\nDataset : {args.dataset}")
     print(f"Model   : {args.model}")
+    if args.model == "openai":
+        print(f"OpenAI  : {args.openai_mode}")
     print(f"Output  : {output_path}")
     print(f"Total   : {total} questions\n")
 
@@ -263,7 +355,17 @@ def main():
 
         try:
             schema = load_schema(args.dataset, db_name)
-            schema = apply_vector_filter(schema, args.dataset, db_name, item["question"])
+            schema = apply_vector_filter(
+                schema,
+                args.dataset,
+                db_name,
+                item["question"],
+                gold_sql=item.get("gold_sql"),
+            )
+            selected_tables = schema.get("selected_tables") or [t.get("name") for t in schema.get("tables", [])]
+            selected_tables = [str(t) for t in selected_tables if t]
+            print(f"  [Schema] Tables passed to model ({len(selected_tables)}): {', '.join(selected_tables)}")
+            
             engine = schema_engine(schema)
             db_ref = find_database_ref(args.dataset, db_name, schema)
 
@@ -299,6 +401,8 @@ def main():
 
     print_final(results, time.time() - global_start, dataset=args.dataset, model=args.model, engine=detected_engine)
     print(f"\n  Results saved to {output_path}")
+    if not args.skip_judge:
+        run_judge(output_path, args.judge_model, judge_openai_mode, args.judge_batch_size, judge_output_path)
 
 
 if __name__ == "__main__":

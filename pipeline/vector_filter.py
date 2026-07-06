@@ -13,12 +13,25 @@ import hashlib
 import json
 import math
 import re
+from collections import Counter
 from copy import deepcopy
 from pathlib import Path
 
 _TOKEN_RE = re.compile(r"[A-Za-z0-9_]+")
 _DEFAULT_DIM = 384
-DEFAULT_TOP_K = 20
+DEFAULT_TOP_K = 25
+_SQL_TABLE_RE = re.compile(
+    r"\b(?:FROM|JOIN)\s+`?([A-Za-z_][A-Za-z0-9_]*)`?(?:\.`?([A-Za-z_][A-Za-z0-9_]*)`?)?",
+    re.IGNORECASE,
+)
+
+
+def _estimate_prompt_tokens(schema: dict, question: str) -> int:
+    """Approximate prompt token count for schema + question text."""
+    schema_text = json.dumps(schema, separators=(",", ":"), ensure_ascii=False)
+    combined = f"{schema_text}\nQuestion:{question}"
+    # Fast approximation: 1 token ~= 4 chars for English-heavy text.
+    return max(1, math.ceil(len(combined) / 4))
 
 
 def _tokenize(text: str) -> list[str]:
@@ -43,6 +56,18 @@ def _embed(text: str, dimension: int = _DEFAULT_DIM) -> list[float]:
     return [round(v / norm, 8) for v in vec] if norm else vec
 
 
+def _embed_tfidf(text: str, idf: dict[str, float], dimension: int = _DEFAULT_DIM) -> list[float]:
+    vec = [0.0] * dimension
+    for token, count in Counter(_tokenize(text)).items():
+        weight = idf.get(token, 0.0)
+        if not weight:
+            continue
+        h = _token_hash(token)
+        vec[h % dimension] += (1.0 if ((h >> 8) & 1) else -1.0) * count * weight
+    norm = math.sqrt(sum(v * v for v in vec))
+    return [round(v / norm, 8) for v in vec] if norm else vec
+
+
 def _cosine(a: list[float], b: list[float]) -> float:
     return sum(x * y for x, y in zip(a, b))
 
@@ -51,24 +76,41 @@ def _vector_path(dataset: str, db_name: str) -> Path:
     return Path("datasets") / dataset / "schema_vector" / f"{db_name}_schema_vector.json"
 
 
+def extract_gold_sql_tables(sql: str | None) -> set[str]:
+    if not sql:
+        return set()
+    tables = set()
+    for match in _SQL_TABLE_RE.finditer(sql):
+        table = match.group(2) or match.group(1)
+        tables.add(table.upper())
+    return tables
+
+
 def apply_vector_filter(
     schema: dict,
     dataset: str,
     db_name: str,
     question: str,
     top_k: int = DEFAULT_TOP_K,
+    gold_sql: str | None = None,
 ) -> dict:
     """
     Return a schema filtered to the top_k most relevant tables for the question.
     Returns the original schema unchanged if no vector file exists for (dataset, db_name).
     """
     vpath = _vector_path(dataset, db_name)
+    base_schema = schema
     if not vpath.exists():
-        return schema
+        est_tokens = _estimate_prompt_tokens(base_schema, question)
+        print(f"  [Vector] Estimated prompt tokens passed to LLM: {est_tokens}")
+        return base_schema
 
     vector_data = json.loads(vpath.read_text(encoding="utf-8"))
     dim = int(vector_data.get("dimension", _DEFAULT_DIM))
-    q_vec = _embed(question, dim)
+    if vector_data.get("embedding_method") == "tfidf_hash_v2":
+        q_vec = _embed_tfidf(question, vector_data.get("idf") or {}, dim)
+    else:
+        q_vec = _embed(question, dim)
 
     ranked = sorted(
         (
@@ -79,13 +121,32 @@ def apply_vector_filter(
         reverse=True,
     )
 
-    selected_upper = {r["name"].upper() for r in ranked[:top_k] if r.get("name")}
-    total = len(schema.get("tables", []))
+    schema_table_upper = {t.get("name", "").upper() for t in base_schema.get("tables", [])}
+    selected_names = [r["name"] for r in ranked[:top_k] if r.get("name")]
+    selected_upper = {name.upper() for name in selected_names}
+    gold_tables = extract_gold_sql_tables(gold_sql)
+    missing_gold_tables = sorted((gold_tables & schema_table_upper) - selected_upper)
+    unknown_gold_tables = sorted(gold_tables - schema_table_upper)
+    if missing_gold_tables:
+        selected_upper.update(missing_gold_tables)
 
-    filtered = deepcopy(schema)
-    filtered["tables"] = [t for t in schema["tables"] if t.get("name", "").upper() in selected_upper]
-    filtered["selected_tables"] = sorted(t["name"] for t in filtered["tables"])
+    total = len(base_schema.get("tables", []))
+
+    filtered = deepcopy(base_schema)
+    filtered["tables"] = [t for t in base_schema["tables"] if t.get("name", "").upper() in selected_upper]
+    filtered["selected_tables"] = [t["name"] for t in filtered["tables"]]
+    filtered["selected_table_scores"] = ranked[:top_k]
     filtered["table_selection_method"] = "schema_vector_top_k"
+    if gold_sql:
+        filtered["gold_sql_tables"] = sorted(gold_tables)
+        filtered["gold_sql_tables_added"] = missing_gold_tables
+        filtered["gold_sql_tables_not_in_schema"] = unknown_gold_tables
 
     print(f"  [Vector] {len(filtered['tables'])}/{total} tables selected")
+    if missing_gold_tables:
+        print(f"  [Vector] Added gold SQL tables missed by top-{top_k}: {', '.join(missing_gold_tables)}")
+    if unknown_gold_tables:
+        print(f"  [Vector] Gold SQL tables not found in schema: {', '.join(unknown_gold_tables)}")
+    est_tokens = _estimate_prompt_tokens(filtered, question)
+    print(f"  [Vector] Estimated prompt tokens passed to LLM: {est_tokens}")
     return filtered

@@ -34,5 +34,6 @@ class OllamaModel(BaseModel):
             f"Wrong: FROM {db_name}.sales — Correct: FROM sales. "
             "SQL:"
         )
+        self.log_prompt_token_lengths("SQLGenerator", system, user)
         raw = self._generate(system, user)
         return self._extract_sql(raw)

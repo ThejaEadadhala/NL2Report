@@ -18,6 +18,8 @@ import sys
 import time
 from pathlib import Path
 from dotenv import load_dotenv
+
+# Always load the project-root .env regardless of current working directory.
 load_dotenv()
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
@@ -59,13 +61,13 @@ def make_db_finder(dataset: str, split: str | None):
     return finder
 
 
-def get_model(model_name: str):
+def get_model(model_name: str, openai_mode: str = "library"):
     if model_name == "ollama":
         from models.ollama_model import OllamaModel
         return OllamaModel()
     elif model_name == "openai":
         from models.openai_model import OpenAIModel
-        return OpenAIModel()
+        return OpenAIModel(use_api=openai_mode == "api")
     elif model_name == "anthropic":
         from models.anthropic_model import AnthropicModel
         return AnthropicModel()
@@ -98,6 +100,8 @@ def main():
     parser.add_argument("--dataset", default="bird", help="Dataset: bird | tpch (default: bird)")
     parser.add_argument("--split", default=None, help="Split: dev | train — omit for datasets with no split (e.g. tpch)")
     parser.add_argument("--model", default="ollama", help="Model: ollama | openai | anthropic (default: ollama)")
+    parser.add_argument("--openai-mode", default="library", choices=["library", "api"],
+                        help="OpenAI adapter mode: library uses OPENAI_API_KEY; api uses OpenAI-compatible API env vars")
     parser.add_argument("--limit", type=int, default=None, help="Limit number of questions for quick tests")
     parser.add_argument("--questions", default=None, help="Custom questions filename (e.g. sample_questions.json)")
     args = parser.parse_args()
@@ -116,11 +120,19 @@ def main():
         print(f"Limiting to first {args.limit} questions")
 
     db_finder     = make_db_finder(args.dataset, args.split)
-    model         = get_model(args.model)
+    model         = get_model(args.model, args.openai_mode)
     schema_loader = lambda db_name: load_schema(args.dataset, db_name)
-    schema_filter = lambda schema, db_name, q: apply_vector_filter(schema, args.dataset, db_name, q)
+    schema_filter = lambda schema, db_name, q, gold_sql=None: apply_vector_filter(
+        schema,
+        args.dataset,
+        db_name,
+        q,
+        gold_sql=gold_sql,
+    )
 
     print(f"\nRunning evaluation with [{args.model}]...\n")
+    if args.model == "openai":
+        print(f"OpenAI mode: {args.openai_mode}\n")
     start = time.time()
 
     results = evaluate_dataset(

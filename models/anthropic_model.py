@@ -53,5 +53,6 @@ class AnthropicModel(BaseModel):
         dialect = "MySQL" if engine == "mysql" else "DuckDB" if engine == "duckdb" else "SQLite"
         system = _sql_system_prompt(dialect)
         user = f"{schema_text}\n\nQuestion: {question}\nSQL:"
+        self.log_prompt_token_lengths("SQLGenerator", system, user)
         raw = self._generate(system, user)
         return self._extract_sql(raw)

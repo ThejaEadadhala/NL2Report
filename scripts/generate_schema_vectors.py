@@ -8,6 +8,7 @@ import hashlib
 import json
 import math
 import re
+from collections import Counter
 from copy import deepcopy
 from pathlib import Path
 from typing import Any
@@ -31,12 +32,21 @@ def token_hash(token: str) -> int:
 
 
 def embed_text(text: str, dimension: int = DEFAULT_DIMENSION) -> list[float]:
+    token_counts = Counter(tokenize(text))
+    return embed_tokens(token_counts, {token: 1.0 for token in token_counts}, dimension)
+
+
+def embed_tokens(
+    token_counts: Counter[str],
+    idf: dict[str, float],
+    dimension: int = DEFAULT_DIMENSION,
+) -> list[float]:
     vector = [0.0] * dimension
-    for token in tokenize(text):
+    for token, count in token_counts.items():
         hashed = token_hash(token)
         index = hashed % dimension
         sign = 1.0 if ((hashed >> 8) & 1) else -1.0
-        vector[index] += sign
+        vector[index] += sign * count * idf.get(token, 0.0)
 
     norm = math.sqrt(sum(value * value for value in vector))
     if not norm:
@@ -89,20 +99,37 @@ def table_text(table: dict[str, Any]) -> str:
     return " ".join(part for part in parts if part)
 
 
+def build_idf(table_texts: list[str]) -> dict[str, float]:
+    document_count = len(table_texts)
+    document_frequency: Counter[str] = Counter()
+    for text in table_texts:
+        document_frequency.update(set(tokenize(text)))
+    return {
+        token: round(math.log((document_count + 1) / (frequency + 1)) + 1, 8)
+        for token, frequency in document_frequency.items()
+    }
+
+
 def schema_vector(schema: dict[str, Any], schema_path: Path | None = None) -> dict[str, Any]:
     database = schema.get("database") or schema.get("db_id") or schema.get("mysql_database")
+    tables = schema.get("tables", [])
+    table_texts = [table_text(table) for table in tables]
+    idf = build_idf(table_texts)
     return {
         "db_id": database,
         "source_schema": str(schema_path) if schema_path else None,
-        "embedding_method": "hashing_cosine_v1",
+        "embedding_method": "tfidf_hash_v2",
         "dimension": DEFAULT_DIMENSION,
+        "idf": idf,
         "tables": [
             {
                 "name": table.get("name"),
-                "text": table_text(table),
-                "vector": embed_text(table_text(table)),
+                "text": text,
+                "vector": embed_tokens(Counter(tokenize(text)), idf),
+                "column_count": len(table.get("columns", [])),
+                "has_fk": bool(table.get("foreign_keys")),
             }
-            for table in schema.get("tables", [])
+            for table, text in zip(tables, table_texts)
         ],
     }
 
@@ -128,7 +155,9 @@ def load_schema_vector(path: Path) -> dict[str, Any]:
 
 
 def rank_tables(question: str, vector_data: dict[str, Any]) -> list[dict[str, Any]]:
-    query_vector = embed_text(question, int(vector_data.get("dimension", DEFAULT_DIMENSION)))
+    dimension = int(vector_data.get("dimension", DEFAULT_DIMENSION))
+    idf = vector_data.get("idf") or {}
+    query_vector = embed_tokens(Counter(tokenize(question)), idf, dimension)
     ranked = []
     for table in vector_data.get("tables", []):
         score = cosine_similarity(query_vector, table.get("vector", []))
