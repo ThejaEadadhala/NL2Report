@@ -114,6 +114,13 @@ def _execute_raw(db_ref, sql: str, engine: str) -> list[tuple]:
         finally:
             cursor.close()
             conn.close()
+    elif engine == "duckdb":
+        import duckdb
+        conn = duckdb.connect(str(db_ref), read_only=True)
+        try:
+            return conn.execute(sql).fetchall()
+        finally:
+            conn.close()
     else:
         conn = sqlite3.connect(str(db_ref))
         try:
@@ -215,12 +222,16 @@ def process_question(item: dict, dataset: str, model, schema: dict, db_ref, engi
 
 
 def run_with_timeout(fn, timeout: int) -> dict:
-    with ThreadPoolExecutor(max_workers=1) as executor:
-        future = executor.submit(fn)
-        try:
-            return future.result(timeout=timeout)
-        except FuturesTimeoutError:
-            raise TimeoutError(f"timed out after {timeout}s")
+    executor = ThreadPoolExecutor(max_workers=1)
+    future = executor.submit(fn)
+    try:
+        return future.result(timeout=timeout)
+    except FuturesTimeoutError:
+        executor.shutdown(wait=False, cancel_futures=True)
+        raise TimeoutError(f"timed out after {timeout}s")
+    except Exception:
+        executor.shutdown(wait=False)
+        raise
 
 
 def print_live(i: int, total: int, result: dict, correct: int, valid_count: int) -> None:
@@ -233,7 +244,7 @@ def print_live(i: int, total: int, result: dict, correct: int, valid_count: int)
     )
 
 
-def print_final(results: list[dict], elapsed: float) -> None:
+def print_final(results: list[dict], elapsed: float, dataset: str = "", model: str = "", engine: str = "") -> None:
     total = len(results)
     if not total:
         print("No results.")
@@ -255,6 +266,9 @@ def print_final(results: list[dict], elapsed: float) -> None:
     print("\n" + "=" * 55)
     print("  Final Evaluation Summary")
     print("=" * 55)
+    if dataset: print(f"  Dataset           : {dataset}")
+    if model:   print(f"  Model             : {model}")
+    if engine:  print(f"  Engine            : {engine}")
     print(f"  Total questions   : {total}")
     print(f"  Valid SQL Rate    : {valid_count}/{total} ({100*valid_count/total:.1f}%)")
     print(f"  Execution Accuracy: {correct}/{total} ({100*correct/total:.1f}%)")
@@ -284,6 +298,7 @@ def main():
                         help="Number of SQL pairs to judge per LLM call")
     parser.add_argument("--judge-output", default=None, help="Judge output JSON path")
     parser.add_argument("--skip-judge", action="store_true", help="Skip automatic LLM judging")
+    parser.add_argument("--limit", type=int, default=None, help="Max number of questions to run")
     args = parser.parse_args()
 
     questions_path = Path(args.questions)
@@ -296,6 +311,8 @@ def main():
     judge_output_path = Path(args.judge_output) if args.judge_output else None
 
     questions = load_questions(questions_path)
+    if args.limit:
+        questions = questions[:args.limit]
     existing = load_existing_results(output_path)
 
     skipped = len([q for q in questions if q["index"] in existing])
@@ -325,6 +342,8 @@ def main():
     print(f"Total   : {total} questions\n")
 
     global_start = time.time()
+    first_schema = load_schema(args.dataset, questions[0]["db"])
+    detected_engine = schema_engine(first_schema)
 
     for item in questions:
         idx = item["index"]
@@ -380,7 +399,7 @@ def main():
         i_done = len(results) - 1
         print_live(i_done, total, result, correct, valid_count)
 
-    print_final(results, time.time() - global_start)
+    print_final(results, time.time() - global_start, dataset=args.dataset, model=args.model, engine=detected_engine)
     print(f"\n  Results saved to {output_path}")
     if not args.skip_judge:
         run_judge(output_path, args.judge_model, judge_openai_mode, args.judge_batch_size, judge_output_path)

@@ -5,6 +5,31 @@ from models.base_model import BaseModel
 DEFAULT_MODEL = "claude-sonnet-4-6"
 
 
+def _sql_system_prompt(dialect: str) -> str:
+    return (
+        f"You are an expert {dialect} SQL assistant. "
+        f"Given a database schema and a natural language question, return ONLY a valid {dialect} SQL query.\n\n"
+        "STRICT RULES — follow every rule exactly:\n"
+        "1. Use ONLY the exact table and column names listed in the schema. Never invent names.\n"
+        "2. NEVER prefix table names with the database name. Write FROM sales not FROM m5.sales.\n"
+        "3. Alias syntax: FROM tablename AS alias. NEVER write FROM alias alone.\n"
+        "4. Wrap column names containing spaces or special characters in backticks.\n"
+        "5. Before writing a JOIN, verify the join key exists in BOTH tables in the schema.\n"
+        "6. Before adding a JOIN, check if all needed columns already exist in one table — if so, no JOIN is needed.\n"
+        "7. Use WHERE for row-level filters and HAVING for aggregate filters.\n"
+        "8. For multi-step analytical queries, use CTEs (WITH clauses) rather than deeply nested subqueries.\n"
+        "9. Window functions: use OVER (PARTITION BY ... ORDER BY ... ROWS BETWEEN ...) syntax exactly.\n"
+        "10. For standard deviation and variance: "
+        "in MySQL and DuckDB use STDDEV() and VARIANCE(); "
+        "in SQLite these functions do not exist — compute manually: "
+        "SQRT(AVG(x*x) - AVG(x)*AVG(x)) for stddev, AVG(x*x) - AVG(x)*AVG(x) for variance. "
+        "Never use STDDEV_POP() or VAR_POP(). Never round unless asked.\n"
+        "11. If the schema does not contain a column or table needed to answer the question, "
+        "use NULL AS column_name as a placeholder — do NOT output explanations or reasoning.\n"
+        "12. Return ONLY the raw SQL query. No explanation, no markdown, no code fences, no prose."
+    )
+
+
 class AnthropicModel(BaseModel):
     def __init__(self, model: str = DEFAULT_MODEL):
         api_key = os.getenv("ANTHROPIC_API_KEY")
@@ -16,7 +41,7 @@ class AnthropicModel(BaseModel):
     def _generate(self, system: str, user: str) -> str:
         message = self.client.messages.create(
             model=self.model,
-            max_tokens=512,
+            max_tokens=2048,
             system=system,
             messages=[{"role": "user", "content": user}],
         )
@@ -24,26 +49,10 @@ class AnthropicModel(BaseModel):
 
     def generate_sql(self, question: str, schema: dict) -> str:
         schema_text = self.format_schema(schema)
-        dialect = "MySQL" if schema.get("engine") == "mysql" else "SQLite"
-        system = (
-            f"You are an expert {dialect} assistant. "
-            f"Given a database schema and a natural language question, return ONLY a valid {dialect} SQL query.\n\n"
-            "STRICT RULES:\n"
-            "1. Use ONLY the exact table names listed in the schema. Never use the database name as a table name.\n"
-            "2. Use ONLY column names explicitly listed in the schema. Never invent column names.\n"
-            "3. Wrap any column name containing spaces or special characters in backticks.\n"
-            "4. NEVER prefix table names with the database name. Write FROM sales not FROM m5.sales, "
-            "FROM orders not FROM tpch.orders.\n"
-            "5. Alias syntax is always FROM tablename AS alias. NEVER write FROM alias alone. "
-            "Correct: FROM sales AS T1. Wrong: FROM T1.\n"
-            "6. Return ONLY the raw SQL query. No explanation, no markdown, no code fences."
-        )
+        engine = schema.get("engine", "sqlite")
+        dialect = "MySQL" if engine == "mysql" else "DuckDB" if engine == "duckdb" else "SQLite"
+        system = _sql_system_prompt(dialect)
         user = f"{schema_text}\n\nQuestion: {question}\nSQL:"
         self.log_prompt_token_lengths("SQLGenerator", system, user)
         raw = self._generate(system, user)
-
-        if raw.startswith("```"):
-            lines = raw.splitlines()
-            raw = "\n".join(l for l in lines if not l.startswith("```")).strip()
-
-        return raw
+        return self._extract_sql(raw)

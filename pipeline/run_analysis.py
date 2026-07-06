@@ -128,7 +128,12 @@ def schema_engine(schema: dict) -> str:
 def find_database_ref(dataset: str, db_name: str, schema: dict) -> Path | str:
     if schema_engine(schema) == "mysql":
         return schema.get("mysql_database") or schema.get("db_id") or db_name
-    return find_db_path(dataset, db_name)
+    base = Path("datasets") / dataset
+    for suffix in (".duckdb", ".sqlite"):
+        matches = list(base.rglob(f"{db_name}{suffix}"))
+        if matches:
+            return matches[0]
+    raise FileNotFoundError(f"No database file found for '{db_name}' under {base}")
 
 
 # ── MySQL execution (Beaver) ───────────────────────────────────────────────────
@@ -194,10 +199,19 @@ def execute_mysql(database: str, sql: str) -> tuple[list, list]:
 
 
 def execute_sql(database_ref: Path | str, sql: str, engine: str) -> tuple[list, list]:
-    """Legacy executor used for MySQL (Beaver). SQLite/DuckDB use engine objects instead."""
     sql = validate_read_only_sql(sql)
     if engine == "mysql":
         return execute_mysql(str(database_ref), sql)
+    if engine == "duckdb":
+        import duckdb
+        conn = duckdb.connect(str(database_ref), read_only=True)
+        try:
+            result = conn.execute(sql)
+            rows = result.fetchall()
+            columns = [desc[0] for desc in result.description] if result.description else []
+            return columns, [list(r) for r in rows]
+        finally:
+            conn.close()
     return execute_sqlite(Path(database_ref), sql)
 
 

@@ -1,6 +1,7 @@
 import os
 from openai import OpenAI
 from models.base_model import BaseModel
+from models.anthropic_model import _sql_system_prompt
 
 DEFAULT_MODEL = "gpt-4o"
 DEFAULT_API_MODEL = "gpt-3.5-turbo"
@@ -46,7 +47,7 @@ class OpenAIModel(BaseModel):
 
     def generate_sql(self, question: str, schema: dict) -> str:
         schema_text = self.format_schema(schema)
-        dialect = "MySQL version 9.7.x" if schema.get("engine") == "mysql" else "SQLite"
+        dialect = "MySQL version 9.7.x" if schema.get("engine") == "mysql" else "DuckDB" if schema.get("engine") == "duckdb" else "SQLite"
         system = (
             f"You are an expert {dialect} SQL generator. "
             f"Return exactly one valid {dialect} SELECT query for the user's question.\n\n"
