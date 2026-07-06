@@ -87,7 +87,10 @@ def evaluate_dataset(
         try:
             schema = schema_loader(db_name)
             if schema_filter:
-                schema = schema_filter(schema, db_name, question)
+                try:
+                    schema = schema_filter(schema, db_name, question, gold_sql)
+                except TypeError:
+                    schema = schema_filter(schema, db_name, question)
             pred_sql = model.generate_sql(question, schema)
             result = execution_accuracy(gold_sql, pred_sql, db_path)
 

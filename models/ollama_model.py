@@ -48,6 +48,7 @@ class OllamaModel(BaseModel):
             f"Wrong: FROM {db_name}.calendar — Correct: FROM calendar. "
             "SQL:"
         )
+        self.log_prompt_token_lengths("SQLGenerator", system, user)
         raw = self._generate(system, user)
 
         if raw.startswith("```"):

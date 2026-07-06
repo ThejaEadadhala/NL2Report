@@ -73,6 +73,7 @@ class PlanningAgent:
         user = f"{schema_text}\n\nQuestion: {question}\nPlan (JSON array):"
 
         try:
+            self._model.log_prompt_token_lengths("PlanningAgent", _SYSTEM_PROMPT, user)
             raw = self._model._generate(_SYSTEM_PROMPT, user)
             result = _parse(raw, question)
             # Collapse spurious splits: if no compound conjunction in the original

@@ -1,3 +1,4 @@
+import re
 from abc import ABC, abstractmethod
 
 
@@ -12,6 +13,35 @@ class BaseModel(ABC):
     def _generate(self, system: str, user: str) -> str:
         """Raw LLM call with a system prompt and user message. Implemented by each adapter."""
         raise NotImplementedError(f"{type(self).__name__} does not implement _generate")
+
+    def token_length(self, text: str) -> int:
+        """Return token length using model tokenizer when available, else fallback heuristic."""
+        try:
+            import tiktoken
+
+            model_name = getattr(self, "model", None)
+            if model_name:
+                try:
+                    enc = tiktoken.encoding_for_model(model_name)
+                except KeyError:
+                    enc = tiktoken.get_encoding("cl100k_base")
+            else:
+                enc = tiktoken.get_encoding("cl100k_base")
+            return len(enc.encode(text))
+        except Exception:
+            # Fallback: punctuation-aware token approximation.
+            return len(re.findall(r"\w+|[^\w\s]", text))
+
+    def log_prompt_token_lengths(self, stage: str, system: str, user: str) -> None:
+        """Print token lengths for the exact messages passed to the LLM call."""
+        system_tokens = self.token_length(system)
+        user_tokens = self.token_length(user)
+        total_tokens = system_tokens + user_tokens
+        model_name = getattr(self, "model", "unknown")
+        print(
+            f"  [Tokens] {stage} model={model_name} "
+            f"system={system_tokens} user={user_tokens} total={total_tokens}"
+        )
 
     @staticmethod
     def _quote(name: str) -> str:

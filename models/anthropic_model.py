@@ -39,6 +39,7 @@ class AnthropicModel(BaseModel):
             "6. Return ONLY the raw SQL query. No explanation, no markdown, no code fences."
         )
         user = f"{schema_text}\n\nQuestion: {question}\nSQL:"
+        self.log_prompt_token_lengths("SQLGenerator", system, user)
         raw = self._generate(system, user)
 
         if raw.startswith("```"):
