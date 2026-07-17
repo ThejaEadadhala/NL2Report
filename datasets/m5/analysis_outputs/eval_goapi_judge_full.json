@@ -1,0 +1,28 @@
+{
+  "run_info": {
+    "dataset": "m5",
+    "model": "goapi (claude-sonnet-4-6)",
+    "judge_model": "gpt-4o via GoAPI",
+    "engine": "duckdb",
+    "input_file": "results/m5_goapi_results.json",
+    "judged_file": "results/m5_goapi_results_llm_judged.json",
+    "timestamp": "2026-07-08 14:37:16"
+  },
+  "metrics": {
+    "total": 100,
+    "scored": 100,
+    "correct": 56,
+    "partially_correct": 27,
+    "incorrect": 17,
+    "average_score": 0.727,
+    "correctness_percent": "72.7%",
+    "verdict_counts": {
+      "correct": 56,
+      "partially_correct": 27,
+      "incorrect": 17
+    }
+  },
+  "correct_questions": [],
+  "partially_correct_questions": [],
+  "incorrect_questions": []
+}

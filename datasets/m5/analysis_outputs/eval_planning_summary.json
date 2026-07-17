@@ -1,0 +1,13 @@
+{
+  "total": 100,
+  "correct": 52,
+  "valid": 92,
+  "errors": 8,
+  "near_miss": 31,
+  "execution_accuracy_pct": "52.0%",
+  "valid_sql_rate_pct": "92.0%",
+  "near_miss_pct": "31.0%",
+  "avg_time_per_question_seconds": 10.32,
+  "total_time_seconds": 1031.7,
+  "total_time_minutes": 17.2
+}

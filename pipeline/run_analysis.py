@@ -68,6 +68,9 @@ def get_model(model_name: str, openai_mode: str = "library"):
     elif model_name == "gemini":
         from models.gemini_model import GeminiModel
         return GeminiModel()
+    elif model_name == 'goapi':
+        from models.goapi_model import GoAPIModel
+        return GoAPIModel()
     else:
         raise ValueError(f"Unknown model '{model_name}'. Choose: ollama | openai | anthropic | gemini")
 

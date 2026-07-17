@@ -1,0 +1,47 @@
+{
+  "run_info": {
+    "dataset": "m5",
+    "model": "goapi (claude-sonnet-4-6)",
+    "judge_model": "gpt-4o via GoAPI",
+    "engine": "duckdb",
+    "questions_file": "datasets/m5/M5_Questions.json",
+    "eval_file": "results/m5_goapi_results.json",
+    "judge_file": "results/m5_goapi_results_llm_judged.json",
+    "timestamp": "2026-07-08 14:38:18"
+  },
+  "execution_accuracy": {
+    "total": 100,
+    "correct": 68,
+    "valid": 98,
+    "errors": 2,
+    "near_miss": 10,
+    "execution_accuracy_pct": "68.0%",
+    "valid_sql_rate_pct": "98.0%",
+    "near_miss_pct": "10.0%",
+    "avg_time_per_question_seconds": 2.6,
+    "total_time_seconds": 259.6,
+    "total_time_minutes": 4.33
+  },
+  "llm_judge": {
+    "total": 100,
+    "scored": 100,
+    "correct": 56,
+    "partially_correct": 27,
+    "incorrect": 17,
+    "correctness_pct": "72.7%",
+    "average_score": 0.727,
+    "verdict_counts": {
+      "correct": 56,
+      "partially_correct": 27,
+      "incorrect": 17
+    }
+  },
+  "combined_analysis": {
+    "strict_ex_pct": "68.0%",
+    "judge_correctness_pct": "72.7%",
+    "valid_sql_pct": "98.0%",
+    "near_miss_count": 10,
+    "gap_ex_vs_judge": "4.7%",
+    "note": "Gap between strict EX and judge correctness shows near-miss effect -- queries correct in logic but differ in formatting"
+  }
+}
