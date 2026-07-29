@@ -2,7 +2,7 @@ import os
 from google import genai
 from google.genai import types
 from models.base_model import BaseModel
-from models.anthropic_model import _sql_system_prompt
+from models.prompts import sql_system_prompt
 
 DEFAULT_MODEL = "gemini-2.0-flash"
 
@@ -30,7 +30,7 @@ class GeminiModel(BaseModel):
         schema_text = self.format_schema(schema)
         engine = schema.get("engine", "sqlite")
         dialect = "MySQL" if engine == "mysql" else "DuckDB" if engine == "duckdb" else "SQLite"
-        system = _sql_system_prompt(dialect)
+        system = sql_system_prompt(dialect)
         user = f"{schema_text}\n\nQuestion: {question}\nSQL:"
         self.log_prompt_token_lengths("SQLGenerator", system, user)
         raw = self._generate(system, user)
