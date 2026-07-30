@@ -214,6 +214,16 @@ python pipeline/batch_eval.py --dataset tpch --model anthropic --questions datas
 
 Output includes per-question `execution_time_seconds` and a final summary with near-miss count (same row count but different values).
 
+### Evaluation UI
+
+The Streamlit dashboard reads final judged artifacts from `results/*llm_judge*.json` or `results/*llm_judged*.json` and merges the matching raw execution file when it exists.
+
+```powershell
+streamlit run ui/app.py
+```
+
+The first version is an evaluation workbench: choose the judged result JSON, review experiment configuration, inspect generated SQL, compare gold and predicted row counts, and view query-level LLM judge outcomes plus aggregate metrics.
+
 ### Legacy batch evaluation
 
 ```powershell

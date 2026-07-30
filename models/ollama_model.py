@@ -1,6 +1,6 @@
 import requests
 from models.base_model import BaseModel
-from models.anthropic_model import _sql_system_prompt
+from models.prompts import sql_system_prompt
 
 OLLAMA_URL = "http://localhost:11434/api/generate"
 DEFAULT_MODEL = "llama3.1:8b"
@@ -25,7 +25,7 @@ class OllamaModel(BaseModel):
         schema_text = self.format_schema(schema)
         engine = schema.get("engine", "sqlite")
         dialect = "MySQL" if engine == "mysql" else "DuckDB" if engine == "duckdb" else "SQLite"
-        system = _sql_system_prompt(dialect)
+        system = sql_system_prompt(dialect)
         db_name = schema.get("database") or schema.get("db_id", "")
         user = (
             f"{schema_text}\n\n"

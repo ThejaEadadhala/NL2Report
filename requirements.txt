@@ -13,5 +13,8 @@ mysql-connector-python>=8.4.0
 nltk>=3.8.0
 rouge-score>=0.1.2
 
+# UI dashboard
+streamlit>=1.36.0
+
 # Environment / config
 python-dotenv>=1.0.0

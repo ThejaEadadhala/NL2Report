@@ -20,6 +20,7 @@ import argparse
 import json
 import sys
 import time
+from datetime import datetime
 from pathlib import Path
 from typing import Any
 
@@ -92,6 +93,17 @@ def parse_judgment(raw: str) -> dict[str, Any]:
             "reason": f"Judge returned invalid JSON: {exc}",
             "raw_judgment": raw,
         }
+
+    if isinstance(parsed, dict) and isinstance(parsed.get("judgments"), list):
+        judgments = parsed["judgments"]
+        if not judgments or not isinstance(judgments[0], dict):
+            return {
+                "score": None,
+                "verdict": "parse_error",
+                "reason": "Judge JSON contained an empty or invalid judgments array.",
+                "raw_judgment": raw,
+            }
+        parsed = judgments[0]
 
     score = parsed.get("score")
     if not isinstance(score, (int, float)):
@@ -291,6 +303,7 @@ def judge_results_file(
         "judge_model": judge_model,
         "openai_mode": openai_mode if judge_model == "openai" else None,
         "batch_size": batch_size,
+        "generated_at": datetime.now().isoformat(timespec="seconds"),
         "summary": summarize(judged),
         "results": judged,
     }

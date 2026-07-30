@@ -1,10 +1,9 @@
 import os
 from openai import OpenAI
 from models.base_model import BaseModel
-from models.anthropic_model import _sql_system_prompt
 
 DEFAULT_MODEL = "gpt-4o"
-DEFAULT_API_MODEL = "gpt-3.5-turbo"
+DEFAULT_API_MODEL = "gpt-4o"
 DEFAULT_API_BASE_URL = "https://goapi.gptnb.ai/v1"
 
 
