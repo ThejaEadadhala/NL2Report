@@ -3,16 +3,16 @@
   "judge_model": "openai",
   "openai_mode": "api",
   "batch_size": 5,
-  "generated_at": "2026-07-30T12:54:22",
+  "generated_at": "2026-07-30T17:27:34",
   "summary": {
     "total": 100,
     "scored": 100,
-    "average_score": 0.4465,
-    "correctness_percent": 44.65,
+    "average_score": 0.4515,
+    "correctness_percent": 45.15,
     "verdict_counts": {
-      "incorrect": 46,
-      "partially_correct": 27,
-      "correct": 27
+      "incorrect": 43,
+      "partially_correct": 28,
+      "correct": 29
     }
   },
   "results": [
@@ -23,9 +23,9 @@
       "pred_sql": "SELECT s.EdOpsName FROM schools AS s JOIN satscores AS sat ON s.CDSCode = sat.cds WHERE sat.AvgScrMath = (SELECT MAX(AvgScrMath) FROM satscores)",
       "gold_row_count": 1,
       "pred_row_count": 0,
-      "judge_score": 0.0,
+      "judge_score": 0.1,
       "judge_verdict": "incorrect",
-      "judge_reason": "The predicted SQL uses a subquery to match MAX(AvgScrMath), but the gold uses ORDER BY DESC LIMIT 1. The key difference is that MAX() ignores NULL values while the subquery approach returns 0 rows (pred_row_count=0 vs gold_row_count=1), indicating the MAX subquery returned NULL or no match — likely because AvgScrMath contains NULLs that MAX skips but the equality check fails. The result sets differ."
+      "judge_reason": "The predicted SQL uses a subquery to find MAX(AvgScrMath), which is semantically close to the gold's ORDER BY DESC LIMIT 1. However, the gold returns 1 row while the predicted returns 0 rows, indicating the subquery likely fails due to NULL values in AvgScrMath — MAX() on a column with all NULLs or a NULL-filtering issue causes no match. The gold's ORDER BY/LIMIT approach handles NULLs differently (sorts them last), so the results diverge. The row count mismatch confirms incorrectness."
     },
     {
       "index": 1,
@@ -34,20 +34,20 @@
       "pred_sql": "SELECT COUNT(*) FROM satscores AS s INNER JOIN schools AS sc ON s.cds = sc.CDSCode WHERE sc.MailCity = 'Lakeport' AND s.NumGE1500 >= 1500",
       "gold_row_count": 1,
       "pred_row_count": 1,
-      "judge_score": 0.0,
+      "judge_score": 0.1,
       "judge_verdict": "incorrect",
-      "judge_reason": "Although both return 1 row, the logic is fundamentally different. The gold filters on the sum of three average score columns (AvgScrRead + AvgScrMath + AvgScrWrite >= 1500), while the predicted uses NumGE1500 >= 1500, which is a count of students scoring >= 1500 — a completely different column and semantic. The matching row count is coincidental and the answer could easily be wrong for different data."
+      "judge_reason": "The predicted SQL uses s.NumGE1500 >= 1500 which is a completely different column and condition than the gold's (AvgScrRead + AvgScrMath + AvgScrWrite) >= 1500. NumGE1500 is the count of students scoring >= 1500, not the sum of average scores. Even though both return 1 row (a COUNT(*)), the filter logic is semantically wrong and would produce a different count under most database contents. The question asks about total SAT scores (sum of averages) being >= 1500, not the number of students."
     },
     {
       "index": 2,
       "question": "Please specify all of the schools and their related mailing zip codes that are under Avetik Atoian's administration.",
       "gold_sql": "SELECT School, MailZip FROM schools WHERE AdmFName1 = 'Avetik' AND AdmLName1 = 'Atoian'",
-      "pred_sql": "SELECT School, MailZip FROM schools WHERE AdmFName1 = 'Avetik' AND AdmLName1 = 'Atoian' OR AdmFName2 = 'Avetik' AND AdmLName2 = 'Atoian' OR AdmFName3 = 'Avetik' AND AdmLName3 = 'Atoian'",
+      "pred_sql": "SELECT School, MailZip FROM schools AS s WHERE s.AdmFName1 = 'Avetik' AND s.AdmLName1 = 'Atoian' OR s.AdmFName2 = 'Avetik' AND s.AdmLName2 = 'Atoian' OR s.AdmFName3 = 'Avetik' AND s.AdmLName3 = 'Atoian'",
       "gold_row_count": 1,
       "pred_row_count": 5,
       "judge_score": 0.3,
       "judge_verdict": "partially_correct",
-      "judge_reason": "The predicted SQL adds OR conditions for AdmFName2/AdmLName2 and AdmFName3/AdmLName3, which the gold does not include. This returns 5 rows vs the gold's 1 row. The question asks about 'Avetik Atoian's administration' and the gold only checks the first administrator fields. The extra OR conditions introduce additional rows not intended by the gold query, making the result incorrect despite the correct base condition."
+      "judge_reason": "The gold SQL only checks the first administrator fields (AdmFName1, AdmLName1), while the predicted SQL also checks AdmFName2/AdmLName2 and AdmFName3/AdmLName3. The question asks for schools under Avetik Atoian's administration without specifying which admin slot, so the predicted SQL's broader search could be argued as more complete. However, the gold returns 1 row while the predicted returns 5 rows, meaning the extra conditions match additional records not intended by the gold answer. Also note the OR conditions lack proper parenthesization which could cause logical errors. The mismatch (1 vs 5 rows) makes the predicted result incorrect relative to the gold."
     },
     {
       "index": 3,
@@ -58,18 +58,18 @@
       "pred_row_count": 0,
       "judge_score": 0.1,
       "judge_verdict": "incorrect",
-      "judge_reason": "The predicted SQL queries the schools table alone using FundingType and Charter columns, while the gold joins frpm to schools and filters on frpm's 'Charter Funding Type' = 'Directly funded' and 'Charter School (Y/N)' = 1. The column names and table used for the charter funding filter are wrong (schools.FundingType vs frpm.'Charter Funding Type'), resulting in 0 rows vs 751 in gold. Completely wrong result."
+      "judge_reason": "The predicted SQL queries the schools table directly using s.FundingType = 'Direct' and s.Charter = 1, but the gold SQL joins frpm to schools and filters on frpm.'Charter Funding Type' = 'Directly funded' and frpm.'Charter School (Y/N)' = 1. The schools table's FundingType column is not the same as frpm's Charter Funding Type, and the value 'Direct' does not match 'Directly funded'. The predicted query returns 0 rows versus the gold's 751, confirming the wrong table/column usage."
     },
     {
       "index": 4,
       "question": "What is the average writing score of each of the schools managed by Ricci Ulrich? List the schools and the corresponding average writing scores.",
       "gold_sql": "SELECT T2.School, T1.AvgScrWrite FROM satscores AS T1 INNER JOIN schools AS T2 ON T1.cds = T2.CDSCode WHERE T2.AdmFName1 = 'Ricci' AND T2.AdmLName1 = 'Ulrich'",
-      "pred_sql": "SELECT s.School, AVG(sa.AvgScrWrite) AS AverageWritingScore FROM schools AS s JOIN satscores AS sa ON s.CDSCode = sa.cds WHERE s.AdmFName1 = 'Ricci' AND s.AdmLName1 = 'Ulrich' GROUP BY s.CDSCode, s.School",
+      "pred_sql": "SELECT s.School, AVG(sat.AvgScrWrite) AS AverageWritingScore FROM schools AS s JOIN satscores AS sat ON s.CDSCode = sat.cds WHERE s.AdmFName1 = 'Ricci' AND s.AdmLName1 = 'Ulrich' GROUP BY s.CDSCode, s.School",
       "gold_row_count": 1,
       "pred_row_count": 1,
       "judge_score": 0.7,
       "judge_verdict": "partially_correct",
-      "judge_reason": "The gold returns the raw AvgScrWrite per SAT record (one row per satscores entry) while the predicted applies AVG(AvgScrWrite) with GROUP BY, aggregating across records. Both return 1 row here because there is only one matching school/record, so the numeric result is the same in this case. However, the semantics differ — if there were multiple SAT records for the school, the gold would return multiple rows while the predicted would collapse them. Partially correct due to unintended aggregation that happens to match on this data."
+      "judge_reason": "Both queries return 1 row and the same school. The gold returns AvgScrWrite directly from satscores (already an average per school per record), while the predicted wraps it in AVG() with GROUP BY. For the single matching record, AVG(AvgScrWrite) equals AvgScrWrite, so the numeric result is the same in this case. However, if a school had multiple SAT score records, the gold would return multiple rows while the predicted would aggregate them — a semantic difference in result grain. The approach is logically different even if it coincidentally matches here."
     },
     {
       "index": 5,
@@ -80,29 +80,29 @@
       "pred_row_count": 2,
       "judge_score": 0.7,
       "judge_verdict": "partially_correct",
-      "judge_reason": "Both queries return 2 rows and the same school names with the same join and filters. However, the gold SQL computes the FRPM percentage inline as FRPM Count * 100 / Enrollment, while the predicted SQL selects the pre-computed column 'Percent (%) Eligible FRPM (Ages 5-17)' directly. These may differ due to rounding or data inconsistencies between the stored column and the computed value. The logic is close but not guaranteed to be numerically identical."
+      "judge_reason": "Both queries join frpm and schools on CDSCode and filter by County='Los Angeles' and GSserved='K-9', returning the same 2 rows. However, the gold SQL computes the FRPM percentage manually as FRPM Count * 100 / Enrollment, while the predicted SQL selects the pre-existing 'Percent (%) Eligible FRPM (Ages 5-17)' column directly. These may differ if the stored column uses different rounding or calculation logic, making the results potentially non-identical."
     },
     {
       "index": 6,
       "question": "Between San Diego and Santa Barbara, which county offers the most number of schools that does not offer physical building? Indicate the amount.",
       "gold_sql": "SELECT County, COUNT(Virtual) FROM schools WHERE (County = 'San Diego' OR County = 'Santa Barbara') AND Virtual = 'F' GROUP BY County ORDER BY COUNT(Virtual) DESC LIMIT 1",
-      "pred_sql": "SELECT County, COUNT(*) AS school_count FROM schools AS s WHERE County IN ('San Diego', 'Santa Barbara') AND Virtual = 'F' GROUP BY County ORDER BY school_count DESC LIMIT 1",
+      "pred_sql": "SELECT County, COUNT(*) AS num_schools FROM schools AS s WHERE County IN ('San Diego', 'Santa Barbara') AND Virtual = 'P' GROUP BY County ORDER BY num_schools DESC LIMIT 1",
       "gold_row_count": 1,
       "pred_row_count": 1,
-      "judge_score": 0.95,
-      "judge_verdict": "correct",
-      "judge_reason": "Both queries are semantically equivalent. They filter schools in San Diego or Santa Barbara where Virtual = 'F', group by County, order by count descending, and limit to 1 result. The only difference is using COUNT(*) vs COUNT(Virtual) and aliasing the count — these produce identical results. Both return 1 row."
+      "judge_score": 0.0,
+      "judge_verdict": "incorrect",
+      "judge_reason": "The gold SQL filters for Virtual='F' (fully virtual, i.e., no physical building), while the predicted SQL filters for Virtual='P'. These are different values and will return different school sets. The row counts happen to match at 1 but likely reflect different counties winning, making the result semantically wrong."
     },
     {
       "index": 7,
       "question": "Consider the average difference between K-12 enrollment and 15-17 enrollment of schools that are locally funded, list the names and DOC type of schools which has a difference above this average.",
       "gold_sql": "SELECT T2.School, T2.DOC FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T2.FundingType = 'Locally funded' AND (T1.`Enrollment (K-12)` - T1.`Enrollment (Ages 5-17)`) > (SELECT AVG(T3.`Enrollment (K-12)` - T3.`Enrollment (Ages 5-17)`) FROM frpm AS T3 INNER JOIN schools AS T4 ON T3.CDSCode = T4.CDSCode WHERE T4.FundingType = 'Locally funded')",
-      "pred_sql": "WITH avg_diff AS (\n    SELECT AVG(`Enrollment (K-12)` - `Enrollment (Ages 5-17)`) AS avg_difference\n    FROM frpm AS f\n    JOIN schools AS s ON f.CDSCode = s.CDSCode\n    WHERE s.FundingType = 'Locally funded'\n)\nSELECT s.School, s.DOCType\nFROM frpm AS f\nJOIN schools AS s ON f.CDSCode = s.CDSCode\nWHERE s.FundingType = 'Locally funded'\nAND (`Enrollment (K-12)` - `Enrollment (Ages 5-17)`) > (SELECT avg_difference FROM avg_diff)",
+      "pred_sql": "WITH avg_diff AS (\n    SELECT AVG(`Enrollment (K-12)` - `Enrollment (Ages 5-17)`) AS avg_difference\n    FROM frpm AS f\n    JOIN schools AS s ON f.CDSCode = s.CDSCode\n    WHERE s.FundingType = 'Locally funded'\n)\nSELECT s.School, s.DOCType\nFROM frpm AS f\nJOIN schools AS s ON f.CDSCode = s.CDSCode, avg_diff\nWHERE s.FundingType = 'Locally funded'\nAND (`Enrollment (K-12)` - `Enrollment (Ages 5-17)`) > avg_diff.avg_difference",
       "gold_row_count": 57,
       "pred_row_count": 57,
-      "judge_score": 0.8,
+      "judge_score": 0.7,
       "judge_verdict": "partially_correct",
-      "judge_reason": "The logic and row count (57) match, and the join/filter/subquery structure is semantically equivalent. However, the predicted SQL selects s.DOCType while the gold SQL selects s.DOC. These are likely different column names for the same or related data, but if DOCType and DOC are distinct columns, the output would differ. This is a column name discrepancy that could produce wrong results depending on the schema."
+      "judge_reason": "The logic and row count (57) match: same join, same funding type filter, same average subquery. However, the predicted SQL selects s.DOCType instead of s.DOC as in the gold SQL. These are different columns — DOC is the numeric code and DOCType is the description. The question asks for 'DOC type', so the predicted column may actually be more semantically appropriate, but it deviates from the gold output column."
     },
     {
       "index": 8,
@@ -113,18 +113,18 @@
       "pred_row_count": 1,
       "judge_score": 0.7,
       "judge_verdict": "partially_correct",
-      "judge_reason": "Both return 1 row. The gold SQL uses schools.Charter = 0 and computes the free meal percentage inline as Free Meal Count * 100 / Enrollment < 0.18. The predicted SQL uses frpm.'Charter School (Y/N)' = 0 (different table/column) and filters on the pre-stored 'Percent (%) Eligible Free (K-12)' < 0.18. The charter column source differs (schools vs frpm), and the percentage comparison uses a stored value vs a computed one, which may yield different results due to rounding or data discrepancies. The matching row count is encouraging but not conclusive."
+      "judge_reason": "Both return 1 row. The gold SQL uses T2.Charter=0 (from the schools table) and computes the free meal percentage manually as Free Meal Count*100/Enrollment < 0.18. The predicted SQL uses f.'Charter School (Y/N)'=0 (from frpm) and compares the stored 'Percent (%) Eligible Free (K-12)' column directly against 0.18. The charter filter source differs (schools vs frpm), and the percentage comparison uses a stored column vs computed value, which could yield different results depending on data precision and consistency."
     },
     {
       "index": 9,
       "question": "Of the schools that offers a magnet program serving a grade span of Kindergarten to 8th grade, how many offers Multiple Provision Types? List the number of cities that offers a Kindergarten to 8th grade span and indicate how many schools are there serving such grade span for each city.",
       "gold_sql": "SELECT T2.City, COUNT(T2.CDSCode) FROM frpm AS T1 INNER JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T2.Magnet = 1 AND T2.GSoffered = 'K-8' AND T1.`NSLP Provision Status` = 'Multiple Provision Types' GROUP BY T2.City",
-      "pred_sql": "WITH magnet_k8 AS (\n  SELECT s.CDSCode, s.City, f.`NSLP Provision Status`\n  FROM schools AS s\n  INNER JOIN frpm AS f ON s.CDSCode = f.CDSCode\n  WHERE s.Magnet = 1\n    AND s.GSserved = 'K-8'\n)\nSELECT\n  City,\n  COUNT(DISTINCT CASE WHEN `NSLP Provision Status` = 'Multiple Provision Types' THEN CDSCode END) AS multiple_provision_count,\n  COUNT(City) OVER() AS cities_with_k8,\n  COUNT(DISTINCT CDSCode) AS schools_per_city\nFROM magnet_k8\nGROUP BY City",
+      "pred_sql": "WITH magnet_k8 AS (\n  SELECT s.CDSCode, s.City, f.`NSLP Provision Status`\n  FROM schools AS s\n  JOIN frpm AS f ON s.CDSCode = f.CDSCode\n  WHERE s.Magnet = 1\n    AND s.GSserved = 'K-8'\n),\nmultiple_provision AS (\n  SELECT COUNT(*) AS num_multiple_provision\n  FROM magnet_k8\n  WHERE `NSLP Provision Status` = 'Multiple Provision Types'\n),\ncity_stats AS (\n  SELECT City, COUNT(*) AS num_schools\n  FROM magnet_k8\n  GROUP BY City\n),\ncity_count AS (\n  SELECT COUNT(DISTINCT City) AS num_cities\n  FROM magnet_k8\n)\nSELECT\n  mp.num_multiple_provision,\n  cc.num_cities,\n  cs.City,\n  cs.num_schools\nFROM city_stats AS cs\nCROSS JOIN multiple_provision AS mp\nCROSS JOIN city_count AS cc\nORDER BY cs.City",
       "gold_row_count": 1,
       "pred_row_count": 18,
-      "judge_score": 0.2,
+      "judge_score": 0.1,
       "judge_verdict": "incorrect",
-      "judge_reason": "Row counts differ significantly: gold returns 1 row, predicted returns 18. The gold SQL uses GSoffered = 'K-8' while the predicted uses GSserved = 'K-8' — a different column. The gold SQL groups by City and counts CDSCodes where NSLP Provision Status = 'Multiple Provision Types', producing a simple city-level count. The predicted SQL adds a window function and extra columns (multiple_provision_count, cities_with_k8, schools_per_city), fundamentally changing the output structure and grain. The query does not correctly answer the question as posed."
+      "judge_reason": "Row counts differ significantly (gold=1, pred=18). The gold SQL filters on GSoffered='K-8' while the predicted SQL uses GSserved='K-8' — a different column. Additionally, the gold query returns only city+count rows for schools with Multiple Provision Types, while the predicted query returns a multi-column result mixing aggregates from different scopes (total multiple provision count, city count, and per-city breakdown) via cross joins. The grain and structure are fundamentally different."
     },
     {
       "index": 10,
@@ -135,7 +135,7 @@
       "pred_row_count": 228004,
       "judge_score": 0.7,
       "judge_verdict": "partially_correct",
-      "judge_reason": "The predicted SQL is missing the join to the cards table, but functionally still retrieves uuid and language from legalities and foreign_data. The key difference is the added 'l.status = 'Legal'' filter, which restricts results beyond what the gold SQL requires (gold only filters on format='legacy' with no status restriction). This accounts for the row count difference (228004 vs 228765). The extra status filter makes the result a subset of the correct answer."
+      "judge_reason": "The predicted SQL omits the join to the cards table (using only legalities and foreign_data), which is a minor structural difference but doesn't change the result grain. More importantly, it adds an extra filter 'l.status = Legal' that is not in the gold SQL. This extra filter reduces the row count from 228765 to 228004, meaning some rows are excluded that should be included. The query is directionally correct but the additional status filter makes it semantically narrower than the gold."
     },
     {
       "index": 11,
@@ -146,18 +146,18 @@
       "pred_row_count": 108,
       "judge_score": 0.0,
       "judge_verdict": "incorrect",
-      "judge_reason": "The predicted SQL selects 'printings' column instead of 'availability'. These are different columns with different semantics and data. The row count difference (108 vs 6) confirms the results are entirely different. The question asks about 'kind of printing' which maps to the 'availability' column (e.g., paper, mtgo), not the 'printings' column which lists set codes."
+      "judge_reason": "The predicted SQL selects 'printings' instead of 'availability'. These are completely different columns — 'availability' describes the print medium (paper, mtgo, etc.) while 'printings' lists set codes the card appeared in. The gold returns 6 distinct rows while the predicted returns 108, confirming the columns differ substantially. The question asks about 'kind of printing' which maps to availability, not printings."
     },
     {
       "index": 12,
       "question": "What's the list of all types for the card \"Molimo, Maro-Sorcerer\"?",
       "gold_sql": "SELECT DISTINCT subtypes, supertypes FROM cards WHERE name = 'Molimo, Maro-Sorcerer'",
-      "pred_sql": "SELECT DISTINCT types FROM cards WHERE name = 'Molimo, Maro-Sorcerer'",
+      "pred_sql": "SELECT DISTINCT type FROM cards AS c WHERE c.name = 'Molimo, Maro-Sorcerer'",
       "gold_row_count": 1,
       "pred_row_count": 1,
-      "judge_score": 0.4,
+      "judge_score": 0.5,
       "judge_verdict": "partially_correct",
-      "judge_reason": "The gold SQL selects both 'subtypes' and 'supertypes' columns to represent 'all types', while the predicted SQL only selects 'types'. The question asks for 'all types' which the gold interprets as subtypes and supertypes. The predicted answer is incomplete as it omits subtypes and supertypes. Row counts both show 1, so the filter is correct but the selected columns are wrong/incomplete."
+      "judge_reason": "The gold SQL selects both 'subtypes' and 'supertypes' as the 'list of all types', while the predicted SQL selects only the 'type' column. Although 'type' may contain a combined type line, it is a different column than the two separate columns requested. The question asks for 'all types' which the gold interprets as subtypes and supertypes specifically. Row counts are both 1, so the grain matches, but the selected columns are wrong relative to the gold."
     },
     {
       "index": 13,
@@ -168,7 +168,7 @@
       "pred_row_count": 104,
       "judge_score": 0.0,
       "judge_verdict": "incorrect",
-      "judge_reason": "The gold SQL returns a single aggregate value: the percentage of Story Spotlight cards that are textless. The predicted SQL returns one row per card with individual percentage calculations using a window function, misunderstanding the question entirely. The row counts (1 vs 104) confirm this. Additionally, the logic is inverted — gold checks isTextless=0 (not textless, i.e., has no text box mapped to isTextless=0 meaning 'has text') and the filter semantics differ."
+      "judge_reason": "The gold SQL computes a single aggregate percentage of Story Spotlight cards that are textless. The predicted SQL instead returns one row per card with a window-function-based percentage, listing individual card IDs. The question asks for 'the percentage... list them by ID' but the gold treats this as a single percentage calculation, not a per-row listing. The row counts differ dramatically (1 vs 104), and the semantics are completely different — the gold returns one scalar percentage value while the predicted returns per-card rows."
     },
     {
       "index": 14,
@@ -179,7 +179,7 @@
       "pred_row_count": 1,
       "judge_score": 0.0,
       "judge_verdict": "incorrect",
-      "judge_reason": "The gold SQL defines 'incredibly powerful' as cards having both cardKingdomFoilId and cardKingdomId not null (i.e., available in foil and regular at Card Kingdom). The predicted SQL interprets 'incredibly powerful' as high power stat (>=9 or '*'), which is a completely different semantic interpretation. These measure entirely different things, even though both happen to return 1 row, the values are almost certainly different."
+      "judge_reason": "The gold SQL defines 'incredibly powerful' as cards having both cardKingdomFoilId and cardKingdomId not null (i.e., available in both Kingdom foil and non-foil), which is a domain-specific definition in this database context. The predicted SQL interprets 'incredibly powerful' as power >= 9 or power = '*', which is a gameplay-based interpretation not supported by the gold. These are fundamentally different filters with different semantics, making the predicted answer incorrect regardless of matching row counts."
     },
     {
       "index": 15,
@@ -190,7 +190,7 @@
       "pred_row_count": 3,
       "judge_score": 0.7,
       "judge_verdict": "partially_correct",
-      "judge_reason": "The logic is semantically equivalent — both join set_translations to cards filtering on the same name and language. However, the gold uses IN with a subquery which deduplicates setCodes before joining, while the predicted uses a direct JOIN that multiplies rows when a card appears multiple times with the same setCode. This causes pred_row_count (3) to exceed gold_row_count (2), meaning the predicted query returns duplicate translations due to the many-to-one card-to-set relationship not being collapsed."
+      "judge_reason": "The logic is semantically equivalent — both join set_translations to cards on setCode filtering for 'Ancestor's Chosen' and Italian. However, the gold uses IN with a subquery which deduplicates setCode values before joining, while the predicted SQL uses a direct JOIN which can multiply rows when a card appears multiple times in the cards table for the same setCode. This explains the row count difference (2 vs 3), meaning the predicted query returns a duplicate translation row."
     },
     {
       "index": 16,
@@ -201,7 +201,7 @@
       "pred_row_count": 0,
       "judge_score": 0.0,
       "judge_verdict": "incorrect",
-      "judge_reason": "The predicted SQL adds a spurious filter 'c.name = 'Kev Walker'' which means it looks for a card whose name is 'Kev Walker' AND artist is 'Kev Walker'. No such card exists, resulting in 0 rows vs the gold's 1253 rows. The gold correctly retrieves rulings for all cards illustrated (artist) by Kev Walker without any name filter. The extra column r.date in SELECT is also a minor deviation but the name filter is the critical flaw."
+      "judge_reason": "The predicted SQL incorrectly filters on c.name = 'Kev Walker' in addition to c.artist = 'Kev Walker'. The question asks for cards illustrated (artist) by Kev Walker, not cards named 'Kev Walker'. This extra filter on c.name eliminates all valid results, producing 0 rows instead of 1253."
     },
     {
       "index": 17,
@@ -210,9 +210,9 @@
       "pred_sql": "SELECT CAST(SUM(CASE WHEN fd.language = 'French' THEN 1 ELSE 0 END) AS REAL) * 100.0 / COUNT(*) AS percentage\nFROM cards AS c\nJOIN foreign_data AS fd ON c.uuid = fd.uuid\nWHERE c.power IS NULL",
       "gold_row_count": 1,
       "pred_row_count": 1,
-      "judge_score": 0.7,
+      "judge_score": 0.8,
       "judge_verdict": "partially_correct",
-      "judge_reason": "Both queries compute the percentage of foreign-language French entries among cards without power. The key difference is the gold's WHERE clause includes 'T1.power IS NULL OR T1.power = '*'' to catch both NULL and wildcard power values, while the predicted only filters 'c.power IS NULL', missing the '*' case. This causes an incorrect denominator and numerator. Both return 1 row so the structure is right, but the filter is incomplete, making the numeric result potentially wrong."
+      "judge_reason": "The structure and aggregation logic are nearly identical. However, the gold SQL filters WHERE T1.power IS NULL OR T1.power = '*', while the predicted SQL only filters WHERE c.power IS NULL, missing the OR c.power = '*' condition. This could exclude cards with power='*' from the denominator and numerator, potentially producing a slightly different percentage. Row counts match (1) but the underlying data filtered may differ."
     },
     {
       "index": 18,
@@ -221,9 +221,9 @@
       "pred_sql": "SELECT l.status FROM cards AS c JOIN legalities AS l ON c.uuid = l.uuid WHERE c.frameVersion = '1997' AND c.artist = 'D. Alexander Gregory' AND l.format = 'legacy' AND (c.hasContentWarning = 1 OR c.supertypes LIKE '%Wizards of the Coast%')",
       "gold_row_count": 1,
       "pred_row_count": 2,
-      "judge_score": 0.5,
+      "judge_score": 0.3,
       "judge_verdict": "partially_correct",
-      "judge_reason": "The gold filters strictly on hasContentWarning = 1, while the predicted uses (hasContentWarning = 1 OR c.supertypes LIKE '%Wizards of the Coast%'). The question says 'sensitive content or Wizards of the Coast' but the gold interprets this as only hasContentWarning = 1. The broader OR condition in the predicted query causes pred_row_count (2) to exceed gold_row_count (1), returning extra rows. The predicted also omits DISTINCT. The misinterpretation of the filter condition is the core issue."
+      "judge_reason": "The predicted SQL incorrectly replaces the gold's hasContentWarning = 1 condition with (c.hasContentWarning = 1 OR c.supertypes LIKE '%Wizards of the Coast%'). The gold treats 'sensitive content OR Wizards of the Coast' as both mapping to hasContentWarning = 1, while the predicted adds a supertypes check that is not how the schema encodes this. Additionally, the predicted lacks DISTINCT. The row count difference (1 vs 2) confirms the predicate mismatch returns extra rows."
     },
     {
       "index": 19,
@@ -234,7 +234,7 @@
       "pred_row_count": 1890,
       "judge_score": 0.6,
       "judge_verdict": "partially_correct",
-      "judge_reason": "The gold returns all card-format combinations including non-Legal statuses (using a CASE to show format only when Legal, otherwise NULL), while the predicted filters WHERE l.status = 'Legal' and only returns legal formats. This causes the row count difference (gold 1664 vs pred 1890 — the pred is actually higher, likely because the gold's CASE+DISTINCT collapses some rows). The gold also uses DISTINCT and does not filter on status before the CASE, preserving all legality rows with NULL for non-legal formats. The semantic interpretation of 'legal' formats differs between the two, and the grain is different due to DISTINCT vs ORDER BY."
+      "judge_reason": "The predicted SQL filters to only legal formats (l.status = 'Legal') and returns only those rows, while the gold uses a CASE expression to return the format when status='Legal' and NULL otherwise, preserving all format rows for the cards. The gold result includes non-legal rows with NULL format (1664 rows), whereas the predicted returns only legal rows (1890 rows — the count difference also suggests a join path difference). The predicted query also adds an ORDER BY not in the gold and misses the DISTINCT on the outer query. The semantics differ meaningfully in what rows are returned."
     },
     {
       "index": 20,
@@ -245,7 +245,7 @@
       "pred_row_count": 1,
       "judge_score": 0.95,
       "judge_verdict": "correct",
-      "judge_reason": "Both queries join users and badges, group by display name, order by badge count descending, and limit to 1. The predicted SQL groups by both u.Id and u.DisplayName instead of just DisplayName, and counts b.Id instead of T1.Id (user ID). These differences don't affect correctness — grouping by the primary key plus display name is semantically equivalent, and counting badge rows vs user rows within the same join produces the same ranking. Both return 1 row."
+      "judge_reason": "Both queries join users and badges, group by display name, order by badge count descending, and limit to 1. The predicted query additionally groups by u.Id which is more correct (avoids potential collisions on DisplayName), and counts b.Id instead of T1.Id — both produce the same result since every badge row has an Id. Semantically equivalent."
     },
     {
       "index": 21,
@@ -256,7 +256,7 @@
       "pred_row_count": 1,
       "judge_score": 1.0,
       "judge_verdict": "correct",
-      "judge_reason": "Both queries join users and badges on UserId, filter for the 'Autobiographer' badge name, order by date ascending, and limit to 1. The predicted SQL is semantically identical to the gold. Both return 1 row."
+      "judge_reason": "Both queries join users and badges on UserId, filter by Name = 'Autobiographer', order by Date ascending, and limit to 1. Semantically identical."
     },
     {
       "index": 22,
@@ -267,18 +267,18 @@
       "pred_row_count": 1,
       "judge_score": 0.0,
       "judge_verdict": "incorrect",
-      "judge_reason": "The gold SQL joins posts to users via OwnerUserId (the post owner/author), while the predicted SQL joins via LastEditorUserId (the last editor). The question asks for 'the editor,' which maps to LastEditorUserId semantically, but the gold uses OwnerUserId. Since the gold is the ground truth, the predicted SQL returns a different user (the last editor rather than the owner), making it incorrect relative to the gold result. The two queries answer different semantic interpretations of the question."
+      "judge_reason": "The gold SQL joins on OwnerUserId to get the post owner, while the predicted SQL joins on LastEditorUserId to get the last editor. The question asks for the 'editor' which is ambiguous, but gold uses OwnerUserId (owner/author), not LastEditorUserId. These are different columns referencing different users, so the results will differ when OwnerUserId != LastEditorUserId."
     },
     {
       "index": 23,
       "question": "Calculate the difference in view count from post posted by Mornington and view count from posts posted by Amos.",
       "gold_sql": "SELECT SUM(IIF(T1.DisplayName = 'Mornington', T3.ViewCount, 0)) - SUM(IIF(T1.DisplayName = 'Amos', T3.ViewCount, 0)) AS diff FROM users AS T1 INNER JOIN postHistory AS T2 ON T1.Id = T2.UserId INNER JOIN posts AS T3 ON T3.Id = T2.PostId",
-      "pred_sql": "SELECT\n    SUM(CASE WHEN u.DisplayName = 'Mornington' THEN p.ViewCount ELSE 0 END) -\n    SUM(CASE WHEN u.DisplayName = 'Amos' THEN p.ViewCount ELSE 0 END) AS ViewCountDifference\nFROM posts AS p\nJOIN users AS u ON p.OwnerUserId = u.Id\nWHERE u.DisplayName IN ('Mornington', 'Amos')",
+      "pred_sql": "SELECT \n    SUM(CASE WHEN u.DisplayName = 'Mornington' THEN p.ViewCount ELSE 0 END) -\n    SUM(CASE WHEN u.DisplayName = 'Amos' THEN p.ViewCount ELSE 0 END) AS ViewCountDifference\nFROM posts AS p\nJOIN users AS u ON p.OwnerUserId = u.Id\nWHERE u.DisplayName IN ('Mornington', 'Amos')",
       "gold_row_count": 1,
       "pred_row_count": 1,
       "judge_score": 0.7,
       "judge_verdict": "partially_correct",
-      "judge_reason": "The gold SQL joins through postHistory to find posts associated with users, while the predicted SQL joins posts directly via OwnerUserId. These two approaches can yield different ViewCount sums if users have posts they don't own but edited (captured in postHistory) or if postHistory contains duplicate PostId entries per user that would multiply ViewCount. The logic structure (CASE WHEN with SUM subtraction) is correct, but the join path differs meaningfully. Both return 1 row, but the actual numeric result may differ depending on data."
+      "judge_reason": "The predicted SQL joins posts to users via OwnerUserId, while the gold SQL goes through postHistory to link users to posts. The gold approach counts view counts of posts that appear in postHistory for those users (potentially counting a post multiple times if it has multiple history entries), whereas the predicted query counts each post once via direct ownership. These can produce different numeric results. The structure and intent are similar but the join path and potential row multiplication differ meaningfully."
     },
     {
       "index": 24,
@@ -289,18 +289,18 @@
       "pred_row_count": 1,
       "judge_score": 1.0,
       "judge_verdict": "correct",
-      "judge_reason": "Both queries are semantically identical: they join postLinks to posts, filter for CreationDate year = '2010' and AnswerCount <= 2, then divide the count by 12 to get a monthly average. The minor differences (COUNT(T1.Id) vs COUNT(*), alias names) do not affect the result. Both return 1 row."
+      "judge_reason": "Both queries count postLinks rows joined to posts where the link was created in 2010 and the post has AnswerCount <= 2, then divide by 12. Semantically identical."
     },
     {
       "index": 25,
       "question": "What is the percentage difference of student badges given during 2010 and 2011?",
       "gold_sql": "SELECT CAST(SUM(IIF(STRFTIME('%Y', Date) = '2010', 1, 0)) AS REAL) * 100 / COUNT(Id) - CAST(SUM(IIF(STRFTIME('%Y', Date) = '2011', 1, 0)) AS REAL) * 100 / COUNT(Id) FROM badges WHERE Name = 'Student'",
-      "pred_sql": "SELECT ROUND((SUM(CASE WHEN STRFTIME('%Y', Date) = '2011' THEN 1 ELSE 0 END) - SUM(CASE WHEN STRFTIME('%Y', Date) = '2010' THEN 1 ELSE 0 END)) * 100.0 / SUM(CASE WHEN STRFTIME('%Y', Date) = '2010' THEN 1 ELSE 0 END), 2) AS PercentageDifference FROM badges AS b WHERE b.Name = 'Student' AND STRFTIME('%Y', Date) IN ('2010', '2011')",
+      "pred_sql": "SELECT ROUND((SUM(CASE WHEN strftime('%Y', Date) = '2011' THEN 1 ELSE 0 END) - SUM(CASE WHEN strftime('%Y', Date) = '2010' THEN 1 ELSE 0 END)) * 100.0 / SUM(CASE WHEN strftime('%Y', Date) = '2010' THEN 1 ELSE 0 END), 2) AS PercentageDifference FROM badges AS b WHERE b.Name = 'Student' AND strftime('%Y', b.Date) IN ('2010', '2011')",
       "gold_row_count": 1,
       "pred_row_count": 1,
       "judge_score": 0.2,
-      "judge_verdict": "incorrect",
-      "judge_reason": "The gold SQL computes (pct_2010 - pct_2011) as shares of the total badge count across all years. The predicted SQL computes a relative growth rate ((2011-2010)/2010)*100 with an extra date filter that also changes the denominator. These are different calculations and would return different values even though both return 1 row."
+      "judge_verdict": "partially_correct",
+      "judge_reason": "The gold SQL calculates percentage-point difference (pct_2010 - pct_2011) over all Student badge rows, while the predicted SQL computes a relative percent change ((2011-2010)/2010*100) over only 2010-2011 rows. Both numerically and directionally different formulas, yielding different results."
     },
     {
       "index": 26,
@@ -310,8 +310,8 @@
       "gold_row_count": 1,
       "pred_row_count": 1,
       "judge_score": 0.2,
-      "judge_verdict": "incorrect",
-      "judge_reason": "The gold SQL joins users to postHistory to posts and sums ViewCount per user to determine popularity, returning the DisplayName of the user with higher total ViewCount. The predicted SQL joins posts directly to users via OwnerUserId, computes a composite popularity score (Score + ViewCount + FavoriteCount), and returns a single post row (with multiple columns) rather than a user display name. The join path is different (no postHistory), the popularity metric is different, the output columns are different, and the grain is a single post rather than a user. The results would differ."
+      "judge_verdict": "partially_correct",
+      "judge_reason": "The gold SQL measures popularity as total ViewCount of posts accessed via postHistory join, groups by DisplayName, and returns the user with the highest total ViewCount. The predicted SQL uses a composite score (Score + ViewCount + FavoriteCount) on posts joined directly to users via OwnerUserId, returning one post row (not one user aggregated). The join path differs (no postHistory), the popularity metric differs, the aggregation grain differs (individual post vs. user-level sum), and the output columns differ. The only commonality is filtering to the two named users and returning 1 row."
     },
     {
       "index": 27,
@@ -322,7 +322,7 @@
       "pred_row_count": null,
       "judge_score": 0.0,
       "judge_verdict": "incorrect",
-      "judge_reason": "The predicted SQL is null, meaning no query was produced. Cannot evaluate correctness."
+      "judge_reason": "The predicted SQL is null — no query was provided. Cannot be correct."
     },
     {
       "index": 28,
@@ -333,7 +333,7 @@
       "pred_row_count": null,
       "judge_score": 0.0,
       "judge_verdict": "incorrect",
-      "judge_reason": "The predicted SQL is null, meaning no query was produced. Cannot evaluate correctness."
+      "judge_reason": "The predicted SQL is null — no query was provided. Cannot be correct."
     },
     {
       "index": 29,
@@ -344,7 +344,7 @@
       "pred_row_count": null,
       "judge_score": 0.0,
       "judge_verdict": "incorrect",
-      "judge_reason": "The predicted SQL is null, meaning no query was produced. Cannot evaluate correctness."
+      "judge_reason": "The predicted SQL is null — no query was provided. Cannot be correct."
     },
     {
       "index": 30,
@@ -355,7 +355,7 @@
       "pred_row_count": null,
       "judge_score": 0.0,
       "judge_verdict": "incorrect",
-      "judge_reason": "The predicted SQL is null, meaning no query was provided. Cannot evaluate correctness."
+      "judge_reason": "Predicted SQL is null — no query was provided."
     },
     {
       "index": 31,
@@ -366,7 +366,7 @@
       "pred_row_count": null,
       "judge_score": 0.0,
       "judge_verdict": "incorrect",
-      "judge_reason": "The predicted SQL is null, meaning no query was provided. Cannot evaluate correctness."
+      "judge_reason": "Predicted SQL is null — no query was provided."
     },
     {
       "index": 32,
@@ -377,7 +377,7 @@
       "pred_row_count": null,
       "judge_score": 0.0,
       "judge_verdict": "incorrect",
-      "judge_reason": "The predicted SQL is null, meaning no query was provided. Cannot evaluate correctness."
+      "judge_reason": "Predicted SQL is null — no query was provided."
     },
     {
       "index": 33,
@@ -388,7 +388,7 @@
       "pred_row_count": null,
       "judge_score": 0.0,
       "judge_verdict": "incorrect",
-      "judge_reason": "The predicted SQL is null, meaning no query was provided. Cannot evaluate correctness."
+      "judge_reason": "Predicted SQL is null — no query was provided."
     },
     {
       "index": 34,
@@ -399,7 +399,7 @@
       "pred_row_count": null,
       "judge_score": 0.0,
       "judge_verdict": "incorrect",
-      "judge_reason": "The predicted SQL is null, meaning no query was provided. Cannot evaluate correctness."
+      "judge_reason": "Predicted SQL is null — no query was provided."
     },
     {
       "index": 35,
@@ -410,7 +410,7 @@
       "pred_row_count": null,
       "judge_score": 0.0,
       "judge_verdict": "incorrect",
-      "judge_reason": "The predicted SQL is null — no query was provided to evaluate."
+      "judge_reason": "The predicted SQL is null — no query was provided."
     },
     {
       "index": 36,
@@ -421,7 +421,7 @@
       "pred_row_count": null,
       "judge_score": 0.0,
       "judge_verdict": "incorrect",
-      "judge_reason": "The predicted SQL is null — no query was provided to evaluate."
+      "judge_reason": "The predicted SQL is null — no query was provided."
     },
     {
       "index": 37,
@@ -432,7 +432,7 @@
       "pred_row_count": null,
       "judge_score": 0.0,
       "judge_verdict": "incorrect",
-      "judge_reason": "The predicted SQL is null — no query was provided to evaluate."
+      "judge_reason": "The predicted SQL is null — no query was provided."
     },
     {
       "index": 38,
@@ -443,7 +443,7 @@
       "pred_row_count": null,
       "judge_score": 0.0,
       "judge_verdict": "incorrect",
-      "judge_reason": "The predicted SQL is null — no query was provided to evaluate."
+      "judge_reason": "The predicted SQL is null — no query was provided."
     },
     {
       "index": 39,
@@ -454,7 +454,7 @@
       "pred_row_count": null,
       "judge_score": 0.0,
       "judge_verdict": "incorrect",
-      "judge_reason": "The predicted SQL is null — no query was provided to evaluate."
+      "judge_reason": "The predicted SQL is null — no query was provided."
     },
     {
       "index": 40,
@@ -465,7 +465,7 @@
       "pred_row_count": null,
       "judge_score": 0.0,
       "judge_verdict": "incorrect",
-      "judge_reason": "The predicted SQL is null, so no answer is produced. Cannot be evaluated as correct."
+      "judge_reason": "Predicted SQL is null — no query was provided to evaluate."
     },
     {
       "index": 41,
@@ -476,7 +476,7 @@
       "pred_row_count": null,
       "judge_score": 0.0,
       "judge_verdict": "incorrect",
-      "judge_reason": "The predicted SQL is null, so no answer is produced. Cannot be evaluated as correct."
+      "judge_reason": "Predicted SQL is null — no query was provided to evaluate."
     },
     {
       "index": 42,
@@ -487,7 +487,7 @@
       "pred_row_count": null,
       "judge_score": 0.0,
       "judge_verdict": "incorrect",
-      "judge_reason": "The predicted SQL is null, so no answer is produced. Cannot be evaluated as correct."
+      "judge_reason": "Predicted SQL is null — no query was provided to evaluate."
     },
     {
       "index": 43,
@@ -498,7 +498,7 @@
       "pred_row_count": null,
       "judge_score": 0.0,
       "judge_verdict": "incorrect",
-      "judge_reason": "The predicted SQL is null, so no answer is produced. Cannot be evaluated as correct."
+      "judge_reason": "Predicted SQL is null — no query was provided to evaluate."
     },
     {
       "index": 44,
@@ -509,7 +509,7 @@
       "pred_row_count": null,
       "judge_score": 0.0,
       "judge_verdict": "incorrect",
-      "judge_reason": "The predicted SQL is null, so no answer is produced. Cannot be evaluated as correct."
+      "judge_reason": "Predicted SQL is null — no query was provided to evaluate."
     },
     {
       "index": 45,
@@ -537,12 +537,12 @@
       "index": 47,
       "question": "How many 'classic' cards are eligible for loan?",
       "gold_sql": "SELECT COUNT(T1.card_id) FROM card AS T1 INNER JOIN disp AS T2 ON T1.disp_id = T2.disp_id WHERE T1.type = 'classic' AND T2.type = 'OWNER'",
-      "pred_sql": "SELECT COUNT(DISTINCT l.loan_id)\nFROM card AS c\nJOIN disp AS d ON c.disp_id = d.disp_id\nJOIN loan AS l ON d.account_id = l.account_id\nWHERE c.type = 'classic'",
+      "pred_sql": "SELECT COUNT(DISTINCT c.card_id)\nFROM card AS c\nJOIN disp AS d ON c.disp_id = d.disp_id\nJOIN loan AS l ON d.account_id = l.account_id\nWHERE c.type = 'classic'",
       "gold_row_count": 1,
       "pred_row_count": 1,
       "judge_score": 0.0,
       "judge_verdict": "incorrect",
-      "judge_reason": "The gold query counts classic cards eligible for loan by checking that the disposition type is 'OWNER' (the account owner can take a loan). The predicted query joins to the loan table and counts distinct loan_id values, which measures how many loans exist for accounts holding classic cards, not how many classic cards are eligible. The logic, join path, and what is being counted all differ semantically. Although both return 1 row, the numeric result is almost certainly different."
+      "judge_reason": "The predicted SQL joins to the loan table and filters on loan.account_id, adding an extra join that does not exist in the gold query. The gold logic determines 'eligible for loan' by checking that the disposition type is 'OWNER', not by joining to an actual loan table. The pred also uses COUNT(DISTINCT) vs COUNT. The semantics differ fundamentally because the pred restricts to accounts that already have a loan, whereas the gold counts all classic cards held by OWNER dispositions."
     },
     {
       "index": 48,
@@ -553,18 +553,18 @@
       "pred_row_count": 2,
       "judge_score": 0.3,
       "judge_verdict": "partially_correct",
-      "judge_reason": "Both queries filter disp on account_id BETWEEN 1 AND 10 and count OWNER vs DISPONENT dispositions. However, the gold returns a single row with two columns (one for OWNER count, one for DISPONENT count), while the predicted query groups by type and returns two rows. The information is equivalent in content but the output grain and shape differ, and gold_row_count=1 vs pred_row_count=2 confirms the structural mismatch. The question asks for both counts together, so the single-row pivoted format matches the intent better."
+      "judge_reason": "The predicted SQL returns the correct data (counts of OWNER and DISPONENT for account_ids 1–10) but in a different shape: two rows (one per type) instead of a single row with two named columns as in the gold. The row counts differ (2 vs 1), confirming the structural mismatch. The filtering logic and grouping are correct, but the output grain and column structure do not match the question's intent of returning both counts together."
     },
     {
       "index": 49,
       "question": "How many clients who were born in 1920 stay in east Bohemia?",
       "gold_sql": "SELECT COUNT(T1.client_id) FROM client AS T1 INNER JOIN district AS T2 ON T1.district_id = T2.district_id WHERE STRFTIME('%Y', T1.birth_date) = '1920' AND T2.A3 = 'east Bohemia'",
-      "pred_sql": "SELECT COUNT(DISTINCT c.client_id) FROM client AS c JOIN district AS d ON c.district_id = d.district_id WHERE strftime('%Y', c.birth_date) = '1920' AND d.A3 = 'east Bohemia'",
+      "pred_sql": "SELECT COUNT(DISTINCT cl.client_id) FROM client AS cl JOIN district AS d ON cl.district_id = d.district_id WHERE strftime('%Y', cl.birth_date) = '1920' AND d.A3 = 'east Bohemia'",
       "gold_row_count": 1,
       "pred_row_count": 1,
       "judge_score": 1.0,
       "judge_verdict": "correct",
-      "judge_reason": "Both queries join client to district on district_id, filter birth year to '1920' using strftime, and filter A3 to 'east Bohemia', then count client IDs. COUNT vs COUNT(DISTINCT) makes no practical difference since client_id is a primary key. Semantically equivalent."
+      "judge_reason": "The predicted SQL is semantically equivalent to the gold. Both join client to district on district_id, filter by birth year 1920 and region 'east Bohemia', and count client_ids. Using COUNT(DISTINCT client_id) vs COUNT(client_id) produces the same result assuming no duplicate client_ids, and the row counts match (both 1)."
     },
     {
       "index": 50,
@@ -573,20 +573,20 @@
       "pred_sql": "SELECT a.account_id\nFROM account AS a\nJOIN loan AS l ON a.account_id = l.account_id\nWHERE strftime('%Y', l.date) = '1997'\n  AND l.status = 'A'\n  AND a.frequency = 'POPLATEK TYDNE'\n  AND l.amount = (\n    SELECT MIN(l2.amount)\n    FROM loan AS l2\n    WHERE strftime('%Y', l2.date) = '1997'\n      AND l2.status = 'A'\n  )",
       "gold_row_count": 1,
       "pred_row_count": 0,
-      "judge_score": 0.1,
-      "judge_verdict": "incorrect",
-      "judge_reason": "The predicted SQL adds a filter on loan.status = 'A' (approved loans) that the gold SQL does not include. Additionally, the subquery for MIN also filters on status = 'A', further narrowing results. The gold SQL finds the account with the lowest loan amount in 1997 with weekly issuance frequency without any status filter. This extra filter causes pred_row_count = 0 vs gold_row_count = 1, confirming the result is wrong."
+      "judge_score": 0.3,
+      "judge_verdict": "partially_correct",
+      "judge_reason": "The predicted SQL adds a filter 'l.status = A' (approved loans) which the gold SQL does not include. This extra filter causes the pred_row_count to be 0 vs gold_row_count of 1. The logic for finding the minimum amount is otherwise sound, and the frequency filter matches, but the status filter on 'A' (approved) restricts results too aggressively, returning no rows when the gold returns 1."
     },
     {
       "index": 51,
       "question": "For loan amount less than USD100,000, what is the percentage of accounts that is still running with no issue.",
       "gold_sql": "SELECT CAST(SUM(status = 'C') AS REAL) * 100 / COUNT(account_id) FROM loan WHERE amount < 100000",
-      "pred_sql": "SELECT ROUND(SUM(CASE WHEN status = 'C' THEN 1.0 ELSE 0 END) * 100.0 / COUNT(*), 2) AS percentage\nFROM loan AS l\nWHERE l.amount < 100000",
+      "pred_sql": "SELECT CAST(SUM(CASE WHEN status = 'C' THEN 1 ELSE 0 END) AS REAL) * 100.0 / COUNT(*) AS percentage\nFROM loan AS l\nWHERE l.amount < 100000",
       "gold_row_count": 1,
       "pred_row_count": 1,
-      "judge_score": 0.9,
+      "judge_score": 0.95,
       "judge_verdict": "correct",
-      "judge_reason": "Both queries compute the percentage of loans with status = 'C' among loans with amount < 100000. The predicted SQL uses ROUND(..., 2) and CASE WHEN instead of SUM(status='C'), but these are semantically equivalent. Both return 1 row. The only minor difference is rounding to 2 decimal places, which is a cosmetic formatting difference rather than a semantic one. Functionally equivalent."
+      "judge_reason": "Semantically equivalent. Both count rows where amount < 100000 and calculate the percentage of status='C' loans. The pred uses CASE WHEN instead of direct boolean sum and multiplies by 100.0 instead of 100, but results are functionally identical. Both return 1 row."
     },
     {
       "index": 52,
@@ -597,29 +597,29 @@
       "pred_row_count": 1,
       "judge_score": 0.2,
       "judge_verdict": "incorrect",
-      "judge_reason": "The gold SQL defines 'active loan' as status IN ('C', 'D') and ranks districts by total loan amount (SUM), returning the district name from column A3. The predicted SQL filters status = 'A' only, ranks by COUNT of loans, and returns A2 (district name, not region). All three key dimensions differ: active loan definition, ranking metric, and output column. Row counts match at 1 but the result is almost certainly a different district."
+      "judge_reason": "Multiple differences: (1) Gold filters status IN ('C','D') meaning active/in-debt loans, pred filters status = 'A'. These are different loan statuses with different semantics. (2) Gold orders by SUM(amount) DESC to find highest total loan amount, pred orders by COUNT(loan_id) DESC. (3) Gold returns district A3 (region name), pred returns A2 (district name). Although both return 1 row, the actual district returned is likely different due to the different status filter and ranking metric."
     },
     {
       "index": 53,
       "question": "Please provide a list of clients who were born between 1983 and 1987 and whose account branch is in East Bohemia, along with their IDs.",
       "gold_sql": "SELECT T1.client_id, T3.account_id FROM client AS T1 INNER JOIN district AS T2 ON T1.district_id = T2.district_id INNER JOIN disp AS T4 ON T1.client_id = T4.client_id INNER JOIN account AS T3 ON T2.district_id = T3.district_id and T4.account_id = T3.account_id WHERE T2.A3 = 'east Bohemia' AND STRFTIME('%Y', T1.birth_date) BETWEEN '1983' AND '1987'",
-      "pred_sql": "SELECT cl.client_id\nFROM client AS cl\nJOIN district AS di ON cl.district_id = di.district_id\nWHERE strftime('%Y', cl.birth_date) BETWEEN '1983' AND '1987'\nAND di.A3 = 'east Bohemia'",
+      "pred_sql": "SELECT cl.client_id\nFROM client AS cl\nJOIN district AS d ON cl.district_id = d.district_id\nWHERE strftime('%Y', cl.birth_date) BETWEEN '1983' AND '1987'\nAND d.A3 = 'east Bohemia'",
       "gold_row_count": 3,
       "pred_row_count": 3,
       "judge_score": 0.6,
       "judge_verdict": "partially_correct",
-      "judge_reason": "The predicted SQL returns client_id for clients born 1983-1987 in East Bohemia, but omits the account_id column that the gold SQL also selects. The gold SQL joins through disp and account to return both client_id and account_id pairs, ensuring the account branch (not just client district) is in East Bohemia. The predicted SQL only checks the client's own district, not the account branch district. Despite matching row counts (3), the grain and output columns differ — the predicted query misses the account_id and uses a simpler join path."
+      "judge_reason": "The predicted SQL returns only client_id, while the gold returns both client_id and account_id. Additionally, gold joins through disp and account to ensure the account branch (not just client district) is in East Bohemia — pred joins only on client.district_id to district, missing the account-level branch constraint. The birth year filter and region filter are correct. Pred row count matches (3) but the output columns differ and the join logic is less precise."
     },
     {
       "index": 54,
       "question": "For loans contracts which are still running where client are in debt, list the district of the and the state the percentage unemployment rate increment from year 1995 to 1996.",
       "gold_sql": "SELECT CAST((T3.A13 - T3.A12) AS REAL) * 100 / T3.A12 FROM loan AS T1 INNER JOIN account AS T2 ON T1.account_id = T2.account_id INNER JOIN district AS T3 ON T2.district_id = T3.district_id WHERE T1.status = 'D'",
-      "pred_sql": "SELECT d.A2 AS district_name, d.A13 - d.A12 AS unemployment_rate_increment\nFROM loan AS l\nJOIN account AS a ON l.account_id = a.account_id\nJOIN district AS d ON a.district_id = d.district_id\nWHERE l.status = 'D'\nGROUP BY d.district_id, d.A2, d.A12, d.A13",
+      "pred_sql": "SELECT d.A2 AS district, ((d.A13 - d.A12) / d.A12) * 100 AS unemployment_rate_increment\nFROM loan AS l\nJOIN account AS a ON l.account_id = a.account_id\nJOIN district AS d ON a.district_id = d.district_id\nWHERE l.status = 'D'",
       "gold_row_count": 45,
-      "pred_row_count": 30,
-      "judge_score": 0.3,
-      "judge_verdict": "incorrect",
-      "judge_reason": "The gold SQL computes the percentage increment as (A13 - A12) * 100 / A12 (a percentage change formula) and returns one row per loan (no GROUP BY). The predicted SQL computes the raw difference A13 - A12 (not a percentage), adds GROUP BY on district which collapses duplicate districts and changes the grain, and includes district name as an extra column. The row count differs (45 vs 30) confirming the GROUP BY collapses rows. The metric computed is also wrong (difference vs percentage change)."
+      "pred_row_count": 45,
+      "judge_score": 0.7,
+      "judge_verdict": "partially_correct",
+      "judge_reason": "Both queries correctly filter on status='D' and join loan -> account -> district to compute unemployment rate increment from A12 to A13. The formula is equivalent. However, the pred adds district name (d.A2) as an extra output column which was requested in the question ('list the district'), so that's arguably correct. The main difference is the gold casts to REAL for division safety while pred does not, which could cause integer division issues in some SQL dialects. Row counts match (45). Minor concern about integer division in pred but the semantic intent is the same."
     },
     {
       "index": 55,
@@ -630,7 +630,7 @@
       "pred_row_count": 0,
       "judge_score": 0.0,
       "judge_verdict": "incorrect",
-      "judge_reason": "The predicted SQL joins against the 'trans' table and filters by type='VYDAJ', while the gold SQL joins against the 'order' table. These are different tables with different semantics. The pred returns 0 rows vs gold's 1 row, confirming the wrong table choice produces no matching result."
+      "judge_reason": "The predicted SQL queries the 'trans' table instead of the 'order' table. The question asks about debiting 3539 in total from the 'order' table (permanent orders/standing orders), not transactions. Additionally, the filter on t.type = 'VYDAJ' is not in the gold SQL, and the pred returns 0 rows while gold returns 1."
     },
     {
       "index": 56,
@@ -641,29 +641,29 @@
       "pred_row_count": 1,
       "judge_score": 1.0,
       "judge_verdict": "correct",
-      "judge_reason": "Both queries join circuits and races on circuitId and filter by race name 'Abu Dhabi Grand Prix', returning lat and lng. The gold uses DISTINCT while the pred uses LIMIT 1 — both produce a single row with the same coordinate data. Semantically equivalent for this dataset."
+      "judge_reason": "Both queries join circuits and races on circuitId, filter by race name 'Abu Dhabi Grand Prix', and return lat and lng. The use of LIMIT 1 vs DISTINCT is functionally equivalent given there is only one matching row (both return 1 row). Semantically equivalent."
     },
     {
       "index": 57,
       "question": "Please give more information about the Formula_1 races that used the Silverstone Circuit.",
       "gold_sql": "SELECT DISTINCT T1.url FROM circuits AS T1 INNER JOIN races AS T2 ON T2.circuitID = T1.circuitId WHERE T1.name = 'Silverstone Circuit'",
-      "pred_sql": "SELECT r.raceId, r.name, r.year, r.round, r.date, r.time, r.url, c.circuitId, c.circuitRef, c.location, c.country, c.lat, c.lng, c.alt FROM races AS r JOIN circuits AS c ON r.circuitId = c.circuitId WHERE c.name = 'Silverstone Circuit' ORDER BY r.year, r.round",
+      "pred_sql": "SELECT r.raceId, r.year, r.round, r.name, r.date, r.time, c.name AS circuit_name, c.location, c.country, c.lat, c.lng, c.alt\nFROM races AS r\nJOIN circuits AS c ON r.circuitId = c.circuitId\nWHERE c.name = 'Silverstone Circuit'\nORDER BY r.year, r.round",
       "gold_row_count": 1,
       "pred_row_count": 51,
       "judge_score": 0.1,
       "judge_verdict": "incorrect",
-      "judge_reason": "The gold SQL returns only the URL column (1 row, DISTINCT) from circuits joined to races filtered by Silverstone Circuit. The predicted SQL returns many columns across 51 rows, including all race details. The result grain, column selection, and row count are all wrong — the pred dramatically over-returns data compared to what the question asks for."
+      "judge_reason": "The gold SQL returns only the circuit's URL (circuits.url) as additional information, returning 1 row. The predicted SQL returns many columns from both races and circuits and returns 51 rows. The result grain, selected columns, and row count all differ significantly. The predicted SQL does not return the URL column that the gold SQL selects."
     },
     {
       "index": 58,
       "question": "In terms of number of points acquired, how many victories did the driver who ranked 91st acquired?",
       "gold_sql": "SELECT SUM(CASE WHEN points = 91 THEN wins ELSE 0 END) FROM driverStandings",
-      "pred_sql": "SELECT wins FROM driverStandings WHERE driverId = (SELECT driverId FROM driverStandings ORDER BY points DESC LIMIT 1 OFFSET 90) ORDER BY wins DESC LIMIT 1",
+      "pred_sql": "SELECT wins FROM driverStandings WHERE position = 91 LIMIT 1",
       "gold_row_count": 1,
       "pred_row_count": 1,
-      "judge_score": 0.2,
+      "judge_score": 0.1,
       "judge_verdict": "incorrect",
-      "judge_reason": "The gold SQL sums wins for all rows where points=91, treating '91st in terms of points' as the literal point value 91. The pred interprets it as the 91st ranked driver by points (OFFSET 90), which is a different interpretation. These produce different results logically. The approaches differ fundamentally in how they interpret 'ranked 91st in terms of points acquired'."
+      "judge_reason": "The gold SQL sums wins where points = 91, interpreting '91st' as 91 points. The predicted SQL filters by position = 91, interpreting '91st' as the position/rank column. These are semantically different interpretations and would likely return different results depending on the data. The question 'ranked 91st in terms of number of points' maps to points = 91 per the gold SQL, not position = 91."
     },
     {
       "index": 59,
@@ -674,7 +674,7 @@
       "pred_row_count": 1,
       "judge_score": 1.0,
       "judge_verdict": "correct",
-      "judge_reason": "Both queries are semantically equivalent — they join constructors with constructorResults, filter on raceId=9, order by points descending, and return the top constructor's URL. The predicted SQL is functionally identical to the gold SQL."
+      "judge_reason": "Both queries are semantically equivalent: they join constructors and constructorResults on constructorId, filter by raceId = 9, order by points descending, and return the constructor's URL limited to 1 row. Minor alias differences do not affect correctness."
     },
     {
       "index": 60,
@@ -685,18 +685,18 @@
       "pred_row_count": 1,
       "judge_score": 0.0,
       "judge_verdict": "incorrect",
-      "judge_reason": "The gold SQL filters for 'British' nationality, but the predicted SQL filters for 'American' nationality. The question asks about 'UN' drivers which is ambiguous, but the gold establishes 'British' as the correct interpretation. The nationality filter is fundamentally wrong, so the results will differ."
+      "judge_reason": "The gold SQL filters for 'British' nationality (likely a mislabeled 'UN' question), but the predicted SQL filters for 'American' nationality. The nationality filter is fundamentally different, so the results will differ even though both return 1 row (they will return different counts)."
     },
     {
       "index": 61,
       "question": "List out top 3 German drivers who were born from 1980-1990 and have the earliest lap time.",
       "gold_sql": "SELECT T2.driverId FROM pitStops AS T1 INNER JOIN drivers AS T2 on T1.driverId = T2.driverId WHERE T2.nationality = 'German' AND STRFTIME('%Y', T2.dob) BETWEEN '1980' AND '1990' ORDER BY T1.time LIMIT 3",
-      "pred_sql": "SELECT d.forename, d.surname, d.dob, MIN(lt.milliseconds) AS earliest_lap_time_ms\nFROM drivers AS d\nJOIN lapTimes AS lt ON d.driverId = lt.driverId\nWHERE d.nationality = 'German'\n  AND strftime('%Y', d.dob) BETWEEN '1980' AND '1990'\nGROUP BY d.driverId, d.forename, d.surname, d.dob\nORDER BY earliest_lap_time_ms ASC\nLIMIT 3",
+      "pred_sql": "SELECT d.forename, d.surname, d.dob, MIN(lt.milliseconds) AS fastest_lap_ms, MIN(lt.time) AS fastest_lap_time\nFROM drivers AS d\nJOIN lapTimes AS lt ON d.driverId = lt.driverId\nWHERE d.nationality = 'German'\nAND d.dob BETWEEN '1980-01-01' AND '1990-12-31'\nGROUP BY d.driverId, d.forename, d.surname, d.dob\nORDER BY fastest_lap_ms ASC\nLIMIT 3",
       "gold_row_count": 3,
       "pred_row_count": 3,
       "judge_score": 0.5,
       "judge_verdict": "partially_correct",
-      "judge_reason": "Both queries return 3 German drivers born 1980-1990 ordered by earliest lap time, but they use different source tables. Gold uses pitStops.time for ordering, while predicted uses lapTimes.milliseconds. These are different tables with different data, so the ordering and results may differ. The selected columns also differ (gold returns only driverId, pred returns forename, surname, dob, and lap time), but column selection is a minor issue compared to the different source tables affecting result correctness."
+      "judge_reason": "Both queries target German drivers born 1980-1990 and return 3 rows ordered by earliest lap time. However, the gold SQL uses the pitStops table and orders by pit stop time, while the predicted SQL uses the lapTimes table and orders by lap milliseconds. These are different data sources measuring different things, so the result sets will differ. The predicted SQL also includes extra output columns (forename, surname, dob, fastest times) beyond just driverId. The approach is partially aligned but uses the wrong table."
     },
     {
       "index": 62,
@@ -707,7 +707,7 @@
       "pred_row_count": 3,
       "judge_score": 0.9,
       "judge_verdict": "partially_correct",
-      "judge_reason": "Both queries correctly join drivers with pitStops, filter for German nationality and birth year 1980-1985, group by driver, order by average pit stop duration ascending, and limit to 3. The gold uses AVG(duration) while predicted uses AVG(milliseconds) — these are different columns but both represent pit stop duration, which could yield the same or slightly different ordering depending on data. The predicted query also includes the avg value as an extra output column, which is minor. The logic is essentially equivalent."
+      "judge_reason": "Both queries join drivers with pitStops, filter for German drivers born 1980-1985, group and order by average pit stop duration ascending, and limit to 3. The logic is semantically equivalent. The only minor difference is the predicted SQL groups by driverId in addition to forename/surname (more correct to avoid ambiguity) and includes the avg_pit_stop_ms in the SELECT (extra column not requested). The core result should be the same."
     },
     {
       "index": 63,
@@ -716,9 +716,9 @@
       "pred_sql": "SELECT c.name, c.nationality, SUM(cr.points) AS total_points\nFROM constructorResults AS cr\nJOIN races AS r ON cr.raceId = r.raceId\nJOIN constructors AS c ON cr.constructorId = c.constructorId\nWHERE r.name = 'Monaco Grand Prix'\n  AND r.year BETWEEN 1980 AND 2010\nGROUP BY c.constructorId, c.name, c.nationality\nORDER BY total_points DESC\nLIMIT 1",
       "gold_row_count": 1,
       "pred_row_count": 1,
-      "judge_score": 1.0,
+      "judge_score": 0.95,
       "judge_verdict": "correct",
-      "judge_reason": "Both queries join constructorResults with races and constructors, filter for 'Monaco Grand Prix' between 1980 and 2010, group by constructor, order by total points descending, and limit to 1. The predicted query returns the same semantic result (name, nationality, total points) with the same filters and aggregation logic. Column order differs slightly but the result is equivalent."
+      "judge_reason": "Both queries compute SUM of points from constructorResults joined with races and constructors, filter for Monaco Grand Prix between 1980 and 2010, group by constructor, order by total points descending, and limit to 1. The predicted SQL groups by constructorId additionally (more robust) and returns columns in different order, but the semantic result is equivalent. Row counts match at 1."
     },
     {
       "index": 64,
@@ -729,18 +729,18 @@
       "pred_row_count": 1,
       "judge_score": 1.0,
       "judge_verdict": "correct",
-      "judge_reason": "Both queries perform the same join between member and major, filter for first_name='Angela' and last_name='Sanders', and return major_name. Semantically identical."
+      "judge_reason": "Both queries perform the same join between member and major tables on link_to_major/major_id, filter for first_name='Angela' and last_name='Sanders', and return major_name. Semantically identical with matching row counts."
     },
     {
       "index": 65,
       "question": "When did the member, Casey Mason, received the income?",
       "gold_sql": "SELECT T2.date_received FROM member AS T1 INNER JOIN income AS T2 ON T1.member_id = T2.link_to_member WHERE T1.first_name = 'Casey' AND T1.last_name = 'Mason'",
-      "pred_sql": "SELECT i.date_received FROM income AS i INNER JOIN member AS m ON i.link_to_member = m.member_id WHERE m.first_name = 'Casey' AND m.last_name = 'Mason'",
+      "pred_sql": "SELECT i.date_received FROM income AS i JOIN member AS m ON i.link_to_member = m.member_id WHERE m.first_name = 'Casey' AND m.last_name = 'Mason'",
       "gold_row_count": 1,
       "pred_row_count": 1,
       "judge_score": 1.0,
       "judge_verdict": "correct",
-      "judge_reason": "Both queries join income and member tables on the same key, filter by first_name='Casey' and last_name='Mason', and select date_received. Semantically identical, same row count."
+      "judge_reason": "Both queries join member and income on member_id/link_to_member, filter on first_name='Casey' and last_name='Mason', and select date_received. Semantically identical, same row count."
     },
     {
       "index": 66,
@@ -751,40 +751,40 @@
       "pred_row_count": 1,
       "judge_score": 1.0,
       "judge_verdict": "correct",
-      "judge_reason": "Both queries count members with position='President'. COUNT(*) vs COUNT(member_id) yields the same result when there are no NULLs in member_id (primary key). Semantically equivalent, same row count."
+      "judge_reason": "Both queries count members where position='President'. COUNT(*) vs COUNT(member_id) produces the same result when member_id is non-null (primary key). Same row count."
     },
     {
       "index": 67,
       "question": "What is the average attendance of meetings in 2020?",
       "gold_sql": "SELECT CAST(COUNT(T2.link_to_event) AS REAL) / COUNT(DISTINCT T2.link_to_event) FROM event AS T1 INNER JOIN attendance AS T2 ON T1.event_id = T2.link_to_event WHERE SUBSTR(T1.event_date, 1, 4) = '2020' AND T1.type = 'Meeting'",
-      "pred_sql": "SELECT CAST(COUNT(a.link_to_member) AS REAL) / COUNT(DISTINCT a.link_to_event) AS average_attendance\nFROM attendance AS a\nJOIN event AS e ON a.link_to_event = e.event_id\nWHERE e.type = 'Meeting' AND e.event_date LIKE '2020%'",
+      "pred_sql": "SELECT CAST(COUNT(a.link_to_member) AS REAL) / COUNT(DISTINCT e.event_id)\nFROM event AS e\nJOIN attendance AS a ON e.event_id = a.link_to_event\nWHERE e.type = 'Meeting'\nAND strftime('%Y', e.event_date) = '2020'",
       "gold_row_count": 1,
       "pred_row_count": 1,
       "judge_score": 1.0,
       "judge_verdict": "correct",
-      "judge_reason": "Both queries compute total attendance rows divided by distinct events for Meeting-type events in 2020. The gold uses COUNT(T2.link_to_event) and pred uses COUNT(a.link_to_member); both count non-null attendance rows which is equivalent. The date filter differs in form (SUBSTR vs LIKE) but is semantically identical. Same row count."
+      "judge_reason": "Both queries compute total attendance rows divided by distinct event count for Meeting-type events in 2020. The numerator uses COUNT(link_to_event) vs COUNT(link_to_member) — both count attendance rows (no NULLs expected in either FK column), yielding the same result. strftime vs SUBSTR year extraction are functionally equivalent for well-formed dates. Same row count."
     },
     {
       "index": 68,
       "question": "List the name of students that have attended more than 7 events.",
       "gold_sql": "SELECT T1.first_name, T1.last_name FROM member AS T1 INNER JOIN attendance AS T2 ON T1.member_id = T2.link_to_member GROUP BY T2.link_to_member HAVING COUNT(T2.link_to_event) > 7",
-      "pred_sql": "SELECT m.first_name, m.last_name FROM member AS m JOIN attendance AS a ON m.member_id = a.link_to_member GROUP BY m.member_id, m.first_name, m.last_name HAVING COUNT(a.link_to_event) > 7",
+      "pred_sql": "SELECT m.first_name || ' ' || m.last_name AS name\nFROM attendance AS a\nJOIN member AS m ON a.link_to_member = m.member_id\nGROUP BY a.link_to_member\nHAVING COUNT(a.link_to_event) > 7",
       "gold_row_count": 29,
       "pred_row_count": 29,
-      "judge_score": 1.0,
+      "judge_score": 0.9,
       "judge_verdict": "correct",
-      "judge_reason": "Both queries join member and attendance, group by member, and filter for more than 7 events attended, returning first and last name. The pred groups by member_id, first_name, last_name which is more explicit but semantically equivalent. Same row count of 29."
+      "judge_reason": "Both queries join member and attendance, group by member, and filter HAVING COUNT > 7. The gold returns first_name and last_name as separate columns; the predicted concatenates them into a single 'name' column. The set of students returned is identical (same row count of 29), but the output column structure differs slightly from the gold. Functionally answers the question correctly."
     },
     {
       "index": 69,
       "question": "How many members did attend the event 'Community Theater' in 2019?",
       "gold_sql": "SELECT COUNT(T2.link_to_member) FROM event AS T1 INNER JOIN attendance AS T2 ON T1.event_id = T2.link_to_event WHERE T1.event_name = 'Community Theater' AND SUBSTR(T1.event_date, 1, 4) = '2019'",
-      "pred_sql": "SELECT COUNT(*) FROM attendance AS a JOIN event AS e ON a.link_to_event = e.event_id WHERE e.event_name = 'Community Theater' AND e.event_date LIKE '2019%'",
+      "pred_sql": "SELECT COUNT(a.link_to_member) FROM attendance AS a JOIN event AS e ON a.link_to_event = e.event_id WHERE e.event_name = 'Community Theater' AND e.event_date LIKE '2019%'",
       "gold_row_count": 1,
       "pred_row_count": 1,
       "judge_score": 1.0,
       "judge_verdict": "correct",
-      "judge_reason": "Both queries count attendance records for the event 'Community Theater' in 2019 by joining event and attendance tables. COUNT(*) vs COUNT(link_to_member) is equivalent here. Date filter via LIKE vs SUBSTR is semantically identical. Same row count."
+      "judge_reason": "Both queries count attendance rows by joining event and attendance, filtering on event_name='Community Theater' and year 2019. LIKE '2019%' and SUBSTR(...,1,4)='2019' are functionally equivalent for standard date strings. Same row count."
     },
     {
       "index": 70,
@@ -793,31 +793,31 @@
       "pred_sql": "SELECT e.event_name\nFROM event AS e\nJOIN budget AS b ON e.event_id = b.link_to_event\nWHERE b.category = 'Parking'\nAND b.spent < (\n    SELECT AVG(b2.spent)\n    FROM budget AS b2\n    WHERE b2.category = 'Parking'\n)",
       "gold_row_count": 3,
       "pred_row_count": 4,
-      "judge_score": 0.1,
+      "judge_score": 0.0,
       "judge_verdict": "incorrect",
-      "judge_reason": "The predicted SQL uses budget.spent compared against AVG(budget.spent) for Parking category, while the gold SQL joins to the expense table and compares expense.cost against AVG(expense.cost) across all expenses. These are fundamentally different columns and different subquery scopes. The row counts also differ (3 vs 4), confirming the results are not equivalent."
+      "judge_reason": "The predicted SQL uses budget.spent compared against AVG(budget.spent) for Parking category only, while the gold SQL joins to the expense table and compares expense.cost against AVG(cost) across all expenses. These are fundamentally different columns and different average baselines. The row counts differ (3 vs 4), confirming the results are not equivalent."
     },
     {
       "index": 71,
       "question": "Which members who were approved from 1/10/2019 to 11/19/2019? Please identify the member who attended the event and the link to their event.",
       "gold_sql": "SELECT DISTINCT T1.link_to_member, T3.link_to_event FROM expense AS T1 INNER JOIN member AS T2 ON T1.link_to_member = T2.member_id INNER JOIN attendance AS T3 ON T2.member_id = T3.link_to_member WHERE date(SUBSTR(T1.expense_date, 1, 10)) BETWEEN '2019-01-10' AND '2019-11-19' AND T1.approved = 'true'",
-      "pred_sql": "SELECT m.member_id, m.first_name, m.last_name, e.approved, e.expense_date, a.link_to_event\nFROM expense AS e\nJOIN member AS m ON e.link_to_member = m.member_id\nJOIN attendance AS a ON m.member_id = a.link_to_member\nWHERE e.approved = 'true'\nAND e.expense_date BETWEEN '2019-01-10' AND '2019-11-19'",
+      "pred_sql": "SELECT m.member_id, m.first_name, m.last_name, e.expense_date, e.approved, a.link_to_event\nFROM expense AS e\nJOIN member AS m ON e.link_to_member = m.member_id\nJOIN attendance AS a ON m.member_id = a.link_to_member\nWHERE e.approved = 'true'\nAND e.expense_date BETWEEN '2019-01-10' AND '2019-11-19'",
       "gold_row_count": 46,
       "pred_row_count": 472,
-      "judge_score": 0.3,
-      "judge_verdict": "partially_correct",
-      "judge_reason": "The predicted SQL has the correct joins and filters (approved='true', date range, linking member to attendance), but the date comparison uses a direct BETWEEN on expense_date string without extracting the date portion (SUBSTR), which may cause issues. More critically, it selects extra columns (first_name, last_name, approved, expense_date) and lacks DISTINCT, leading to massively different row counts (46 vs 472). The core logic is partially right but the missing DISTINCT and extra columns inflate results dramatically."
+      "judge_score": 0.2,
+      "judge_verdict": "incorrect",
+      "judge_reason": "The predicted SQL returns extra columns (first_name, last_name, expense_date, approved) beyond the requested link_to_member and link_to_event, and critically omits the DISTINCT clause. The date filter uses BETWEEN on a string date field without SUBSTR/date conversion, which may not correctly handle the date format. The row count difference (46 vs 472) confirms the results are not equivalent — likely due to missing DISTINCT and/or date parsing issues."
     },
     {
       "index": 72,
       "question": "Among the members who incurred expenses in more than one event, who paid the most amount?",
       "gold_sql": "SELECT T2.member_id FROM expense AS T1 INNER JOIN member AS T2 ON T1.link_to_member = T2.member_id INNER JOIN budget AS T3 ON T1.link_to_budget = T3.budget_id INNER JOIN event AS T4 ON T3.link_to_event = T4.event_id GROUP BY T2.member_id HAVING COUNT(DISTINCT T4.event_id) > 1 ORDER BY SUM(T1.cost) DESC LIMIT 1",
-      "pred_sql": "SELECT e.link_to_member, SUM(e.cost) AS total_paid\nFROM expense AS e\nJOIN budget AS b ON e.link_to_budget = b.budget_id\nGROUP BY e.link_to_member\nHAVING COUNT(DISTINCT b.link_to_event) > 1\nORDER BY total_paid DESC\nLIMIT 1",
+      "pred_sql": "SELECT e.link_to_member, SUM(e.cost) AS total_cost\nFROM expense AS e\nJOIN budget AS b ON e.link_to_budget = b.budget_id\nGROUP BY e.link_to_member\nHAVING COUNT(DISTINCT b.link_to_event) > 1\nORDER BY total_cost DESC\nLIMIT 1",
       "gold_row_count": 1,
       "pred_row_count": 1,
       "judge_score": 0.8,
       "judge_verdict": "partially_correct",
-      "judge_reason": "The predicted SQL correctly identifies members with expenses in more than one event by grouping on link_to_member and counting DISTINCT b.link_to_event, and orders by total cost descending with LIMIT 1. The gold uses a member join to return member_id from the member table, while predicted returns link_to_member from expense directly — these should be the same value. The approach and logic are semantically equivalent and row counts match (1 vs 1). Minor difference is the extra total_paid column in the output, but the core answer (member identity) is correct."
+      "judge_reason": "The predicted SQL produces the same row count (1) and uses a semantically similar approach: grouping by member, filtering HAVING COUNT(DISTINCT b.link_to_event) > 1, ordering by SUM(cost) DESC, LIMIT 1. However, the gold SQL joins through to the event table explicitly and groups by member_id via the member table, while the predicted SQL groups directly by expense.link_to_member without joining member. This means the output column is link_to_member (a foreign key string) rather than member_id from the member table — functionally the same value but the gold returns from the member table. The logic is largely correct and should return the same member."
     },
     {
       "index": 73,
@@ -828,7 +828,7 @@
       "pred_row_count": 3,
       "judge_score": 0.8,
       "judge_verdict": "partially_correct",
-      "judge_reason": "The predicted SQL correctly computes the average cost across all expenses and filters members whose expenses exceed that average. It groups by member to deduplicate (equivalent to DISTINCT). The subquery logic is equivalent. The main difference is the gold uses DISTINCT with individual rows while the predicted uses GROUP BY — both should return 3 rows, which matches. The concatenated full_name output format differs from the gold's separate first_name/last_name columns, which is a minor output format difference. Row counts match (3 vs 3)."
+      "judge_reason": "The predicted SQL correctly filters expenses where cost exceeds the overall average and returns first_name, last_name, and phone. The row counts match (3 vs 3). The main difference is the predicted SQL uses GROUP BY to deduplicate (equivalent to DISTINCT in effect), concatenates names into full_name, and skips the redundant budget/member join in the subquery. The result grain and filtering logic are semantically equivalent, but the output format differs slightly (concatenated full_name vs separate first_name/last_name columns). This is a minor presentational difference that doesn't affect correctness of the answer."
     },
     {
       "index": 74,
@@ -839,18 +839,18 @@
       "pred_row_count": 102,
       "judge_score": 0.0,
       "judge_verdict": "incorrect",
-      "judge_reason": "The predicted SQL groups by both s.id and s.full_name, while the gold groups only by full_name. This causes a difference in how duplicates are handled — if multiple heroes share the same full_name but have different ids, the predicted SQL would count their powers separately and potentially include more rows. This is confirmed by the significantly different row counts (71 vs 102), indicating the predicted query returns far too many results."
+      "judge_reason": "The predicted SQL groups by s.id and s.full_name, while the gold SQL groups by T1.full_name only (with DISTINCT). Because multiple heroes can share the same full_name, grouping by id counts powers per hero ID, potentially splitting heroes with the same name into separate groups and inflating counts or missing the HAVING threshold. The row counts differ significantly (71 vs 102), confirming the results are not equivalent."
     },
     {
       "index": 75,
       "question": "Among the superheroes with the race of god/eternal, how many of them are male",
       "gold_sql": "SELECT COUNT(*) FROM superhero AS T1 INNER JOIN race AS T2 ON T1.race_id = T2.id INNER JOIN gender AS T3 ON T3.id = T1.gender_id WHERE T1.race_id = 21 AND T1.gender_id = 1",
-      "pred_sql": "SELECT COUNT(*) FROM superhero AS s INNER JOIN race AS r ON s.race_id = r.id INNER JOIN gender AS g ON s.gender_id = g.id WHERE r.race = 'God/Eternal' AND g.gender = 'Male'",
+      "pred_sql": "SELECT COUNT(*) FROM superhero AS s JOIN race AS r ON s.race_id = r.id JOIN gender AS g ON s.gender_id = g.id WHERE r.race = 'God/Eternal' AND g.gender = 'Male'",
       "gold_row_count": 1,
       "pred_row_count": 1,
       "judge_score": 1.0,
       "judge_verdict": "correct",
-      "judge_reason": "Semantically equivalent. The predicted SQL uses named lookups (r.race = 'God/Eternal' AND g.gender = 'Male') while the gold uses hardcoded IDs (race_id = 21, gender_id = 1), but both resolve to the same filter. Same joins, same COUNT(*), same row count."
+      "judge_reason": "Both queries count male God/Eternal superheroes. The gold uses hardcoded IDs (race_id=21, gender_id=1) while the predicted joins and filters by name values 'God/Eternal' and 'Male'. These are semantically equivalent assuming the IDs map correctly to those names, and the row counts match."
     },
     {
       "index": 76,
@@ -861,18 +861,18 @@
       "pred_row_count": 1,
       "judge_score": 1.0,
       "judge_verdict": "correct",
-      "judge_reason": "Identical logic. Both compute AVG(height_cm) for superheroes with alignment = 'Neutral' via the same join pattern. Only alias names differ."
+      "judge_reason": "Both queries compute AVG(height_cm) for superheroes with alignment='Neutral' via the same join structure. Functionally identical, row counts match."
     },
     {
       "index": 77,
       "question": "Who is the dumbest superhero?",
       "gold_sql": "SELECT T1.superhero_name FROM superhero AS T1 INNER JOIN hero_attribute AS T2 ON T1.id = T2.hero_id INNER JOIN attribute AS T3 ON T2.attribute_id = T3.id WHERE T3.attribute_name = 'Intelligence' ORDER BY T2.attribute_value LIMIT 1",
-      "pred_sql": "SELECT s.superhero_name FROM superhero AS s JOIN hero_attribute AS ha ON s.id = ha.hero_id JOIN attribute AS a ON ha.attribute_id = a.id WHERE a.attribute_name = 'Intelligence' ORDER BY ha.attribute_value ASC LIMIT 1",
+      "pred_sql": "SELECT s.superhero_name\nFROM superhero AS s\nJOIN hero_attribute AS ha ON s.id = ha.hero_id\nJOIN attribute AS a ON ha.attribute_id = a.id\nWHERE a.attribute_name = 'Intelligence'\nORDER BY ha.attribute_value ASC\nLIMIT 1",
       "gold_row_count": 1,
       "pred_row_count": 1,
       "judge_score": 1.0,
       "judge_verdict": "correct",
-      "judge_reason": "Semantically identical. Both filter on attribute_name = 'Intelligence', order ascending by attribute_value, and take LIMIT 1 to find the lowest intelligence (dumbest). ASC is explicit in pred but implicit (default) in gold — same result."
+      "judge_reason": "Both queries find the superhero with the lowest Intelligence attribute value using the same joins, filter, ASC ordering (default in gold, explicit in predicted), and LIMIT 1. Semantically equivalent, row counts match."
     },
     {
       "index": 78,
@@ -883,7 +883,7 @@
       "pred_row_count": 1,
       "judge_score": 1.0,
       "judge_verdict": "correct",
-      "judge_reason": "Semantically identical. Both filter on attribute_name = 'Speed', order by attribute_value DESC, and take LIMIT 1. Only formatting and alias names differ."
+      "judge_reason": "Both queries find the superhero with the highest Speed attribute value using the same joins, filter, DESC ordering, and LIMIT 1. Semantically equivalent, row counts match."
     },
     {
       "index": 79,
@@ -894,7 +894,7 @@
       "pred_row_count": 1,
       "judge_score": 1.0,
       "judge_verdict": "correct",
-      "judge_reason": "Semantically identical. Both join superhero, hero_attribute, and attribute, filter on superhero_name = 'Hulk' and attribute_name = 'Strength', and return the attribute_value. Only alias names differ."
+      "judge_reason": "Both queries retrieve the Strength attribute value for 'Hulk' using the same join structure and filters. Semantically equivalent, row counts match."
     },
     {
       "index": 80,
@@ -905,7 +905,7 @@
       "pred_row_count": 1,
       "judge_score": 1.0,
       "judge_verdict": "correct",
-      "judge_reason": "Both queries compute the percentage of female heroes published by Marvel Comics by dividing the count of Marvel female heroes by the total count of female heroes. The predicted SQL uses SUM with ELSE 0 instead of COUNT with ELSE NULL, which produces the same numeric result. Same joins, same WHERE filter, same row count."
+      "judge_reason": "Both queries compute the percentage of female heroes published by Marvel Comics by joining superhero, publisher, and gender tables, filtering on gender='Female', and dividing the count of Marvel rows by total female rows. Using SUM(CASE WHEN ... THEN 1 ELSE 0 END) vs COUNT(CASE WHEN ... THEN 1 ELSE NULL END) is semantically equivalent. Both return 1 row."
     },
     {
       "index": 81,
@@ -916,7 +916,7 @@
       "pred_row_count": 1,
       "judge_score": 1.0,
       "judge_verdict": "correct",
-      "judge_reason": "Both queries calculate the percentage of female superheroes among bad-aligned heroes. The predicted SQL uses SUM(CASE WHEN...THEN 1 ELSE 0) which is semantically equivalent to COUNT(CASE WHEN...THEN id ELSE NULL END). Same joins, same filter on alignment='Bad', same row count of 1."
+      "judge_reason": "Both queries compute the percentage of female superheroes among bad-aligned heroes. The pred uses SUM(CASE WHEN female THEN 1 ELSE 0 END) which is semantically equivalent to COUNT(CASE WHEN female THEN id ELSE NULL END). Same joins, same filter on alignment='Bad', same result grain. Both return 1 row."
     },
     {
       "index": 82,
@@ -927,29 +927,29 @@
       "pred_row_count": 1,
       "judge_score": 0.9,
       "judge_verdict": "correct",
-      "judge_reason": "Both queries compute (count of blue-eyed heroes) minus (count of no-colour-eyed heroes) among superheroes with missing/zero weight. The gold uses hardcoded IDs (7 for Blue, 1 for No Colour) while the predicted uses colour name strings ('Blue', 'No Colour'). The predicted also uses LEFT JOIN vs INNER JOIN, but since the CASE expressions default to 0 for non-matching rows, the result should be the same assuming the colour names match the IDs used in gold. Minor risk from name vs ID lookup, but functionally equivalent in a well-formed database. Same row count."
+      "judge_reason": "Both queries calculate (count of blue-eyed) minus (count of no-eye-colour) among superheroes with missing/zero weight. The gold references colour IDs directly (id=7 for Blue, id=1 for No Colour) while pred joins to colour table and matches by name ('Blue', 'No Colour'). This is semantically equivalent assuming those IDs map to those names. The pred uses LEFT JOIN which could include rows where eye_colour_id has no match, but the gold uses INNER JOIN. This is a minor difference; practically both should return the same result. Both return 1 row."
     },
     {
       "index": 83,
       "question": "Provide all ID, sex and birthday of patients whose urea nitrogen (UN) just within the borderline of passing?",
       "gold_sql": "SELECT DISTINCT T1.ID, T1.SEX, T1.Birthday FROM Patient AS T1 INNER JOIN Laboratory AS T2 ON T1.ID = T2.ID WHERE T2.UN = 29",
-      "pred_sql": "SELECT DISTINCT p.ID, p.SEX, p.Birthday FROM Patient AS p INNER JOIN Laboratory AS l ON p.ID = l.ID WHERE l.UN = 22",
+      "pred_sql": "SELECT DISTINCT p.ID, p.SEX, p.Birthday FROM Patient AS p JOIN Laboratory AS l ON p.ID = l.ID WHERE l.UN = (SELECT MAX(l2.UN) FROM Laboratory AS l2)",
       "gold_row_count": 20,
-      "pred_row_count": 74,
+      "pred_row_count": 1,
       "judge_score": 0.0,
       "judge_verdict": "incorrect",
-      "judge_reason": "The gold SQL filters UN = 29 (upper borderline of normal range), while the predicted SQL filters UN = 22. These produce entirely different result sets — gold returns 20 rows, predicted returns 74 rows. The filter value is wrong."
+      "judge_reason": "The gold query filters for UN=29, which represents the borderline/upper-normal threshold for urea nitrogen. The pred query filters for UN equal to the MAX(UN) across all lab records, which is a completely different condition. Gold returns 20 rows while pred returns 1 row, confirming the results differ significantly. The interpretation of 'borderline of passing' as the specific threshold value 29 is domain knowledge encoded in the gold SQL that the pred misses."
     },
     {
       "index": 84,
       "question": "Who is the oldest patient with the highest total cholesterol (T-CHO). State the patient ID and T-CHO index.",
       "gold_sql": "SELECT T1.ID, T2.`T-CHO` FROM Patient AS T1 INNER JOIN Laboratory AS T2 ON T1.ID = T2.ID ORDER BY T2.`T-CHO` DESC, T1.Birthday ASC LIMIT 1",
-      "pred_sql": "SELECT p.ID, l.`T-CHO` FROM Patient AS p JOIN Laboratory AS l ON p.ID = l.ID WHERE l.`T-CHO` = (SELECT MAX(`T-CHO`) FROM Laboratory) ORDER BY p.Birthday ASC LIMIT 1",
+      "pred_sql": "SELECT l.ID, l.`T-CHO` FROM Laboratory AS l JOIN Patient AS p ON l.ID = p.ID WHERE l.`T-CHO` IS NOT NULL ORDER BY p.Birthday ASC, l.`T-CHO` DESC LIMIT 1",
       "gold_row_count": 1,
       "pred_row_count": 1,
-      "judge_score": 0.8,
+      "judge_score": 0.5,
       "judge_verdict": "partially_correct",
-      "judge_reason": "Both queries find the oldest patient with the highest T-CHO. The predicted SQL first filters to only rows where T-CHO equals the maximum T-CHO, then orders by birthday ascending and takes 1. The gold SQL orders by T-CHO DESC then birthday ASC and takes 1, which means it considers the globally highest T-CHO row(s) and picks the oldest among them. Both approaches should return the same single record when the maximum T-CHO is unambiguous. However, the gold approach could technically return a different row if the max T-CHO value appears in multiple records with different patient birthdays — in that scenario both would still resolve correctly. The logic is effectively equivalent for the common case, and row counts match at 1. Minor structural difference but semantically equivalent in practice."
+      "judge_reason": "The question asks for the oldest patient with the highest T-CHO. The gold orders by T-CHO DESC first, then Birthday ASC, meaning it prioritizes highest cholesterol and breaks ties by oldest age. The pred orders by Birthday ASC first (oldest), then T-CHO DESC, which prioritizes oldest patient and breaks ties by highest cholesterol. These orderings can return different results when there is no single patient who is both oldest and has highest T-CHO simultaneously. The pred's approach misinterprets the question's priority ordering. Both return 1 row but likely a different row."
     },
     {
       "index": 85,
@@ -959,30 +959,30 @@
       "gold_row_count": 197,
       "pred_row_count": 223,
       "judge_score": 0.2,
-      "judge_verdict": "partially_correct",
-      "judge_reason": "The query structure is correct (join Patient and Laboratory, select ID and Diagnosis), but uses the wrong threshold. The question asks for TG greater than 100 of the normal range, and the gold SQL uses TG > 300 (the upper bound of the normal range is 200, so 100 above normal = 300). The predicted SQL uses TG > 100, which is a much lower threshold that incorrectly includes many more patients. This is confirmed by the row count difference: gold returns 197 rows while pred returns 223 rows. Additionally, pred uses DISTINCT which changes the grain slightly."
+      "judge_verdict": "incorrect",
+      "judge_reason": "The gold SQL filters TG > 300 (the upper bound of the normal range for triglycerides), while the predicted SQL filters TG > 100. This is a critical filter difference that directly causes the row count mismatch (223 vs 197). The predicted SQL also adds DISTINCT which further changes the result grain. The threshold of 100 vs 300 is semantically wrong for the question's intent."
     },
     {
       "index": 86,
       "question": "How many of the patients with the most serious thrombosis cases examined in 1997 are women?",
       "gold_sql": "SELECT  COUNT(*) FROM Patient AS T1 INNER JOIN Examination AS T2 ON T1.ID = T2.ID WHERE T1.SEX = 'F' AND STRFTIME('%Y', T2.`Examination Date`) = '1997' AND T2.Thrombosis = 1",
-      "pred_sql": "SELECT COUNT(DISTINCT p.ID)\nFROM Patient AS p\nJOIN Examination AS e ON p.ID = e.ID\nWHERE e.Thrombosis = (SELECT MAX(Thrombosis) FROM Examination)\n  AND strftime('%Y', e.`Examination Date`) = '1997'\n  AND p.SEX = 'F'",
+      "pred_sql": "SELECT COUNT(DISTINCT p.ID)\nFROM Patient AS p\nJOIN Examination AS e ON p.ID = e.ID\nWHERE e.Thrombosis = (SELECT MAX(Thrombosis) FROM Examination)\nAND strftime('%Y', e.`Examination Date`) = '1997'\nAND p.SEX = 'F'",
       "gold_row_count": 1,
       "pred_row_count": 1,
       "judge_score": 0.9,
       "judge_verdict": "correct",
-      "judge_reason": "Both queries count female patients examined in 1997 with the most serious thrombosis level. The gold hardcodes Thrombosis = 1, while pred uses a subquery SELECT MAX(Thrombosis) to find the most serious level dynamically — semantically equivalent assuming 1 is the max value. Pred uses COUNT(DISTINCT p.ID) vs COUNT(*) in gold, which could differ if there are duplicate rows, but the row counts match at 1. This is effectively correct."
+      "judge_reason": "Both queries count female patients examined in 1997 with the most serious thrombosis level. The gold uses Thrombosis = 1 as a literal for 'most serious', while the predicted uses a subquery MAX(Thrombosis) which evaluates to 1 in this dataset. Both produce the same row count (1) and the logic is semantically equivalent. The predicted uses COUNT(DISTINCT p.ID) vs COUNT(*) but both should yield the same result here."
     },
     {
       "index": 87,
       "question": "For all patients with triglyceride (TG) level beyond the normal range, how many are age more than 50 years?",
       "gold_sql": "SELECT COUNT(DISTINCT T1.ID) FROM Patient AS T1 INNER JOIN Laboratory AS T2 ON T1.ID = T2.ID WHERE T2.TG >= 200 AND STRFTIME('%Y', CURRENT_TIMESTAMP) - STRFTIME('%Y', T1.Birthday) > 50",
-      "pred_sql": "SELECT COUNT(DISTINCT l.ID) FROM Laboratory AS l JOIN Patient AS p ON l.ID = p.ID WHERE l.TG > 200 AND (CAST(strftime('%Y', l.Date) AS INTEGER) - CAST(strftime('%Y', p.Birthday) AS INTEGER)) > 50",
+      "pred_sql": "SELECT COUNT(DISTINCT l.ID) FROM Laboratory AS l JOIN Patient AS p ON l.ID = p.ID WHERE l.TG > 200 AND (STRFTIME('%Y', 'now') - STRFTIME('%Y', p.Birthday)) > 50",
       "gold_row_count": 1,
       "pred_row_count": 1,
-      "judge_score": 0.6,
-      "judge_verdict": "partially_correct",
-      "judge_reason": "Both queries count distinct patients with TG beyond normal range and age > 50, and both return 1 row. However, the age calculation differs: gold computes age relative to CURRENT_TIMESTAMP (today's date), while pred computes age relative to the lab test date (l.Date), which is not the patient's current age. This is semantically different — a patient could be over 50 at today's date but under 50 at the time of the lab test, or vice versa. The row counts happen to match (both return 1), but the logic is incorrect. Also, gold uses TG >= 200 while pred uses TG > 200, a minor boundary difference."
+      "judge_score": 0.95,
+      "judge_verdict": "correct",
+      "judge_reason": "Both queries count distinct patients with TG beyond normal range and age > 50. The gold uses TG >= 200 while the predicted uses TG > 200 — a minor boundary difference — but both produce the same row count (1). The age calculation logic is functionally equivalent. The results match."
     },
     {
       "index": 88,
@@ -993,7 +993,7 @@
       "pred_row_count": 1,
       "judge_score": 0.1,
       "judge_verdict": "incorrect",
-      "judge_reason": "The predicted SQL is fundamentally wrong. Gold joins Patient, Laboratory, and Examination tables, filters on T-CHO >= 250 (total cholesterol higher than normal) and checks KCT = '-' (negative degree of coagulation). Pred only queries Laboratory without joining Examination, and checks RF = '-' instead of KCT = '-'. RF is rheumatoid factor, not a coagulation measure. The pred query is missing the Examination join entirely and uses the wrong column for the coagulation check. Despite both returning 1 row, the results are computed from wrong logic and wrong columns."
+      "judge_reason": "The gold SQL joins Patient, Laboratory, and Examination tables, filtering T-CHO >= 250 and KCT = '-' (degree of coagulation negative). The predicted SQL only queries Laboratory, uses RF = '-' instead of KCT = '-' (wrong column — RF is rheumatoid factor, not coagulation degree), and misses the Examination join entirely. While both return row count 1, the logic is fundamentally wrong — wrong column, wrong table, missing join."
     },
     {
       "index": 89,
@@ -1004,29 +1004,29 @@
       "pred_row_count": 1,
       "judge_score": 0.95,
       "judge_verdict": "correct",
-      "judge_reason": "Both queries compute the average aCL IgG for admitted patients (Admission = '+') aged 50 and above. The logic is semantically equivalent: both join Patient and Examination, filter on Admission = '+', and calculate age using the current year minus birth year >= 50. The pred uses CAST(strftime('%Y','now')) which is equivalent to gold's STRFTIME('%Y', CURRENT_TIMESTAMP). Both return 1 row. This is effectively correct."
+      "judge_reason": "Both queries compute the average aCL IgG for admitted ('+') patients aged 50 and above by joining Patient and Examination. The age calculation approach is functionally equivalent (both use strftime year subtraction). The predicted query explicitly casts to INTEGER which is a minor implementation detail but produces the same result. Row counts match (1)."
     },
     {
       "index": 90,
       "question": "What is the ratio of male to female patients among all those with abnormal uric acid counts?",
       "gold_sql": "SELECT CAST(SUM(CASE WHEN T2.UA <= 8.0 AND T1.SEX = 'M' THEN 1 ELSE 0 END) AS REAL) / SUM(CASE WHEN T2.UA <= 6.5 AND T1.SEX = 'F' THEN 1 ELSE 0 END) FROM Patient AS T1 INNER JOIN Laboratory AS T2 ON T1.ID = T2.ID",
-      "pred_sql": "SELECT CAST(SUM(CASE WHEN p.SEX = 'M' THEN 1 ELSE 0 END) AS REAL) / NULLIF(SUM(CASE WHEN p.SEX = 'F' THEN 1 ELSE 0 END), 0) AS male_to_female_ratio FROM Patient AS p WHERE p.ID IN (SELECT DISTINCT ID FROM Laboratory AS l WHERE l.UA IS NOT NULL AND (l.UA < 2.5 OR l.UA > 7.0))",
+      "pred_sql": "SELECT CAST(SUM(CASE WHEN p.SEX = 'M' THEN 1 ELSE 0 END) AS REAL) / NULLIF(SUM(CASE WHEN p.SEX = 'F' THEN 1 ELSE 0 END), 0) AS male_to_female_ratio FROM Patient AS p WHERE p.ID IN (SELECT DISTINCT l.ID FROM Laboratory AS l WHERE l.UA IS NOT NULL AND (l.UA < 2.0 OR l.UA > 6.5))",
       "gold_row_count": 1,
       "pred_row_count": 1,
       "judge_score": 0.0,
       "judge_verdict": "incorrect",
-      "judge_reason": "The predicted SQL uses completely different thresholds for abnormal uric acid (UA < 2.5 OR UA > 7.0) compared to the gold SQL which defines abnormal as UA <= 8.0 for males and UA <= 6.5 for females. The gold SQL computes the ratio by counting male records where UA <= 8.0 over female records where UA <= 6.5 across all lab records joined to patients, while the predicted SQL first filters to distinct patient IDs with UA outside a different normal range and then counts by sex. The logic, thresholds, and approach are fundamentally different and would produce different numeric results."
+      "judge_reason": "The gold SQL defines 'abnormal' uric acid as UA <= 8.0 for males and UA <= 6.5 for females (these appear to be the normal upper bounds used inversely, but that is what the gold uses). The predicted SQL filters for UA < 2.0 OR UA > 6.5 for all patients regardless of sex, which is a completely different definition of abnormal UA. The male/female split logic also differs: gold counts males with UA <= 8.0 and females with UA <= 6.5 separately in the same joined table, while predicted filters a subquery first then counts by sex. The filter conditions are fundamentally different, so the results would differ."
     },
     {
       "index": 91,
       "question": "Among the male patients who have a normal level of white blood cells, how many of them have an abnormal fibrinogen level?",
       "gold_sql": "SELECT COUNT(DISTINCT T1.ID) FROM Patient AS T1 INNER JOIN Laboratory AS T2 ON T1.ID = T2.ID WHERE T2.FG <= 150 OR T2.FG >= 450 AND T2.WBC > 3.5 AND T2.WBC < 9.0 AND T1.SEX = 'M'",
-      "pred_sql": "SELECT COUNT(DISTINCT l.ID) FROM Laboratory AS l JOIN Patient AS p ON l.ID = p.ID WHERE p.SEX = 'M' AND l.WBC >= 3.5 AND l.WBC <= 9.0 AND (l.FG < 150 OR l.FG > 400)",
+      "pred_sql": "SELECT COUNT(DISTINCT l.ID)\nFROM Laboratory AS l\nJOIN Patient AS p ON l.ID = p.ID\nWHERE p.SEX = 'M'\n  AND l.WBC >= 3.5 AND l.WBC <= 9.0\n  AND (l.FG < 150 OR l.FG > 400)",
       "gold_row_count": 1,
       "pred_row_count": 1,
-      "judge_score": 0.1,
-      "judge_verdict": "incorrect",
-      "judge_reason": "The gold SQL has an operator precedence issue (no parentheses around the OR for FG condition), but taken literally it filters FG <= 150 OR (FG >= 450 AND WBC > 3.5 AND WBC < 9.0 AND SEX = 'M'), which is semantically different from the intended query. The predicted SQL uses different FG thresholds (FG < 150 OR FG > 400) vs gold (FG <= 150 OR FG >= 450), different WBC boundary conditions (>= vs > and <= vs <), and applies all conditions together with proper parentheses. Both row counts are 1 but the numeric values would differ due to differing thresholds and filter logic."
+      "judge_score": 0.3,
+      "judge_verdict": "partially_correct",
+      "judge_reason": "The gold SQL has a operator precedence bug (no parentheses around the OR condition for FG), effectively computing (FG <= 150) OR (FG >= 450 AND WBC > 3.5 AND WBC < 9.0 AND SEX = 'M'), which is logically different from the intent. The predicted SQL correctly parenthesizes the FG abnormal condition but uses different thresholds (FG < 150 OR FG > 400 vs gold's FG <= 150 OR FG >= 450), and uses WBC >= 3.5/<=9.0 vs gold's WBC > 3.5/<9.0 (boundary inclusion differs). The pred_row_count matches gold_row_count at 1, but the threshold differences (especially FG > 400 vs >= 450) mean the actual count values could differ. Partial credit for correct structure and intent but wrong thresholds."
     },
     {
       "index": 92,
@@ -1035,9 +1035,9 @@
       "pred_sql": "SELECT DISTINCT a2.atom_id\nFROM atom AS a1\nJOIN connected AS c ON a1.atom_id = c.atom_id\nJOIN atom AS a2 ON c.atom_id2 = a2.atom_id\nWHERE a1.element = 'pb'\nUNION\nSELECT DISTINCT a1.atom_id\nFROM atom AS a2\nJOIN connected AS c ON a2.atom_id = c.atom_id2\nJOIN atom AS a1 ON c.atom_id = a1.atom_id\nWHERE a2.element = 'pb'",
       "gold_row_count": 4,
       "pred_row_count": 4,
-      "judge_score": 0.4,
+      "judge_score": 0.5,
       "judge_verdict": "partially_correct",
-      "judge_reason": "The gold SQL returns both atom_id and atom_id2 columns from the connected table for bonds where atom_id belongs to a lead element atom — effectively returning the bond endpoints as pairs. The predicted SQL uses UNION to return distinct individual atom_ids that are bonded to a lead atom (from either direction), resulting in a single column of atom IDs rather than pairs. Row counts match at 4, but the output schema (two columns vs one column) and semantics differ. The predicted query also handles bidirectional bonds which the gold does not, potentially inflating results, though row counts happen to match."
+      "judge_reason": "The gold SQL returns both atom_id and atom_id2 columns from the connected table for bonds where atom_id belongs to a lead element — giving the full bond pair records. The predicted SQL returns only distinct individual atom_ids of atoms bonded to lead (collapsing the pair into individual atoms via UNION). Both return 4 rows, but the output structure differs: gold returns two columns (bond pairs), while pred returns one column (individual atom IDs). The question asks 'what atoms can bond with lead' which the pred addresses, but it doesn't match the gold's output format."
     },
     {
       "index": 93,
@@ -1048,7 +1048,7 @@
       "pred_row_count": 1,
       "judge_score": 1.0,
       "judge_verdict": "correct",
-      "judge_reason": "Both queries are semantically identical: they count atom_id from the atom table joined to molecule on molecule_id, filtered where label = '+'. The only difference is alias naming, which does not affect results."
+      "judge_reason": "Both queries are semantically identical: they join atom to molecule on molecule_id and count atom_ids where the molecule label is '+'. The only difference is alias naming, which has no effect on results."
     },
     {
       "index": 94,
@@ -1059,7 +1059,7 @@
       "pred_row_count": 2,
       "judge_score": 1.0,
       "judge_verdict": "correct",
-      "judge_reason": "Both queries are semantically equivalent: they join bond and connected on bond_id, filter where bond_id = 'TR001_6_9', and return bond_type, atom_id, and atom_id2. Alias names differ but logic and output are identical."
+      "judge_reason": "Both queries are semantically identical: they join bond and connected on bond_id, filter by bond_id = 'TR001_6_9', and return bond_type, atom_id, and atom_id2. Alias differences only."
     },
     {
       "index": 95,
@@ -1070,7 +1070,7 @@
       "pred_row_count": 1,
       "judge_score": 0.5,
       "judge_verdict": "partially_correct",
-      "judge_reason": "The predicted SQL retrieves the correct molecule_id and joins correctly, but returns the raw label value ('+' or '-') instead of transforming it to 'YES'/'NO' as required by the question. The result grain and row count match, but the output column for carcinogenicity is not properly formatted per the gold SQL."
+      "judge_reason": "The predicted SQL retrieves the correct molecule_id and joins correctly, but returns the raw label value ('+' or '-') instead of converting it to 'YES'/'NO' as requested by the question. The data grain and row count are correct, but the output column does not match the required carcinogenic flag format."
     },
     {
       "index": 96,
@@ -1079,31 +1079,31 @@
       "pred_sql": "SELECT m.molecule_id, m.label, COUNT(b.bond_id) AS double_bond_count, CASE WHEN m.label = '+' THEN 'Yes' ELSE 'No' END AS is_carcinogenic FROM molecule AS m JOIN bond AS b ON m.molecule_id = b.molecule_id WHERE b.bond_type = '=' GROUP BY m.molecule_id, m.label ORDER BY double_bond_count DESC LIMIT 1",
       "gold_row_count": 1,
       "pred_row_count": 1,
-      "judge_score": 0.5,
+      "judge_score": 0.6,
       "judge_verdict": "partially_correct",
-      "judge_reason": "The predicted SQL correctly identifies the molecule with the most double bonds and includes a CASE expression for carcinogenicity. However, it returns extra columns (molecule_id, double_bond_count, is_carcinogenic) beyond the single label column in the gold SQL. The core logic is correct but the output differs in both column selection and carcinogenicity representation (gold returns raw label; pred adds a derived column). Row counts match at 1."
+      "judge_reason": "The predicted SQL returns the correct molecule and correctly identifies carcinogenicity, but it adds extra columns (molecule_id, double_bond_count, is_carcinogenic) beyond the gold which only returns label. The core logic is correct and the row counts match, but the output grain differs. Also, the gold uses bond_type filter in a subquery while the pred filters similarly — the logic is equivalent, but the extra output columns make it partially correct."
     },
     {
       "index": 97,
       "question": "Identify whether the chemical compound that contains Calcium is carcinogenic.",
       "gold_sql": "SELECT T2.label AS flag_carcinogenic FROM atom AS T1 INNER JOIN molecule AS T2 ON T1.molecule_id = T2.molecule_id WHERE T1.element = 'ca'",
-      "pred_sql": "SELECT m.molecule_id, m.label FROM molecule AS m JOIN atom AS a ON m.molecule_id = a.molecule_id WHERE a.element = 'ca'",
+      "pred_sql": "SELECT m.label FROM molecule AS m JOIN atom AS a ON m.molecule_id = a.molecule_id WHERE a.element = 'ca'",
       "gold_row_count": 1,
       "pred_row_count": 1,
-      "judge_score": 0.5,
-      "judge_verdict": "partially_correct",
-      "judge_reason": "The predicted SQL correctly joins atom and molecule on molecule_id and filters by element = 'ca', producing the right row count. However, it selects both molecule_id and label, whereas the gold SQL selects only the label column. The extra column makes the output not semantically equivalent to what was asked."
+      "judge_score": 1.0,
+      "judge_verdict": "correct",
+      "judge_reason": "The predicted SQL is semantically equivalent to the gold. Both join atom and molecule on molecule_id, filter by element = 'ca', and return the label column. Row counts match (1)."
     },
     {
       "index": 98,
       "question": "List the elements of all the triple bonds.",
       "gold_sql": "SELECT DISTINCT T3.element FROM bond AS T1 INNER JOIN connected AS T2 ON T1.bond_id = T2.bond_id INNER JOIN atom AS T3 ON T2.atom_id = T3.atom_id WHERE T1.bond_type = '#'",
-      "pred_sql": "SELECT DISTINCT a.element FROM atom AS a JOIN connected AS c ON a.atom_id = c.atom_id OR a.atom_id = c.atom_id2 JOIN bond AS b ON c.bond_id = b.bond_id WHERE b.bond_type = '#'",
+      "pred_sql": "SELECT DISTINCT a.element FROM atom AS a JOIN connected AS c ON a.atom_id = c.atom_id JOIN bond AS b ON c.bond_id = b.bond_id WHERE b.bond_type = '#'",
       "gold_row_count": 4,
       "pred_row_count": 4,
-      "judge_score": 0.9,
-      "judge_verdict": "partially_correct",
-      "judge_reason": "The predicted SQL uses 'OR a.atom_id = c.atom_id2' which is redundant (the first condition already covers atom_id = c.atom_id) but both sides of the connected table are addressed, which is actually the more correct approach. The gold SQL only joins on atom_id = c.atom_id, missing atom_id2. Both return 4 rows, suggesting results coincide in this dataset. The pred SQL is arguably more complete but technically different in join logic. Marking as high partial since results match and logic is sound."
+      "judge_score": 1.0,
+      "judge_verdict": "correct",
+      "judge_reason": "The predicted SQL is semantically equivalent to the gold. Both join bond, connected, and atom tables to find distinct elements involved in triple bonds (bond_type = '#'). The join order differs slightly but yields the same result. Row counts match (4)."
     },
     {
       "index": 99,
@@ -1112,9 +1112,9 @@
       "pred_sql": "SELECT DISTINCT a.element FROM atom AS a JOIN connected AS c ON a.atom_id = c.atom_id JOIN bond AS b ON c.bond_id = b.bond_id WHERE b.molecule_id = 'TR024' AND b.bond_type = '='",
       "gold_row_count": 76,
       "pred_row_count": 2,
-      "judge_score": 0.1,
-      "judge_verdict": "incorrect",
-      "judge_reason": "The predicted SQL joins atom to connected and then to bond, filtering elements that are directly part of a connected pair with a double bond in TR024. The gold SQL joins atom directly to bond on molecule_id, returning all elements in the molecule that also have any double bond. These are semantically different approaches and yield very different row counts (76 vs 2), confirming the predicted SQL is incorrect."
+      "judge_score": 0.3,
+      "judge_verdict": "partially_correct",
+      "judge_reason": "The predicted SQL uses the connected table to join atoms to bonds, which is a more precise join path. However, it also adds DISTINCT which collapses duplicate elements, returning only 2 rows vs the gold's 76. The gold joins atom to bond directly on molecule_id (not via connected), returning one row per atom in the molecule that has any double bond — a different and broader grain. The pred's approach is logically different and produces far fewer rows, meaning the result sets differ significantly."
     }
   ]
 }
