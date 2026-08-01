@@ -63,7 +63,7 @@ def make_judge(model_name: str, openai_mode: str):
     if model_name == "openai":
         from models.openai_model import OpenAIModel
 
-        return OpenAIModel(use_api=openai_mode == "api")
+        return OpenAIModel(use_api=True)
     if model_name == "anthropic":
         from models.anthropic_model import AnthropicModel
 

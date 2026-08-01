@@ -125,5 +125,5 @@
       "judge_reason": "The predicted SQL is null, so it cannot answer the question or match the gold SQL."
     }
   ],
-  "last_run_at": "2026-07-29T15:30:39"
+  "last_run_at": "2026-08-01T16:10:42"
 }

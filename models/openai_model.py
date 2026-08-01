@@ -20,9 +20,9 @@ class OpenAIModel(BaseModel):
             self.model = model or os.getenv("GOAPI_MODEL") or os.getenv("GPTNB_MODEL") or DEFAULT_API_MODEL
             missing_key_message = "GOAPI_API_KEY or GPTNB_API_KEY not set. Add it to your .env file."
         else:
-            api_key = os.getenv("OPENAI_API_KEY")
-            base_url = None
-            self.model = model or os.getenv("OPENAI_MODEL") or DEFAULT_MODEL
+            api_key = os.getenv("OPENAI_API_KEY") or os.getenv("GOAPI_API_KEY") or os.getenv("GOAPI_KEY")
+            base_url = DEFAULT_API_BASE_URL if not os.getenv("OPENAI_API_KEY") else None
+            self.model = model or os.getenv("OPENAI_MODEL") or os.getenv("GOAPI_MODEL") or DEFAULT_MODEL
             missing_key_message = "OPENAI_API_KEY not set. Add it to your .env file."
 
         if not api_key:

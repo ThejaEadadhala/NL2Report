@@ -1,0 +1,18 @@
+[
+  {
+    "index": 4,
+    "db": "m5",
+    "question": "What is the average units sold per row for each category, and what is the overall maximum units sold in a single row?",
+    "gold_sql": "SELECT cat_id, AVG(sales) AS avg_units FROM sales GROUP BY cat_id ORDER BY avg_units DESC",
+    "pred_sql": "SELECT \n    cat_id, \n    AVG(sales) AS avg_units_sold_per_row\nFROM \n    sales\nGROUP BY \n    cat_id;",
+    "repaired_sql": null,
+    "repair_status": "not_needed",
+    "compiler_actions": [],
+    "valid": true,
+    "match": true,
+    "pred_error": null,
+    "gold_row_count": 3,
+    "pred_row_count": 3,
+    "execution_time_seconds": 8.13
+  }
+]

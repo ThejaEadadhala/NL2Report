@@ -1,0 +1,30 @@
+{
+  "input": "/Users/devanshishah/Desktop/NL2Report_repo/results/m5_openai_m5_q4_single_ui_results.json",
+  "judge_model": "openai",
+  "openai_mode": "api",
+  "batch_size": 1,
+  "generated_at": "2026-08-01T16:06:35",
+  "summary": {
+    "total": 1,
+    "scored": 1,
+    "average_score": 0.8,
+    "correctness_percent": 80.0,
+    "verdict_counts": {
+      "partially_correct": 1
+    }
+  },
+  "results": [
+    {
+      "index": 4,
+      "question": "What is the average units sold per row for each category, and what is the overall maximum units sold in a single row?",
+      "gold_sql": "SELECT cat_id, AVG(sales) AS avg_units FROM sales GROUP BY cat_id ORDER BY avg_units DESC",
+      "pred_sql": "SELECT \n    cat_id, \n    AVG(sales) AS avg_units_sold_per_row\nFROM \n    sales\nGROUP BY \n    cat_id;",
+      "gold_row_count": 3,
+      "pred_row_count": 3,
+      "judge_score": 0.8,
+      "judge_verdict": "partially_correct",
+      "judge_reason": "The predicted SQL correctly calculates the average units sold per row for each category and groups by category ID, matching the gold SQL in terms of result grain and row count. However, it omits the ORDER BY clause present in the gold SQL, which specifies sorting the results by average units in descending order. This omission affects the semantic equivalence of the queries."
+    }
+  ],
+  "last_run_at": "2026-08-01T16:06:25"
+}

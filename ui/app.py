@@ -36,6 +36,13 @@ MODEL_DETAILS = {
         "context_window": "Model dependent",
         "enabled": True,
     },
+    "goapi": {
+        "label": "goapi",
+        "provider": "GoAPI (Claude Sonnet 4.6)",
+        "model_name": "claude-sonnet-4-6",
+        "context_window": "200K tokens",
+        "enabled": True,
+    },
 }
 
 DATASET_DETAILS = {
@@ -992,7 +999,7 @@ def main() -> None:
     else:
         st.caption("Pipeline is not running. No previous run timestamp is available.")
 
-    st.dataframe(stage_rows(selected_row), width="stretch", hide_index=True)
+    st.dataframe(stage_rows(selected_row), use_container_width=True, hide_index=True)
 
     if st.session_state.get("last_pipeline_output") and not run_clicked:
         with st.expander("Last pipeline/run_analysis.py output", expanded=False):
@@ -1018,7 +1025,7 @@ def main() -> None:
                 st.write(f"{i}. {item}")
 
         with schema_tab:
-            st.dataframe(retrieved_schema_frame(selected_row, selected_dataset, selected_db), width="stretch")
+            st.dataframe(retrieved_schema_frame(selected_row, selected_dataset, selected_db), use_container_width=True)
 
         with sql_tab:
             sql_cols = st.columns(3)
@@ -1040,7 +1047,7 @@ def main() -> None:
                 st.code(selected_row["gold_sql"], language="sql")
 
         with exec_tab:
-            st.dataframe(execution_frame(selected_row), width="stretch", hide_index=True)
+            st.dataframe(execution_frame(selected_row), use_container_width=True, hide_index=True)
             if selected_row.get("pred_error"):
                 st.error(selected_row["pred_error"])
             st.caption("Result rows are summarized from the evaluation artifact. Full row payloads are not currently saved by the batch evaluator.")
@@ -1079,7 +1086,7 @@ def main() -> None:
             [{"Classification": key, "Count": value} for key, value in m["counts"].items()]
         )
         if not chart_data.empty:
-            st.bar_chart(chart_data, x="Classification", y="Count", width="stretch")
+            st.bar_chart(chart_data, x="Classification", y="Count", use_container_width=True)
 
         result_frame = pd.DataFrame(
             [
@@ -1096,7 +1103,7 @@ def main() -> None:
                 for row in rows
             ]
         )
-        st.dataframe(result_frame, width="stretch", hide_index=True)
+        st.dataframe(result_frame, use_container_width=True, hide_index=True)
 
 
 if __name__ == "__main__":
