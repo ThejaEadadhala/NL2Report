@@ -1,0 +1,252 @@
+[
+  {
+    "db_id": "neutron",
+    "question": "List every network with its ID, name, tenant ID, status, MTU, and administrative state, ordered by network name and ID.",
+    "SQL": "SELECT id, name, tenant_id, status, mtu, admin_state_up FROM networks ORDER BY name, id"
+  },
+  {
+    "db_id": "neutron",
+    "question": "Show the number of networks for each status, ordered from the largest count to the smallest.",
+    "SQL": "SELECT status, COUNT(*) AS network_count FROM networks GROUP BY status ORDER BY network_count DESC"
+  },
+  {
+    "db_id": "neutron",
+    "question": "For each tenant, show the number of networks and the average network MTU. Include only tenants that own at least one network.",
+    "SQL": "SELECT tenant_id, COUNT(*) AS network_count, AVG(mtu) AS avg_mtu FROM networks GROUP BY tenant_id HAVING COUNT(id) > 0"
+  },
+  {
+    "db_id": "neutron",
+    "question": "List all ports with their network ID, MAC address, device owner, status, and administrative state, ordered by network ID and port ID.",
+    "SQL": "SELECT id, network_id, mac_address, device_owner, status, admin_state_up FROM ports ORDER BY network_id, id"
+  },
+  {
+    "db_id": "neutron",
+    "question": "Show the count of ports by device owner and status.",
+    "SQL": "SELECT device_owner, status, COUNT(*) AS port_count FROM ports GROUP BY device_owner, status"
+  },
+  {
+    "db_id": "neutron",
+    "question": "For each network, show its ID, name, status, and number of ports, including networks with no ports.",
+    "SQL": "SELECT n.id, n.name, n.status, COUNT(p.id) AS port_count FROM networks n LEFT JOIN ports p ON p.network_id = n.id GROUP BY n.id, n.name, n.status"
+  },
+  {
+    "db_id": "neutron",
+    "question": "For each network, show its ID, name, number of subnets, and number of distinct IP versions used by those subnets, including networks with no subnets.",
+    "SQL": "SELECT n.id, n.name, COUNT(s.id) AS subnet_count, COUNT(DISTINCT s.ip_version) AS ip_version_count FROM networks n LEFT JOIN subnets s ON s.network_id = n.id GROUP BY n.id, n.name"
+  },
+  {
+    "db_id": "neutron",
+    "question": "List each subnet with its network name, CIDR, IP version, gateway IP, and DHCP setting.",
+    "SQL": "SELECT s.id, s.name AS subnet_name, n.name AS network_name, s.cidr, s.ip_version, s.gateway_ip, s.enable_dhcp FROM subnets s JOIN networks n ON n.id = s.network_id"
+  },
+  {
+    "db_id": "neutron",
+    "question": "For each network, show the number of DHCP-enabled and DHCP-disabled subnets.",
+    "SQL": "SELECT n.id, n.name, SUM(CASE WHEN s.enable_dhcp = 1 THEN 1 ELSE 0 END) AS dhcp_enabled_subnets, SUM(CASE WHEN s.enable_dhcp = 0 THEN 1 ELSE 0 END) AS dhcp_disabled_subnets FROM networks n LEFT JOIN subnets s ON s.network_id = n.id GROUP BY n.id, n.name"
+  },
+  {
+    "db_id": "neutron",
+    "question": "Show networks that have more ports than the average number of ports per network, with their port counts.",
+    "SQL": "WITH port_counts AS (SELECT n.id, n.name, COUNT(p.id) AS port_count FROM networks n LEFT JOIN ports p ON p.network_id = n.id GROUP BY n.id, n.name) SELECT id, name, port_count FROM port_counts WHERE port_count > (SELECT AVG(port_count) FROM port_counts)"
+  },
+  {
+    "db_id": "neutron",
+    "question": "List routers with their gateway port name, gateway port status, and SNAT setting, including routers without a gateway port.",
+    "SQL": "SELECT r.id, r.name AS router_name, r.status AS router_status, r.enable_snat, p.name AS gateway_port_name, p.status AS gateway_port_status FROM routers r LEFT JOIN ports p ON p.id = r.gw_port_id"
+  },
+  {
+    "db_id": "neutron",
+    "question": "For each router, show its ID, name, status, and number of attached ports, including routers with no attached ports.",
+    "SQL": "SELECT r.id, r.name, r.status, COUNT(rp.port_id) AS attached_port_count FROM routers r LEFT JOIN routerports rp ON rp.router_id = r.id GROUP BY r.id, r.name, r.status"
+  },
+  {
+    "db_id": "neutron",
+    "question": "For each router and router port type, show the number of attached ports.",
+    "SQL": "SELECT r.id AS router_id, r.name AS router_name, rp.port_type, COUNT(*) AS port_count FROM routers r JOIN routerports rp ON rp.router_id = r.id GROUP BY r.id, r.name, rp.port_type"
+  },
+  {
+    "db_id": "neutron",
+    "question": "List router ports with router name, port name, network name, port type, MAC address, and port status.",
+    "SQL": "SELECT r.name AS router_name, p.name AS port_name, n.name AS network_name, rp.port_type, p.mac_address, p.status AS port_status FROM routerports rp JOIN routers r ON r.id = rp.router_id JOIN ports p ON p.id = rp.port_id JOIN networks n ON n.id = p.network_id"
+  },
+  {
+    "db_id": "neutron",
+    "question": "For each tenant, show the number of routers and how many of them have SNAT enabled.",
+    "SQL": "SELECT tenant_id, COUNT(*) AS router_count, SUM(CASE WHEN enable_snat = 1 THEN 1 ELSE 0 END) AS snat_enabled_count FROM routers GROUP BY tenant_id"
+  },
+  {
+    "db_id": "neutron",
+    "question": "List floating IPs with their status, fixed IP address, associated router name, and fixed port name, including records without a router or fixed port.",
+    "SQL": "SELECT f.id, f.floating_ip_address, f.fixed_ip_address, f.status, r.name AS router_name, p.name AS fixed_port_name FROM floatingips f LEFT JOIN routers r ON r.id = f.router_id LEFT JOIN ports p ON p.id = f.fixed_port_id"
+  },
+  {
+    "db_id": "neutron",
+    "question": "For each router, show the number of floating IPs and the number of distinct fixed ports used by those floating IPs.",
+    "SQL": "SELECT r.id, r.name, COUNT(f.id) AS floating_ip_count, COUNT(DISTINCT f.fixed_port_id) AS fixed_port_count FROM routers r LEFT JOIN floatingips f ON f.router_id = r.id GROUP BY r.id, r.name"
+  },
+  {
+    "db_id": "neutron",
+    "question": "Rank routers within each tenant by their number of floating IPs, with the router having the most floating IPs ranked first.",
+    "SQL": "WITH router_fip_counts AS (SELECT r.tenant_id, r.id, r.name, COUNT(f.id) AS floating_ip_count FROM routers r LEFT JOIN floatingips f ON f.router_id = r.id GROUP BY r.tenant_id, r.id, r.name) SELECT tenant_id, id, name, floating_ip_count, DENSE_RANK() OVER (PARTITION BY tenant_id ORDER BY floating_ip_count DESC) AS tenant_rank FROM router_fip_counts"
+  },
+  {
+    "db_id": "neutron",
+    "question": "For each security group, show its tenant ID and number of security group rules, including groups with no rules.",
+    "SQL": "SELECT sg.id, sg.name, sg.tenant_id, COUNT(sgr.id) AS rule_count FROM securitygroups sg LEFT JOIN securitygrouprules sgr ON sgr.security_group_id = sg.id GROUP BY sg.id, sg.name, sg.tenant_id"
+  },
+  {
+    "db_id": "neutron",
+    "question": "Show the count of security group rules by direction, ethertype, and protocol.",
+    "SQL": "SELECT direction, ethertype, protocol, COUNT(*) AS rule_count FROM securitygrouprules GROUP BY direction, ethertype, protocol"
+  },
+  {
+    "db_id": "neutron",
+    "question": "List security group rules with the security group name, direction, protocol, source and destination port ranges, remote IP prefix, and action-related identifiers.",
+    "SQL": "SELECT sgr.id, sg.name AS security_group_name, sgr.direction, sgr.ethertype, sgr.protocol, sgr.port_range_min, sgr.port_range_max, sgr.remote_ip_prefix, sgr.remote_group_id FROM securitygrouprules sgr JOIN securitygroups sg ON sg.id = sgr.security_group_id"
+  },
+  {
+    "db_id": "neutron",
+    "question": "For each port, show its network name and number of assigned security groups, including ports with no security groups.",
+    "SQL": "SELECT p.id, p.name AS port_name, n.name AS network_name, COUNT(sgb.security_group_id) AS security_group_count FROM ports p JOIN networks n ON n.id = p.network_id LEFT JOIN securitygroupportbindings sgb ON sgb.port_id = p.id GROUP BY p.id, p.name, n.name"
+  },
+  {
+    "db_id": "neutron",
+    "question": "Find ports assigned to more than one security group and show the port ID, port name, and security group count.",
+    "SQL": "SELECT p.id, p.name, COUNT(sgb.security_group_id) AS security_group_count FROM ports p JOIN securitygroupportbindings sgb ON sgb.port_id = p.id GROUP BY p.id, p.name HAVING COUNT(sgb.security_group_id) > 1"
+  },
+  {
+    "db_id": "neutron",
+    "question": "For each network, show the total number of security group assignments across its ports and the number of distinct security groups assigned.",
+    "SQL": "SELECT n.id, n.name, COUNT(sgb.security_group_id) AS assignment_count, COUNT(DISTINCT sgb.security_group_id) AS distinct_security_group_count FROM networks n LEFT JOIN ports p ON p.network_id = n.id LEFT JOIN securitygroupportbindings sgb ON sgb.port_id = p.id GROUP BY n.id, n.name"
+  },
+  {
+    "db_id": "neutron",
+    "question": "List agents with their type, host, availability zone, administrative state, load, and latest heartbeat timestamp.",
+    "SQL": "SELECT id, agent_type, host, availability_zone, admin_state_up, `load`, heartbeat_timestamp FROM agents"
+  },
+  {
+    "db_id": "neutron",
+    "question": "For each agent type and availability zone, show the number of agents and average load.",
+    "SQL": "SELECT agent_type, availability_zone, COUNT(*) AS agent_count, AVG(`load`) AS avg_load FROM agents GROUP BY agent_type, availability_zone"
+  },
+  {
+    "db_id": "neutron",
+    "question": "List each network and its DHCP agents, including the agent host, availability zone, administrative state, and load.",
+    "SQL": "SELECT n.id AS network_id, n.name AS network_name, a.id AS agent_id, a.host, a.availability_zone, a.admin_state_up, a.`load` FROM networkdhcpagentbindings b JOIN networks n ON n.id = b.network_id JOIN agents a ON a.id = b.dhcp_agent_id"
+  },
+  {
+    "db_id": "neutron",
+    "question": "For each DHCP agent, show the number of bound networks and rank agents within each availability zone by that count.",
+    "SQL": "WITH agent_network_counts AS (SELECT a.id, a.host, a.availability_zone, COUNT(b.network_id) AS network_count FROM agents a LEFT JOIN networkdhcpagentbindings b ON b.dhcp_agent_id = a.id GROUP BY a.id, a.host, a.availability_zone) SELECT id, host, availability_zone, network_count, DENSE_RANK() OVER (PARTITION BY availability_zone ORDER BY network_count DESC) AS zone_rank FROM agent_network_counts"
+  },
+  {
+    "db_id": "neutron",
+    "question": "List load balancers with their VIP address, provisioning status, operating status, VIP subnet name, and VIP port name.",
+    "SQL": "SELECT lb.id, lb.name, lb.vip_address, lb.provisioning_status, lb.operating_status, s.name AS vip_subnet_name, p.name AS vip_port_name FROM lbaas_loadbalancers lb LEFT JOIN subnets s ON s.id = lb.vip_subnet_id LEFT JOIN ports p ON p.id = lb.vip_port_id"
+  },
+  {
+    "db_id": "neutron",
+    "question": "For each load balancer, show the number of listeners and pools, using distinct counts to avoid duplication.",
+    "SQL": "SELECT lb.id, lb.name, COUNT(DISTINCT l.id) AS listener_count, COUNT(DISTINCT p.id) AS pool_count FROM lbaas_loadbalancers lb LEFT JOIN lbaas_listeners l ON l.loadbalancer_id = lb.id LEFT JOIN lbaas_pools p ON p.loadbalancer_id = lb.id GROUP BY lb.id, lb.name"
+  },
+  {
+    "db_id": "neutron",
+    "question": "List listeners with load balancer name, protocol, protocol port, connection limit, provisioning status, and operating status.",
+    "SQL": "SELECT l.id, l.name AS listener_name, lb.name AS loadbalancer_name, l.protocol, l.protocol_port, l.connection_limit, l.provisioning_status, l.operating_status FROM lbaas_listeners l JOIN lbaas_loadbalancers lb ON lb.id = l.loadbalancer_id"
+  },
+  {
+    "db_id": "neutron",
+    "question": "For each load balancer pool, show its algorithm, protocol, operating status, and number of members, including pools with no members.",
+    "SQL": "SELECT p.id, p.name, p.lb_algorithm, p.protocol, p.operating_status, COUNT(m.id) AS member_count FROM lbaas_pools p LEFT JOIN lbaas_members m ON m.pool_id = p.id GROUP BY p.id, p.name, p.lb_algorithm, p.protocol, p.operating_status"
+  },
+  {
+    "db_id": "neutron",
+    "question": "For each pool, show the total member weight, average member weight, and number of administratively enabled members.",
+    "SQL": "SELECT p.id, p.name, SUM(m.weight) AS total_member_weight, AVG(m.weight) AS avg_member_weight, SUM(CASE WHEN m.admin_state_up = 1 THEN 1 ELSE 0 END) AS enabled_member_count FROM lbaas_pools p LEFT JOIN lbaas_members m ON m.pool_id = p.id GROUP BY p.id, p.name"
+  },
+  {
+    "db_id": "neutron",
+    "question": "Rank members within each load balancer pool by weight from highest to lowest.",
+    "SQL": "SELECT m.pool_id, m.id AS member_id, m.name AS member_name, m.address, m.protocol_port, m.weight, DENSE_RANK() OVER (PARTITION BY m.pool_id ORDER BY m.weight DESC) AS weight_rank FROM lbaas_members m"
+  },
+  {
+    "db_id": "neutron",
+    "question": "List firewalls with their policy name, firewall status, shared setting, administrative state, and whether the policy is audited.",
+    "SQL": "SELECT f.id, f.name AS firewall_name, f.status, f.shared, f.admin_state_up, fp.name AS policy_name, fp.audited FROM firewalls f JOIN firewall_policies fp ON fp.id = f.firewall_policy_id"
+  },
+  {
+    "db_id": "neutron",
+    "question": "For each firewall policy, show the number of firewalls and the number of firewall rules, including policies with neither.",
+    "SQL": "SELECT fp.id, fp.name, COUNT(DISTINCT f.id) AS firewall_count, COUNT(DISTINCT fr.id) AS rule_count FROM firewall_policies fp LEFT JOIN firewalls f ON f.firewall_policy_id = fp.id LEFT JOIN firewall_rules fr ON fr.firewall_policy_id = fp.id GROUP BY fp.id, fp.name"
+  },
+  {
+    "db_id": "neutron",
+    "question": "List firewall rules with their policy name, position, protocol, action, enabled setting, and source and destination IP addresses.",
+    "SQL": "SELECT fr.id, fr.name AS rule_name, fp.name AS policy_name, fr.position, fr.protocol, fr.action, fr.enabled, fr.source_ip_address, fr.destination_ip_address FROM firewall_rules fr JOIN firewall_policies fp ON fp.id = fr.firewall_policy_id"
+  },
+  {
+    "db_id": "neutron",
+    "question": "For each firewall policy and action, show the number of enabled and disabled rules.",
+    "SQL": "SELECT fp.id AS policy_id, fp.name AS policy_name, fr.action, SUM(CASE WHEN fr.enabled = 1 THEN 1 ELSE 0 END) AS enabled_rule_count, SUM(CASE WHEN fr.enabled = 0 THEN 1 ELSE 0 END) AS disabled_rule_count FROM firewall_policies fp JOIN firewall_rules fr ON fr.firewall_policy_id = fp.id GROUP BY fp.id, fp.name, fr.action"
+  },
+  {
+    "db_id": "neutron",
+    "question": "List VPN services with their router name, subnet name, status, and administrative state.",
+    "SQL": "SELECT v.id, v.name AS vpnservice_name, v.status, v.admin_state_up, r.name AS router_name, s.name AS subnet_name FROM vpnservices v JOIN routers r ON r.id = v.router_id JOIN subnets s ON s.id = v.subnet_id"
+  },
+  {
+    "db_id": "neutron",
+    "question": "For each VPN service, show the number of IPsec site connections and their average MTU, including VPN services with no connections.",
+    "SQL": "SELECT v.id, v.name, COUNT(c.id) AS connection_count, AVG(c.mtu) AS avg_connection_mtu FROM vpnservices v LEFT JOIN ipsec_site_connections c ON c.vpnservice_id = v.id GROUP BY v.id, v.name"
+  },
+  {
+    "db_id": "neutron",
+    "question": "List IPsec site connections with VPN service name, router ID, peer address, route mode, authentication mode, status, and DPD settings.",
+    "SQL": "SELECT c.id, c.name AS connection_name, v.name AS vpnservice_name, v.router_id, c.peer_address, c.route_mode, c.auth_mode, c.status, c.dpd_action, c.dpd_interval, c.dpd_timeout FROM ipsec_site_connections c JOIN vpnservices v ON v.id = c.vpnservice_id"
+  },
+  {
+    "db_id": "neutron",
+    "question": "For each VPN service, rank its IPsec site connections by MTU from highest to lowest.",
+    "SQL": "SELECT c.vpnservice_id, c.id, c.name, c.peer_address, c.mtu, DENSE_RANK() OVER (PARTITION BY c.vpnservice_id ORDER BY c.mtu DESC) AS mtu_rank FROM ipsec_site_connections c"
+  },
+  {
+    "db_id": "neutron",
+    "question": "List BGP speakers and their bound peers, including speaker name, local AS, IP version, peer name, peer IP, and remote AS.",
+    "SQL": "SELECT s.id AS speaker_id, s.name AS speaker_name, s.local_as, s.ip_version, p.id AS peer_id, p.name AS peer_name, p.peer_ip, p.remote_as FROM bgp_speaker_peer_bindings b JOIN bgp_speakers s ON s.id = b.bgp_speaker_id JOIN bgp_peers p ON p.id = b.bgp_peer_id"
+  },
+  {
+    "db_id": "neutron",
+    "question": "For each BGP speaker, show the number of bound peers and the number of distinct remote autonomous systems.",
+    "SQL": "SELECT s.id, s.name, COUNT(p.id) AS peer_count, COUNT(DISTINCT p.remote_as) AS remote_as_count FROM bgp_speakers s LEFT JOIN bgp_speaker_peer_bindings b ON b.bgp_speaker_id = s.id LEFT JOIN bgp_peers p ON p.id = b.bgp_peer_id GROUP BY s.id, s.name"
+  },
+  {
+    "db_id": "neutron",
+    "question": "For each tenant and IP version, show the number of BGP speakers and average local autonomous system number.",
+    "SQL": "SELECT tenant_id, ip_version, COUNT(*) AS speaker_count, AVG(local_as) AS avg_local_as FROM bgp_speakers GROUP BY tenant_id, ip_version"
+  },
+  {
+    "db_id": "neutron",
+    "question": "List QoS bandwidth limit rules with policy name, maximum kilobits per second, and maximum burst kilobits per second.",
+    "SQL": "SELECT r.id AS rule_id, p.id AS policy_id, p.name AS policy_name, r.max_kbps, r.max_burst_kbps FROM qos_bandwidth_limit_rules r JOIN qos_policies p ON p.id = r.qos_policy_id"
+  },
+  {
+    "db_id": "neutron",
+    "question": "For each QoS policy, show the number of bandwidth limit rules, bound networks, and bound ports.",
+    "SQL": "SELECT q.id, q.name, COUNT(DISTINCT br.id) AS bandwidth_rule_count, COUNT(DISTINCT nb.network_id) AS network_count, COUNT(DISTINCT pb.port_id) AS port_count FROM qos_policies q LEFT JOIN qos_bandwidth_limit_rules br ON br.qos_policy_id = q.id LEFT JOIN qos_network_policy_bindings nb ON nb.policy_id = q.id LEFT JOIN qos_port_policy_bindings pb ON pb.policy_id = q.id GROUP BY q.id, q.name"
+  },
+  {
+    "db_id": "neutron",
+    "question": "List networks with their bound QoS policy name and the number of ports in each network, including networks without a QoS policy.",
+    "SQL": "SELECT n.id, n.name AS network_name, q.name AS qos_policy_name, COUNT(p.id) AS port_count FROM networks n LEFT JOIN qos_network_policy_bindings b ON b.network_id = n.id LEFT JOIN qos_policies q ON q.id = b.policy_id LEFT JOIN ports p ON p.network_id = n.id GROUP BY n.id, n.name, q.name"
+  },
+  {
+    "db_id": "neutron",
+    "question": "For each resource type, show the number of standard attribute records and the earliest and latest creation timestamps.",
+    "SQL": "SELECT resource_type, COUNT(*) AS attribute_count, MIN(created_at) AS earliest_created_at, MAX(created_at) AS latest_created_at FROM standardattributes GROUP BY resource_type"
+  },
+  {
+    "db_id": "neutron",
+    "question": "For each network, show its name, standard attribute description, and number of tags, including networks without tags.",
+    "SQL": "SELECT n.id, n.name, sa.description, COUNT(t.tag) AS tag_count FROM networks n JOIN standardattributes sa ON sa.id = n.standard_attr_id LEFT JOIN tags t ON t.standard_attr_id = sa.id GROUP BY n.id, n.name, sa.description"
+  }
+]
