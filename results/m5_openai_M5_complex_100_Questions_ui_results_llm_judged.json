@@ -1116,5 +1116,6 @@
       "judge_verdict": "correct",
       "judge_reason": "The predicted SQL matches the gold SQL in terms of table joins, filters, grouping, aggregation, and output columns. Both produce the same number of rows (36), and the logic for SNAP units, non-SNAP units, shares, month-over-month changes, and ranks is semantically equivalent."
     }
-  ]
+  ],
+  "last_run_at": "2026-08-04T19:50:15"
 }

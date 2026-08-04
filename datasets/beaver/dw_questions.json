@@ -1,252 +1,252 @@
 [
   {
     "db_id": "dw",
-    "question": "For each subject code where the department is degree granting(Y/N) and the department is Mathematics, show the subject code, subject code description, department name, school name, and the average department budget code within each school, along with the subject title, total units, dense rank over the department code ordered by department code, and the number of subjects offered by the department, for each subject offered by the Mathematics department, ordered by department name and dense rank. Do not return any rounded answers.",
-    "SQL": "WITH inner_cte AS (SELECT t1.SUBJECT_CODE, t1.SUBJECT_CODE_DESC, t0.DEPARTMENT_NAME, t1.SCHOOL_NAME, AVG(t0.DEPT_BUDGET_CODE) OVER (PARTITION BY t1.SCHOOL_NAME ORDER BY t0.DEPARTMENT_NAME) AS avg_dept_budget_code FROM SIS_DEPARTMENT t0 JOIN SIS_SUBJECT_CODE t1 ON t0.SCHOOL_CODE = t1.SCHOOL_CODE WHERE t0.IS_DEGREE_GRANTING = 'Y' AND t0.DEPARTMENT_NAME = 'Mathematics' ORDER BY t0.DEPARTMENT_NAME) SELECT icte.SUBJECT_CODE, icte.SUBJECT_CODE_DESC, icte.DEPARTMENT_NAME, icte.SCHOOL_NAME, icte.avg_dept_budget_code, sos.SUBJECT_TITLE, sos.TOTAL_UNITS, DENSE_RANK() OVER (PARTITION BY d.DEPARTMENT_CODE ORDER BY d.DEPARTMENT_CODE) AS window_column, dept_subject_counts.subject_count FROM inner_cte icte JOIN SIS_DEPARTMENT d ON icte.DEPARTMENT_NAME = d.DEPARTMENT_NAME AND icte.SCHOOL_NAME = d.SCHOOL_NAME JOIN SIS_SUBJECT_CODE sc ON d.DEPARTMENT_CODE = sc.DEPARTMENT_CODE JOIN SUBJECT_OFFERED_SUMMARY sos ON sc.DEPARTMENT_CODE = sos.OFFER_DEPT_CODE JOIN (SELECT d2.DEPARTMENT_CODE, COUNT(sos2.SUBJECT_OFFERED_SUMMARY_KEY) AS subject_count FROM SIS_DEPARTMENT d2 JOIN SUBJECT_OFFERED_SUMMARY sos2 ON d2.DEPARTMENT_CODE = sos2.OFFER_DEPT_CODE WHERE d2.IS_DEGREE_GRANTING = 'Y' AND d2.DEPARTMENT_NAME = 'Mathematics' GROUP BY d2.DEPARTMENT_CODE) dept_subject_counts ON d.DEPARTMENT_CODE = dept_subject_counts.DEPARTMENT_CODE WHERE d.IS_DEGREE_GRANTING = 'Y' AND d.DEPARTMENT_NAME = 'Mathematics' ORDER BY icte.DEPARTMENT_NAME, window_column"
+    "question": "For each school, show the number of degree-granting departments, the number of subject codes attached to those departments, and the average total units of subjects offered in academic year 2024. Include only schools with at least two degree-granting departments and order by average total units descending.",
+    "SQL": "WITH degree_departments AS (SELECT DEPARTMENT_CODE, SCHOOL_NAME FROM sis_department WHERE IS_DEGREE_GRANTING = 'Y'), subject_counts AS (SELECT d.SCHOOL_NAME, COUNT(DISTINCT sc.SUBJECT_CODE) AS subject_code_count FROM degree_departments d JOIN sis_subject_code sc ON d.DEPARTMENT_CODE = sc.DEPARTMENT_CODE GROUP BY d.SCHOOL_NAME), offered_units AS (SELECT d.SCHOOL_NAME, AVG(ccs.TOTAL_UNITS) AS avg_total_units FROM degree_departments d JOIN course_catalog_subject_offered ccs ON d.DEPARTMENT_CODE = ccs.DEPARTMENT_CODE WHERE ccs.ACADEMIC_YEAR = '2024' AND ccs.TOTAL_UNITS IS NOT NULL GROUP BY d.SCHOOL_NAME) SELECT d.SCHOOL_NAME, COUNT(DISTINCT d.DEPARTMENT_CODE) AS degree_granting_department_count, COALESCE(sc.subject_code_count, 0) AS subject_code_count, ou.avg_total_units FROM degree_departments d LEFT JOIN subject_counts sc ON d.SCHOOL_NAME = sc.SCHOOL_NAME LEFT JOIN offered_units ou ON d.SCHOOL_NAME = ou.SCHOOL_NAME GROUP BY d.SCHOOL_NAME, sc.subject_code_count, ou.avg_total_units HAVING COUNT(DISTINCT d.DEPARTMENT_CODE) >= 2 ORDER BY ou.avg_total_units DESC;"
   },
   {
     "db_id": "dw",
-    "question": "For each department, provide the department name, the average, range, and variance of the number of supervisees for all space units associated with that department, and also include the total square footage and the total research volume for each department. Do not return any rounded answers.",
-    "SQL": "WITH inner_cte AS (SELECT SPACE_UNIT.SPACE_UNIT AS department_name, AVG(SPACE_SUPERVISOR_USAGE.NUM_OF_SUPERVISEES) AS avg_supervisees, MAX(SPACE_SUPERVISOR_USAGE.NUM_OF_SUPERVISEES) - MIN(SPACE_SUPERVISOR_USAGE.NUM_OF_SUPERVISEES) AS supervisee_range, VARIANCE(SPACE_SUPERVISOR_USAGE.NUM_OF_SUPERVISEES) AS supervisee_variance FROM SPACE_SUPERVISOR_USAGE JOIN SPACE_UNIT ON SPACE_SUPERVISOR_USAGE.DEPT_NAMES = SPACE_UNIT.DLC_KEY GROUP BY SPACE_UNIT.SPACE_UNIT) SELECT inner_cte.department_name, inner_cte.avg_supervisees, inner_cte.supervisee_range, inner_cte.supervisee_variance, SUM(SSU.SQFT) AS total_sqft, SUM(SSU.RESEARCH_VOLUME) AS total_research_volume FROM inner_cte JOIN SPACE_UNIT SU ON inner_cte.department_name = SU.SPACE_UNIT JOIN SPACE_SUPERVISOR_USAGE SSU ON SU.DLC_KEY = SSU.DEPT_NAMES GROUP BY inner_cte.department_name, inner_cte.avg_supervisees, inner_cte.supervisee_range, inner_cte.supervisee_variance ORDER BY inner_cte.supervisee_range DESC"
+    "question": "For each department in term 2022FA, compare fifth-week enrollment with first-week enrollment and return departments where total enrollment increased. Show the department, first-week enrollment, fifth-week enrollment, absolute increase, and percent increase.",
+    "SQL": "SELECT DEPARTMENT_CODE, DEPARTMENT_NAME, SUM(SUBJECT_ENROLLMENT_FIRST_WEEK) AS first_week_enrollment, SUM(SUBJECT_ENROLLMENT_FIFTH_WEEK) AS fifth_week_enrollment, SUM(SUBJECT_ENROLLMENT_FIFTH_WEEK) - SUM(SUBJECT_ENROLLMENT_FIRST_WEEK) AS enrollment_increase, 100 * (SUM(SUBJECT_ENROLLMENT_FIFTH_WEEK) - SUM(SUBJECT_ENROLLMENT_FIRST_WEEK)) / NULLIF(SUM(SUBJECT_ENROLLMENT_FIRST_WEEK), 0) AS percent_increase FROM subject_summary WHERE TERM_CODE = '2022FA' GROUP BY DEPARTMENT_CODE, DEPARTMENT_NAME HAVING SUM(SUBJECT_ENROLLMENT_FIFTH_WEEK) > SUM(SUBJECT_ENROLLMENT_FIRST_WEEK) ORDER BY percent_increase DESC;"
   },
   {
     "db_id": "dw",
-    "question": "For Mathematics subjects in academic year 2024, show each subject code, subject title, total units, and the average total units within its department. Include only subjects with non-null total units and order by subject code.",
-    "SQL": "SELECT ccs.SUBJECT_CODE,ccs.SUBJECT_TITLE,ccs.TOTAL_UNITS,AVG(ccs.TOTAL_UNITS) OVER (PARTITION BY ccs.DEPARTMENT_CODE) AS AVG_TOTAL_UNITS_DEPT\nFROM course_catalog_subject_offered AS ccs\nWHERE ccs.ACADEMIC_YEAR = '2024'AND ccs.DEPARTMENT_NAME LIKE '%Mathematics%'AND ccs.TOTAL_UNITS IS NOT NULL\nORDER BY ccs.SUBJECT_CODE;"
+    "question": "For each offer school in subject_offered_summary during 2022FA, show total subjects, total enrolled students, average enrolled students, and the school's dense rank by total enrollment.",
+    "SQL": "SELECT OFFER_SCHOOL_NAME, COUNT(DISTINCT SUBJECT_ID) AS subject_count, SUM(NUM_ENROLLED_STUDENTS) AS total_enrolled_students, AVG(NUM_ENROLLED_STUDENTS) AS avg_enrolled_students, DENSE_RANK() OVER (ORDER BY SUM(NUM_ENROLLED_STUDENTS) DESC) AS enrollment_rank FROM subject_offered_summary WHERE TERM_CODE = '2022FA' GROUP BY OFFER_SCHOOL_NAME ORDER BY enrollment_rank, OFFER_SCHOOL_NAME;"
   },
   {
     "db_id": "dw",
-    "question": "For each academic year in academic_terms_all, show the academic year, academic year description, number of terms, first term start date, and last term end date. Exclude rows with null academic year and order by academic year.",
-    "SQL": "SELECT ACADEMIC_YEAR, ACADEMIC_YEAR_DESC, COUNT(TERM_CODE) AS number_of_terms, MIN(TERM_START_DATE) AS first_term_start_date, MAX(TERM_END_DATE) AS last_term_end_date\nFROM academic_terms_all\nWHERE ACADEMIC_YEAR IS NOT NULL\nGROUP BY ACADEMIC_YEAR, ACADEMIC_YEAR_DESC\nORDER BY ACADEMIC_YEAR;"
+    "question": "For each building, show the building number, building name, total room area, assignable area, and the difference between summed room area and building assignable area. Include only buildings with at least ten rooms recorded in fclt_rooms.",
+    "SQL": "SELECT b.BUILDING_NUMBER, b.BUILDING_NAME, COUNT(r.FCLT_ROOM_KEY) AS room_count, SUM(r.AREA) AS total_room_area, b.ASSIGNABLE_AREA, SUM(r.AREA) - b.ASSIGNABLE_AREA AS room_area_minus_assignable_area FROM fclt_building b JOIN fclt_rooms r ON b.FCLT_BUILDING_KEY = r.FCLT_BUILDING_KEY WHERE r.AREA IS NOT NULL GROUP BY b.BUILDING_NUMBER, b.BUILDING_NAME, b.ASSIGNABLE_AREA HAVING COUNT(r.FCLT_ROOM_KEY) >= 10 ORDER BY ABS(SUM(r.AREA) - b.ASSIGNABLE_AREA) DESC;"
   },
   {
     "db_id": "dw",
-    "question": "For each school in sis_department, show the school name, number of departments, number of degree-granting departments, and average department budget code. Include only schools with at least 2 departments.",
-    "SQL": "SELECT SCHOOL_NAME,COUNT(DEPARTMENT_CODE) AS number_of_departments,SUM(CASE WHEN IS_DEGREE_GRANTING = 'Y' THEN 1 ELSE 0 END) AS number_of_degree_granting_departments,AVG(CAST(DEPT_BUDGET_CODE AS UNSIGNED)) AS average_department_budget_code\nFROM sis_department\nGROUP BY SCHOOL_NAME\nHAVING COUNT(DEPARTMENT_CODE) >= 2;"
+    "question": "For each major room use, show the number of rooms, total area, average area, and percent of all room area represented by that use.",
+    "SQL": "WITH use_area AS (SELECT MAJOR_USE_DESC, COUNT(*) AS room_count, SUM(AREA) AS total_area, AVG(AREA) AS avg_area FROM fclt_rooms WHERE AREA > 0 GROUP BY MAJOR_USE_DESC), all_area AS (SELECT SUM(AREA) AS grand_total_area FROM fclt_rooms WHERE AREA > 0) SELECT u.MAJOR_USE_DESC, u.room_count, u.total_area, u.avg_area, 100 * u.total_area / NULLIF(a.grand_total_area, 0) AS percent_of_all_area FROM use_area u CROSS JOIN all_area a ORDER BY percent_of_all_area DESC;"
   },
   {
     "db_id": "dw",
-    "question": "For each degree-granting department, show the department code, department name, school name, clearing cost collector, and department budget code by joining sis_department to sis_admin_department on department code. Exclude rows where clearing cost collector is null.",
-    "SQL": "SELECT d.DEPARTMENT_CODE, d.DEPARTMENT_NAME, d.SCHOOL_NAME, a.CLEARING_COST_COLLECTOR, d.DEPT_BUDGET_CODE\nFROM sis_department AS d\nJOIN sis_admin_department AS a ON d.DEPARTMENT_CODE = a.SIS_ADMIN_DEPARTMENT_CODE\nWHERE d.IS_DEGREE_GRANTING = 'Y' AND a.CLEARING_COST_COLLECTOR IS NOT NULL;"
+    "question": "For each space unit, show total square footage from space_detail, total supervisee square footage from space_supervisor_usage, and the difference between the two totals. Include only units appearing in both sources.",
+    "SQL": "WITH detail_area AS (SELECT su.SPACE_UNIT, SUM(sd.ROOM_SQUARE_FOOTAGE) AS detail_sqft FROM space_unit su JOIN space_detail sd ON su.SPACE_UNIT_KEY = sd.SPACE_UNIT_KEY GROUP BY su.SPACE_UNIT), supervisor_area AS (SELECT su.SPACE_UNIT, SUM(ssu.SQFT) AS supervisor_sqft FROM space_unit su JOIN space_supervisor_usage ssu ON su.DLC_KEY = ssu.DEPT_NAMES GROUP BY su.SPACE_UNIT) SELECT d.SPACE_UNIT, d.detail_sqft, s.supervisor_sqft, d.detail_sqft - s.supervisor_sqft AS sqft_difference FROM detail_area d JOIN supervisor_area s ON d.SPACE_UNIT = s.SPACE_UNIT ORDER BY ABS(d.detail_sqft - s.supervisor_sqft) DESC;"
   },
   {
     "db_id": "dw",
-    "question": "For each department in subject_summary, show the department name, count of subjects, average total units, variance of total units, and standard deviation (using STDDEV only and never STDDEV_POP) of total units for term '2022FA'. Include only subjects with total units greater than 0.",
-    "SQL": "SELECT DEPARTMENT_NAME,COUNT(SUBJECT_ID) AS subject_count,AVG(TOTAL_UNITS) AS avg_total_units,VARIANCE(TOTAL_UNITS) AS variance_total_units,STDDEV(TOTAL_UNITS) AS stddev_total_units\nFROM subject_summary\nWHERE TERM_CODE = '2022FA'AND TOTAL_UNITS > 0\nGROUP BY DEPARTMENT_NAME;"
+    "question": "For each department, show employee count, student count, and the employee-to-student ratio using employee_directory and mit_student_directory. Include only departments that have both employees and students.",
+    "SQL": "WITH employees AS (SELECT DEPARTMENT_NAME, COUNT(*) AS employee_count FROM employee_directory WHERE DEPARTMENT_NAME IS NOT NULL GROUP BY DEPARTMENT_NAME), students AS (SELECT DEPARTMENT_NAME, COUNT(*) AS student_count FROM mit_student_directory WHERE DEPARTMENT_NAME IS NOT NULL GROUP BY DEPARTMENT_NAME) SELECT e.DEPARTMENT_NAME, e.employee_count, s.student_count, e.employee_count / NULLIF(s.student_count, 0) AS employee_to_student_ratio FROM employees e JOIN students s ON e.DEPARTMENT_NAME = s.DEPARTMENT_NAME ORDER BY employee_to_student_ratio DESC;"
   },
   {
     "db_id": "dw",
-    "question": "For each offer department in library_subject_offered during term '2014FA', show the department name, number of library subjects, average enrolled students, minimum enrolled students, and maximum enrolled students. Include only departments with at least 3 library subjects.",
-    "SQL": "SELECT OFFER_DEPT_CODE AS department_code,OFFER_DEPT_NAME AS department_name,COUNT(*) AS number_of_library_subjects,AVG(NUM_ENROLLED_STUDENTS) AS average_enrolled_students,MIN(NUM_ENROLLED_STUDENTS) AS minimum_enrolled_students,MAX(NUM_ENROLLED_STUDENTS) AS maximum_enrolled_students\nFROM library_subject_offered\nWHERE TERM_CODE = '2014FA'\nGROUP BY OFFER_DEPT_CODE, OFFER_DEPT_NAME\nHAVING COUNT(*) >= 3;"
+    "question": "For each HR organization unit, compare employee_directory and drupal_employee_directory counts by department or organization title and show the absolute difference.",
+    "SQL": "WITH emp AS (SELECT DEPARTMENT_NAME AS org_name, COUNT(*) AS employee_directory_count FROM employee_directory WHERE DEPARTMENT_NAME IS NOT NULL GROUP BY DEPARTMENT_NAME), drupal AS (SELECT HR_ORG_UNIT_TITLE AS org_name, COUNT(*) AS drupal_employee_count FROM drupal_employee_directory WHERE HR_ORG_UNIT_TITLE IS NOT NULL GROUP BY HR_ORG_UNIT_TITLE) SELECT COALESCE(emp.org_name, drupal.org_name) AS org_name, COALESCE(emp.employee_directory_count, 0) AS employee_directory_count, COALESCE(drupal.drupal_employee_count, 0) AS drupal_employee_count, ABS(COALESCE(emp.employee_directory_count, 0) - COALESCE(drupal.drupal_employee_count, 0)) AS count_difference FROM emp LEFT JOIN drupal ON emp.org_name = drupal.org_name UNION SELECT COALESCE(emp.org_name, drupal.org_name) AS org_name, COALESCE(emp.employee_directory_count, 0) AS employee_directory_count, COALESCE(drupal.drupal_employee_count, 0) AS drupal_employee_count, ABS(COALESCE(emp.employee_directory_count, 0) - COALESCE(drupal.drupal_employee_count, 0)) AS count_difference FROM emp RIGHT JOIN drupal ON emp.org_name = drupal.org_name WHERE emp.org_name IS NULL ORDER BY count_difference DESC;"
   },
   {
     "db_id": "dw",
-    "question": "For each IAP sponsor type, show the sponsor type, number of activities, average attendance, and maximum attendance for non-cancelled IAP activities with non-null attendance.",
-    "SQL": "SELECT s.SPONSOR_TYPE,COUNT(d.ACTIVITY_TITLE) AS number_of_activities,AVG(CAST(d.ATTENDANCE AS DECIMAL(10,2))) AS average_attendance,MAX(CAST(d.ATTENDANCE AS UNSIGNED)) AS maximum_attendance\nFROM iap_subject_detail d\nJOIN iap_subject_sponsor s ON d.IAP_SUBJECT_SPONSOR_KEY = s.IAP_SUBJECT_SPONSOR_KEY\nWHERE d.IS_CANCELLED IS NULL OR d.IS_CANCELLED = 'N'AND d.ATTENDANCE IS NOT NULL\nGROUP BY s.SPONSOR_TYPE;"
+    "question": "For every course level and degree type, show the number of degree programs, average degree weight, and rank the degree type within each course level by program count.",
+    "SQL": "SELECT COURSE_LEVEL, DEGREE_TYPE, DEGREE_TYPE_DESC, COUNT(*) AS program_count, AVG(DEGREE_WEIGHT) AS avg_degree_weight, DENSE_RANK() OVER (PARTITION BY COURSE_LEVEL ORDER BY COUNT(*) DESC) AS count_rank_within_course_level FROM student_degree_program WHERE COURSE_LEVEL IS NOT NULL AND DEGREE_TYPE IS NOT NULL GROUP BY COURSE_LEVEL, DEGREE_TYPE, DEGREE_TYPE_DESC ORDER BY COURSE_LEVEL, count_rank_within_course_level;"
   },
   {
     "db_id": "dw",
-    "question": "For IAP activities with session information, show the activity title, session title, session date, session start time, session end time, and person name. Exclude cancelled activities and order by session date and start time.",
-    "SQL": "SELECT iap.ACTIVITY_TITLE, sess.SESSION_TITLE, sess.SESSION_DATE, sess.SESSION_START_TIME, sess.SESSION_END_TIME, pers.PERSON_NAME\nFROM iap_subject_detail AS iap\nJOIN iap_subject_session AS sess ON iap.IAP_SUBJECT_SESSION_KEY = sess.IAP_SUBJECT_SESSION_KEY\nJOIN iap_subject_person AS pers ON iap.IAP_SUBJECT_PERSON_KEY = pers.IAP_SUBJECT_PERSON_KEY\nWHERE iap.IS_CANCELLED <> 'Y'\nORDER BY sess.SESSION_DATE, sess.SESSION_START_TIME;"
+    "question": "For each department, show the number of double-major programs, total programs, and percent of programs marked as double majors.",
+    "SQL": "SELECT DEPARTMENT, COUNT(*) AS total_programs, SUM(CASE WHEN IS_DOUBLE_MAJOR = 'Y' THEN 1 ELSE 0 END) AS double_major_programs, 100 * SUM(CASE WHEN IS_DOUBLE_MAJOR = 'Y' THEN 1 ELSE 0 END) / NULLIF(COUNT(*), 0) AS percent_double_major FROM student_degree_program WHERE DEPARTMENT IS NOT NULL GROUP BY DEPARTMENT HAVING COUNT(*) >= 2 ORDER BY percent_double_major DESC;"
   },
   {
     "db_id": "dw",
-    "question": "For each building in fclt_building, show the building number, building name, number of rooms, assignable area, and average room area from fclt_rooms. Include only rooms with positive area.",
-    "SQL": "SELECT b.BUILDING_NUMBER, b.BUILDING_NAME, b.NUM_OF_ROOMS, b.ASSIGNABLE_AREA, AVG(r.AREA) AS AVG_ROOM_AREA\nFROM fclt_building AS b\nJOIN fclt_rooms AS r ON b.FCLT_BUILDING_KEY = r.FCLT_BUILDING_KEY\nWHERE r.AREA > 0\nGROUP BY b.BUILDING_NUMBER, b.BUILDING_NAME, b.NUM_OF_ROOMS, b.ASSIGNABLE_AREA;"
+    "question": "For academic year 2024, find departments whose average offered subject units are above the overall average. Show department, subject count, department average units, and overall average units.",
+    "SQL": "WITH dept_units AS (SELECT DEPARTMENT_CODE, DEPARTMENT_NAME, COUNT(*) AS subject_count, AVG(TOTAL_UNITS) AS dept_avg_units FROM course_catalog_subject_offered WHERE ACADEMIC_YEAR = '2024' AND TOTAL_UNITS IS NOT NULL GROUP BY DEPARTMENT_CODE, DEPARTMENT_NAME), overall_units AS (SELECT AVG(TOTAL_UNITS) AS overall_avg_units FROM course_catalog_subject_offered WHERE ACADEMIC_YEAR = '2024' AND TOTAL_UNITS IS NOT NULL) SELECT d.DEPARTMENT_CODE, d.DEPARTMENT_NAME, d.subject_count, d.dept_avg_units, o.overall_avg_units FROM dept_units d CROSS JOIN overall_units o WHERE d.dept_avg_units > o.overall_avg_units ORDER BY d.dept_avg_units DESC;"
   },
   {
     "db_id": "dw",
-    "question": "For each major room use in fclt_rooms, show the major use description, number of rooms, total area, average area, variance of area, and standard deviation (using STDDEV only and never STDDEV_POP) of area. Include only rooms with area greater than 100.",
-    "SQL": "SELECT MAJOR_USE_DESC,COUNT(*) AS number_of_rooms,SUM(AREA) AS total_area,AVG(AREA) AS average_area,VARIANCE(AREA) AS variance_area,STDDEV(AREA) AS stddev_area\nFROM fclt_rooms\nWHERE AREA > 100\nGROUP BY MAJOR_USE_DESC;"
+    "question": "For each department in course_catalog_subject_offered for academic year 2024, show counts of subjects offered in fall, spring, IAP, and summer, and include only departments offering subjects in at least three of those terms.",
+    "SQL": "SELECT DEPARTMENT_CODE, DEPARTMENT_NAME, SUM(CASE WHEN IS_OFFERED_FALL_TERM = 'Y' THEN 1 ELSE 0 END) AS fall_count, SUM(CASE WHEN IS_OFFERED_SPRING_TERM = 'Y' THEN 1 ELSE 0 END) AS spring_count, SUM(CASE WHEN IS_OFFERED_IAP = 'Y' THEN 1 ELSE 0 END) AS iap_count, SUM(CASE WHEN IS_OFFERED_SUMMER_TERM = 'Y' THEN 1 ELSE 0 END) AS summer_count FROM course_catalog_subject_offered WHERE ACADEMIC_YEAR = '2024' GROUP BY DEPARTMENT_CODE, DEPARTMENT_NAME HAVING (fall_count > 0) + (spring_count > 0) + (iap_count > 0) + (summer_count > 0) >= 3 ORDER BY DEPARTMENT_NAME;"
   },
   {
     "db_id": "dw",
-    "question": "For each floor in each fclt building, show the building key, floor, assignable area, non-assignable area, and the percent of gross area that is assignable. Exclude floors with null or zero gross area.",
-    "SQL": "SELECT f.FCLT_BUILDING_KEY,f.FLOOR,f.ASSIGNABLE_AREA,f.NON_ASSIGNABLE_AREA,(f.ASSIGNABLE_AREA / (f.ASSIGNABLE_AREA + f.NON_ASSIGNABLE_AREA)) * 100 AS PERCENT_ASSIGNABLE_AREA\nFROM fclt_floor AS f\nWHERE (f.ASSIGNABLE_AREA + f.NON_ASSIGNABLE_AREA) IS NOT NULLAND (f.ASSIGNABLE_AREA + f.NON_ASSIGNABLE_AREA) > 0;"
+    "question": "For each subject in 2022FA, show the subject title, department, enrollment, department average enrollment, and enrollment difference from the department average. Return only subjects above their department average.",
+    "SQL": "WITH dept_avg AS (SELECT OFFER_DEPT_CODE, AVG(NUM_ENROLLED_STUDENTS) AS avg_enrollment FROM subject_offered_summary WHERE TERM_CODE = '2022FA' GROUP BY OFFER_DEPT_CODE) SELECT s.SUBJECT_ID, s.SUBJECT_TITLE, s.OFFER_DEPT_CODE, s.OFFER_DEPT_NAME, s.NUM_ENROLLED_STUDENTS, d.avg_enrollment, s.NUM_ENROLLED_STUDENTS - d.avg_enrollment AS enrollment_above_department_average FROM subject_offered_summary s JOIN dept_avg d ON s.OFFER_DEPT_CODE = d.OFFER_DEPT_CODE WHERE s.TERM_CODE = '2022FA' AND s.NUM_ENROLLED_STUDENTS > d.avg_enrollment ORDER BY enrollment_above_department_average DESC;"
   },
   {
     "db_id": "dw",
-    "question": "For each employee department in employee_directory, show the department name, number of employees, number with office phone, and number with email address. Include only departments with at least 5 employees.",
-    "SQL": "SELECT DEPARTMENT_NAME,DEPARTMENT_NUMBER,COUNT(*) AS num_employees,COUNT(CASE WHEN OFFICE_PHONE IS NOT NULL AND OFFICE_PHONE <> '' THEN 1 END) AS num_with_office_phone,COUNT(CASE WHEN EMAIL_ADDRESS IS NOT NULL AND EMAIL_ADDRESS <> '' THEN 1 END) AS num_with_email_address\nFROM employee_directory\nGROUP BY DEPARTMENT_NAME, DEPARTMENT_NUMBER\nHAVING COUNT(*) >= 5;"
+    "question": "For each school in 2022FA, identify the department with the highest total enrollment. Show school, department, department enrollment, and rank within the school.",
+    "SQL": "WITH dept_enrollment AS (SELECT OFFER_SCHOOL_NAME, OFFER_DEPT_CODE, OFFER_DEPT_NAME, SUM(NUM_ENROLLED_STUDENTS) AS total_enrollment FROM subject_offered_summary WHERE TERM_CODE = '2022FA' GROUP BY OFFER_SCHOOL_NAME, OFFER_DEPT_CODE, OFFER_DEPT_NAME), ranked AS (SELECT dept_enrollment.*, DENSE_RANK() OVER (PARTITION BY OFFER_SCHOOL_NAME ORDER BY total_enrollment DESC) AS enrollment_rank FROM dept_enrollment) SELECT OFFER_SCHOOL_NAME, OFFER_DEPT_CODE, OFFER_DEPT_NAME, total_enrollment, enrollment_rank FROM ranked WHERE enrollment_rank = 1 ORDER BY OFFER_SCHOOL_NAME;"
   },
   {
     "db_id": "dw",
-    "question": "For each HR organization unit title in drupal_employee_directory, show the organization unit title, number of employees, number with additional appointment, and number with dual appointment.",
-    "SQL": "SELECT HR_ORG_UNIT_TITLE,COUNT(*) AS num_employees,SUM(CASE WHEN HAS_ADDL_APPOINTMENT = 'Y' THEN 1 ELSE 0 END) AS num_with_addl_appointment,SUM(CASE WHEN HAS_DUAL_APPOINTMENT = 'Y' THEN 1 ELSE 0 END) AS num_with_dual_appointment\nFROM drupal_employee_directory\nGROUP BY HR_ORG_UNIT_TITLE;"
+    "question": "For each IAP sponsor type, show activity count, cancelled activity count, average attendance for non-cancelled activities, and cancellation rate.",
+    "SQL": "SELECT s.SPONSOR_TYPE, COUNT(*) AS activity_count, SUM(CASE WHEN d.IS_CANCELLED = 'Y' THEN 1 ELSE 0 END) AS cancelled_activity_count, AVG(CASE WHEN d.IS_CANCELLED <> 'Y' OR d.IS_CANCELLED IS NULL THEN CAST(d.ATTENDANCE AS DECIMAL(10,2)) END) AS avg_non_cancelled_attendance, 100 * SUM(CASE WHEN d.IS_CANCELLED = 'Y' THEN 1 ELSE 0 END) / NULLIF(COUNT(*), 0) AS cancellation_rate FROM iap_subject_detail d JOIN iap_subject_sponsor s ON d.IAP_SUBJECT_SPONSOR_KEY = s.IAP_SUBJECT_SPONSOR_KEY GROUP BY s.SPONSOR_TYPE ORDER BY cancellation_rate DESC;"
   },
   {
     "db_id": "dw",
-    "question": "For each student department in mit_student_directory, show the department name, student year, and count of students. Include only rows where department name and student year are not null.",
-    "SQL": "SELECT DEPARTMENT_NAME, STUDENT_YEAR, COUNT(*) AS student_count\nFROM mit_student_directory\nWHERE DEPARTMENT_NAME IS NOT NULL AND STUDENT_YEAR IS NOT NULL\nGROUP BY DEPARTMENT_NAME, STUDENT_YEAR;"
+    "question": "For each IAP person role, show the number of distinct activities, number of distinct people, and average maximum enrollment for non-cancelled activities.",
+    "SQL": "SELECT p.PERSON_ROLE, COUNT(DISTINCT d.ACTIVITY_TITLE) AS activity_count, COUNT(DISTINCT p.PERSON_NAME) AS person_count, AVG(CAST(d.MAX_ENROLLMENT AS DECIMAL(10,2))) AS avg_max_enrollment FROM iap_subject_detail d JOIN iap_subject_person p ON d.IAP_SUBJECT_PERSON_KEY = p.IAP_SUBJECT_PERSON_KEY WHERE d.IS_CANCELLED IS NULL OR d.IS_CANCELLED <> 'Y' GROUP BY p.PERSON_ROLE ORDER BY activity_count DESC;"
   },
   {
     "db_id": "dw",
-    "question": "For each degree type in student_degree_program, show the degree type, degree type description, number of degree programs, minimum degree weight, maximum degree weight, and average degree weight. Exclude rows with null degree type.",
-    "SQL": "SELECT DEGREE_TYPE, DEGREE_TYPE_DESC, COUNT(*) AS number_of_degree_programs, MIN(DEGREE_WEIGHT) AS min_degree_weight, MAX(DEGREE_WEIGHT) AS max_degree_weight, AVG(DEGREE_WEIGHT) AS avg_degree_weight\nFROM student_degree_program\nWHERE DEGREE_TYPE IS NOT NULL\nGROUP BY DEGREE_TYPE, DEGREE_TYPE_DESC;"
+    "question": "For IAP sessions with session information, show the session date, number of sessions, earliest start time, latest end time, and number of distinct activity titles.",
+    "SQL": "SELECT sess.SESSION_DATE, COUNT(*) AS session_count, MIN(sess.SESSION_START_TIME) AS earliest_start_time, MAX(sess.SESSION_END_TIME) AS latest_end_time, COUNT(DISTINCT d.ACTIVITY_TITLE) AS distinct_activity_count FROM iap_subject_session sess JOIN iap_subject_detail d ON sess.IAP_SUBJECT_SESSION_KEY = d.IAP_SUBJECT_SESSION_KEY WHERE sess.HAS_SESSION_INFO = 'Y' AND (d.IS_CANCELLED IS NULL OR d.IS_CANCELLED <> 'Y') GROUP BY sess.SESSION_DATE ORDER BY sess.SESSION_DATE;"
   },
   {
     "db_id": "dw",
-    "question": "For each department and course level in student_degree_program, show the department, course level, and number of programs. Include a rollup total by department using GROUP BY WITH ROLLUP.",
-    "SQL": "SELECT DEPARTMENT, COURSE_LEVEL, COUNT(*) AS number_of_programs\nFROM student_degree_program\nGROUP BY DEPARTMENT, COURSE_LEVEL WITH ROLLUP;"
+    "question": "For each library offer department in 2014FA, show total enrolled students, number of subjects, average enrolled students, and rank departments by total enrolled students.",
+    "SQL": "SELECT OFFER_DEPT_CODE, OFFER_DEPT_NAME, COUNT(DISTINCT SUBJECT_ID) AS subject_count, SUM(NUM_ENROLLED_STUDENTS) AS total_enrolled_students, AVG(NUM_ENROLLED_STUDENTS) AS avg_enrolled_students, DENSE_RANK() OVER (ORDER BY SUM(NUM_ENROLLED_STUDENTS) DESC) AS enrollment_rank FROM library_subject_offered WHERE TERM_CODE = '2014FA' GROUP BY OFFER_DEPT_CODE, OFFER_DEPT_NAME ORDER BY enrollment_rank;"
   },
   {
     "db_id": "dw",
-    "question": "For each course catalog HASS attribute, show the HASS attribute, HASS attribute description, number of subjects, and average total units. Include only subjects offered this year with non-null total units.",
-    "SQL": "SELECT c.HASS_ATTRIBUTE,c.HASS_ATTRIBUTE_DESC,COUNT(*) AS number_of_subjects,AVG(c.TOTAL_UNITS) AS average_total_units\nFROM cis_course_catalog AS c\nWHERE c.IS_OFFERED_THIS_YEAR = 'Y'AND c.TOTAL_UNITS IS NOT NULL\nGROUP BY c.HASS_ATTRIBUTE,c.HASS_ATTRIBUTE_DESC;"
+    "question": "For each responsible faculty member in library_subject_offered, show the number of distinct departments, number of subjects, and total enrolled students. Include only faculty associated with more than one department.",
+    "SQL": "SELECT RESPONSIBLE_FACULTY_NAME, COUNT(DISTINCT OFFER_DEPT_CODE) AS department_count, COUNT(DISTINCT SUBJECT_ID) AS subject_count, SUM(NUM_ENROLLED_STUDENTS) AS total_enrolled_students FROM library_subject_offered WHERE RESPONSIBLE_FACULTY_NAME IS NOT NULL GROUP BY RESPONSIBLE_FACULTY_NAME HAVING COUNT(DISTINCT OFFER_DEPT_CODE) > 1 ORDER BY department_count DESC, total_enrolled_students DESC;"
   },
   {
     "db_id": "dw",
-    "question": "For each department in cis_course_catalog, show the department name, count of subjects offered in the fall term, count offered in the spring term, and count offered in IAP.",
-    "SQL": "SELECT DEPARTMENT_NAME,COUNT(CASE WHEN IS_OFFERED_FALL_TERM = 'Y' THEN SUBJECT_ID END) AS FALL_TERM_COUNT,COUNT(CASE WHEN IS_OFFERED_SPRING_TERM = 'Y' THEN SUBJECT_ID END) AS SPRING_TERM_COUNT,COUNT(CASE WHEN IS_OFFERED_IAP = 'Y' THEN SUBJECT_ID END) AS IAP_COUNT\nFROM cis_course_catalog\nGROUP BY DEPARTMENT_NAME;"
+    "question": "For each academic year, show the number of terms, the number of current terms, first class start date, last class end date, and rank years by number of terms.",
+    "SQL": "SELECT ACADEMIC_YEAR, ACADEMIC_YEAR_DESC, COUNT(DISTINCT TERM_CODE) AS term_count, SUM(CASE WHEN IS_CURRENT_TERM = 'Y' THEN 1 ELSE 0 END) AS current_term_count, MIN(FIRST_DAY_OF_CLASSES) AS first_day_of_classes, MAX(LAST_DAY_OF_CLASSES) AS last_day_of_classes, DENSE_RANK() OVER (ORDER BY COUNT(DISTINCT TERM_CODE) DESC) AS term_count_rank FROM academic_terms_all WHERE ACADEMIC_YEAR IS NOT NULL GROUP BY ACADEMIC_YEAR, ACADEMIC_YEAR_DESC ORDER BY ACADEMIC_YEAR;"
   },
   {
     "db_id": "dw",
-    "question": "For each subject in course_catalog_subject_offered that meets with another subject, show the subject code, subject title, department name, meets-with subjects, and total units for academic year 2024.",
-    "SQL": "SELECT SUBJECT_CODE, SUBJECT_TITLE, DEPARTMENT_NAME, MEETS_WITH_SUBJECTS, TOTAL_UNITS\nFROM course_catalog_subject_offered\nWHERE ACADEMIC_YEAR = '2024' AND MEETS_WITH_SUBJECTS IS NOT NULL AND MEETS_WITH_SUBJECTS <> '';"
+    "question": "For each department, show whether it appears in both sis_department and student_department, along with the SIS school name and student department school name.",
+    "SQL": "SELECT s.DEPARTMENT_CODE, s.DEPARTMENT_NAME, s.SCHOOL_NAME AS sis_school_name, sd.SCHOOL_NAME AS student_department_school_name, CASE WHEN sd.DEPARTMENT_CODE IS NULL THEN 'SIS_ONLY' ELSE 'BOTH' END AS department_presence FROM sis_department s LEFT JOIN student_department sd ON s.DEPARTMENT_CODE = sd.DEPARTMENT_CODE ORDER BY department_presence, s.DEPARTMENT_NAME;"
   },
   {
     "db_id": "dw",
-    "question": "For each subject grouping in subject_grouping, show the term code, department code, department name, school name, and number of groupings. Include only term '2022FA'.",
-    "SQL": "SELECT TERM_CODE, DEPARTMENT_CODE, DEPARTMENT_NAME, SCHOOL_NAME, COUNT(*) AS NUMBER_OF_GROUPINGS\nFROM subject_grouping\nWHERE TERM_CODE = '2022FA'\nGROUP BY TERM_CODE, DEPARTMENT_CODE, DEPARTMENT_NAME, SCHOOL_NAME;"
+    "question": "For each school, compare the number of SIS departments with the number of student departments and show the difference.",
+    "SQL": "WITH sis AS (SELECT SCHOOL_NAME, COUNT(DISTINCT DEPARTMENT_CODE) AS sis_department_count FROM sis_department GROUP BY SCHOOL_NAME), stu AS (SELECT SCHOOL_NAME, COUNT(DISTINCT DEPARTMENT_CODE) AS student_department_count FROM student_department GROUP BY SCHOOL_NAME) SELECT COALESCE(sis.SCHOOL_NAME, stu.SCHOOL_NAME) AS SCHOOL_NAME, COALESCE(sis.sis_department_count, 0) AS sis_department_count, COALESCE(stu.student_department_count, 0) AS student_department_count, COALESCE(sis.sis_department_count, 0) - COALESCE(stu.student_department_count, 0) AS department_count_difference FROM sis LEFT JOIN stu ON sis.SCHOOL_NAME = stu.SCHOOL_NAME UNION SELECT COALESCE(sis.SCHOOL_NAME, stu.SCHOOL_NAME) AS SCHOOL_NAME, COALESCE(sis.sis_department_count, 0) AS sis_department_count, COALESCE(stu.student_department_count, 0) AS student_department_count, COALESCE(sis.sis_department_count, 0) - COALESCE(stu.student_department_count, 0) AS department_count_difference FROM sis RIGHT JOIN stu ON sis.SCHOOL_NAME = stu.SCHOOL_NAME WHERE sis.SCHOOL_NAME IS NULL ORDER BY ABS(department_count_difference) DESC;"
   },
   {
     "db_id": "dw",
-    "question": "For each subject in subject_offered_summary for term '2022FA', show subject id, subject title, offer department name, total units, number of enrolled students, and the enrollment difference from the department average enrollment.",
-    "SQL": "SELECT sos.SUBJECT_ID,sos.SUBJECT_TITLE,sos.OFFER_DEPT_NAME,sos.TOTAL_UNITS,sos.NUM_ENROLLED_STUDENTS,sos.NUM_ENROLLED_STUDENTS - dept_avg.avg_enrollment AS enrollment_difference_from_dept_avg\nFROM subject_offered_summary AS sos\nJOIN (SELECT   OFFER_DEPT_NAME,  AVG(NUM_ENROLLED_STUDENTS) AS avg_enrollmentFROM   subject_offered_summaryWHERE   TERM_CODE = '2022FA'GROUP BY   OFFER_DEPT_NAME\n) AS dept_avg ON sos.OFFER_DEPT_NAME = dept_avg.OFFER_DEPT_NAME\nWHERE sos.TERM_CODE = '2022FA';"
+    "question": "For each department with administrative information, show department name, phone number, clearing cost collector, subject code count, and offered subject count in academic year 2024.",
+    "SQL": "WITH subject_codes AS (SELECT DEPARTMENT_CODE, COUNT(DISTINCT SUBJECT_CODE) AS subject_code_count FROM sis_subject_code GROUP BY DEPARTMENT_CODE), offered AS (SELECT DEPARTMENT_CODE, COUNT(DISTINCT SUBJECT_ID) AS offered_subject_count FROM course_catalog_subject_offered WHERE ACADEMIC_YEAR = '2024' GROUP BY DEPARTMENT_CODE) SELECT d.DEPARTMENT_CODE, d.DEPARTMENT_NAME, CONCAT(a.DEPARTMENT_PHONE_AREA_CODE, '-', a.DEPARTMENT_PHONE_NUMBER) AS department_phone, a.CLEARING_COST_COLLECTOR, COALESCE(sc.subject_code_count, 0) AS subject_code_count, COALESCE(o.offered_subject_count, 0) AS offered_subject_count FROM sis_department d JOIN sis_admin_department a ON d.DEPARTMENT_CODE = a.SIS_ADMIN_DEPARTMENT_CODE LEFT JOIN subject_codes sc ON d.DEPARTMENT_CODE = sc.DEPARTMENT_CODE LEFT JOIN offered o ON d.DEPARTMENT_CODE = o.DEPARTMENT_CODE ORDER BY offered_subject_count DESC;"
   },
   {
     "db_id": "dw",
-    "question": "For each offer school in subject_offered_summary during term '2022FA', show the school name, total subjects, total enrolled students, average enrolled students, and standard deviation (using STDDEV only and never STDDEV_POP) of enrolled students.",
-    "SQL": "SELECT OFFER_SCHOOL_NAME AS school_name,COUNT(DISTINCT SUBJECT_ID) AS total_subjects,SUM(NUM_ENROLLED_STUDENTS) AS total_enrolled_students,AVG(NUM_ENROLLED_STUDENTS) AS average_enrolled_students,STDDEV(NUM_ENROLLED_STUDENTS) AS stddev_enrolled_students\nFROM subject_offered_summary\nWHERE TERM_CODE = '2022FA'\nGROUP BY OFFER_SCHOOL_NAME\nORDER BY OFFER_SCHOOL_NAME;"
+    "question": "For each school, return the top three departments by 2022FA subject enrollment using subject_offered_summary.",
+    "SQL": "WITH dept_enrollment AS (SELECT OFFER_SCHOOL_NAME, OFFER_DEPT_CODE, OFFER_DEPT_NAME, SUM(NUM_ENROLLED_STUDENTS) AS total_enrollment FROM subject_offered_summary WHERE TERM_CODE = '2022FA' GROUP BY OFFER_SCHOOL_NAME, OFFER_DEPT_CODE, OFFER_DEPT_NAME), ranked AS (SELECT dept_enrollment.*, ROW_NUMBER() OVER (PARTITION BY OFFER_SCHOOL_NAME ORDER BY total_enrollment DESC) AS rn FROM dept_enrollment) SELECT OFFER_SCHOOL_NAME, OFFER_DEPT_CODE, OFFER_DEPT_NAME, total_enrollment, rn AS school_enrollment_rank FROM ranked WHERE rn <= 3 ORDER BY OFFER_SCHOOL_NAME, school_enrollment_rank;"
   },
   {
     "db_id": "dw",
-    "question": "For each term in subject_summary, show the term code, number of subjects, total fifth-week credit enrollment, total fifth-week listener enrollment, and average total units. Include only subjects with positive total units.",
-    "SQL": "SELECT TERM_CODE,COUNT(SUBJECT_ID) AS number_of_subjects,SUM(SUBJECT_ENROLLMENT_5TH_CREDIT) AS total_fifth_week_credit_enrollment,SUM(SUBJECT_ENROLLMENT_5TH_LISTEN) AS total_fifth_week_listener_enrollment,AVG(TOTAL_UNITS) AS average_total_units\nFROM subject_summary\nWHERE TOTAL_UNITS > 0\nGROUP BY TERM_CODE;"
+    "question": "For each department and term in subject_summary, show total credit enrollment, total listener enrollment, and the listener share of total enrollment. Include only department-term pairs with positive total enrollment.",
+    "SQL": "SELECT TERM_CODE, DEPARTMENT_CODE, DEPARTMENT_NAME, SUM(SUBJECT_ENROLLMENT_CREDIT) AS credit_enrollment, SUM(SUBJECT_ENROLLMENT_LISTEN) AS listener_enrollment, 100 * SUM(SUBJECT_ENROLLMENT_LISTEN) / NULLIF(SUM(SUBJECT_ENROLLMENT_CREDIT) + SUM(SUBJECT_ENROLLMENT_LISTEN), 0) AS listener_share_percent FROM subject_summary GROUP BY TERM_CODE, DEPARTMENT_CODE, DEPARTMENT_NAME HAVING SUM(SUBJECT_ENROLLMENT_CREDIT) + SUM(SUBJECT_ENROLLMENT_LISTEN) > 0 ORDER BY listener_share_percent DESC;"
   },
   {
     "db_id": "dw",
-    "question": "For each subject in subject_summary for term '2022FA', show subject id, subject title, department name, subject enrollment first week, subject enrollment fifth week, and the change from first week to fifth week.",
-    "SQL": "SELECT SUBJECT_ID, SUBJECT_TITLE, DEPARTMENT_NAME, SUBJECT_ENROLLMENT_FIRST_WEEK, SUBJECT_ENROLLMENT_FIFTH_WEEK, (SUBJECT_ENROLLMENT_FIFTH_WEEK - SUBJECT_ENROLLMENT_FIRST_WEEK) AS ENROLLMENT_CHANGE\nFROM subject_summary\nWHERE TERM_CODE = '2022FA';"
+    "question": "Find subjects in 2022FA where cluster enrollment differs from subject enrollment. Show subject id, title, department, subject enrollment, cluster enrollment, and absolute difference.",
+    "SQL": "SELECT SUBJECT_ID, SUBJECT_TITLE, DEPARTMENT_NAME, SUBJECT_ENROLLMENT_NUMBER, CLUSTER_ENROLLMENT_NUMBER, ABS(COALESCE(CLUSTER_ENROLLMENT_NUMBER, 0) - COALESCE(SUBJECT_ENROLLMENT_NUMBER, 0)) AS enrollment_difference FROM subject_summary WHERE TERM_CODE = '2022FA' AND COALESCE(CLUSTER_ENROLLMENT_NUMBER, 0) <> COALESCE(SUBJECT_ENROLLMENT_NUMBER, 0) ORDER BY enrollment_difference DESC;"
   },
   {
     "db_id": "dw",
-    "question": "For each library course instructor department, show the department, number of instructors, number of reserve material records, and number of distinct catalog titles.",
-    "SQL": "SELECT lci.DEPARTMENT,COUNT(DISTINCT lci.INSTRUCTOR_NAME) AS number_of_instructors,COUNT(lrmd.LIBRARY_COURSE_INSTRUCTOR_KEY) AS number_of_reserve_material_records,COUNT(DISTINCT lrc.CATALOG_TITLE) AS number_of_distinct_catalog_titles\nFROM library_course_instructor AS lci\nLEFT JOIN library_reserve_matrl_detail AS lrmd ON lci.LIBRARY_COURSE_INSTRUCTOR_KEY = lrmd.LIBRARY_COURSE_INSTRUCTOR_KEY\nLEFT JOIN library_reserve_catalog AS lrc ON lrmd.LIBRARY_RESERVE_CATALOG_KEY = lrc.LIBRARY_RESERVE_CATALOG_KEY\nGROUP BY lci.DEPARTMENT\nORDER BY lci.DEPARTMENT;"
+    "question": "For each HASS attribute in cis_course_catalog, show subject count, average total units, and number of subjects offered in both fall and spring.",
+    "SQL": "SELECT HASS_ATTRIBUTE, HASS_ATTRIBUTE_DESC, COUNT(*) AS subject_count, AVG(TOTAL_UNITS) AS avg_total_units, SUM(CASE WHEN IS_OFFERED_FALL_TERM = 'Y' AND IS_OFFERED_SPRING_TERM = 'Y' THEN 1 ELSE 0 END) AS offered_both_fall_and_spring_count FROM cis_course_catalog WHERE HASS_ATTRIBUTE IS NOT NULL GROUP BY HASS_ATTRIBUTE, HASS_ATTRIBUTE_DESC ORDER BY subject_count DESC;"
   },
   {
     "db_id": "dw",
-    "question": "For each TIP material publisher, show the publisher, number of materials, average new shelf price, average used shelf price, and average rental used price. Include only materials with non-null publisher.",
-    "SQL": "SELECT publisher,COUNT(*) AS number_of_materials,AVG(NEW_SHELF_PRICE) AS avg_new_shelf_price,AVG(USED_SHELF_PRICE) AS avg_used_shelf_price,AVG(RENTAL_USED_PRICE) AS avg_rental_used_price\nFROM tip_material\nWHERE publisher IS NOT NULL\nGROUP BY publisher;"
+    "question": "For each department in cis_course_catalog, show the number of subjects with prerequisites, joint subjects, meets-with subjects, and equivalent subjects.",
+    "SQL": "SELECT DEPARTMENT_NAME, COUNT(*) AS subject_count, SUM(CASE WHEN PREREQUISITES IS NOT NULL AND PREREQUISITES <> '' THEN 1 ELSE 0 END) AS subjects_with_prerequisites, SUM(CASE WHEN JOINT_SUBJECTS IS NOT NULL AND JOINT_SUBJECTS <> '' THEN 1 ELSE 0 END) AS subjects_with_joint_subjects, SUM(CASE WHEN MEETS_WITH_SUBJECTS IS NOT NULL AND MEETS_WITH_SUBJECTS <> '' THEN 1 ELSE 0 END) AS subjects_with_meets_with_subjects, SUM(CASE WHEN EQUIVALENT_SUBJECTS IS NOT NULL AND EQUIVALENT_SUBJECTS <> '' THEN 1 ELSE 0 END) AS subjects_with_equivalent_subjects FROM cis_course_catalog GROUP BY DEPARTMENT_NAME ORDER BY subject_count DESC;"
   },
   {
     "db_id": "dw",
-    "question": "For each TIP subject in term '2022FA', show subject id, subject title, offer department name, count of associated material records, and total record count from tip_detail.",
-    "SQL": "SELECT   tso.SUBJECT_ID,  tso.SUBJECT_TITLE,  tso.OFFER_DEPT_NAME,  COUNT(td.TIP_MATERIAL_KEY) AS material_record_count,  COALESCE(SUM(td.RECORD_COUNT), 0) AS total_record_count\nFROM   tip_subject_offered AS tso\nLEFT JOIN   tip_detail AS td  ON tso.TIP_SUBJECT_OFFERED_KEY = td.TIP_SUBJECT_OFFERED_KEY\nWHERE   tso.TERM_CODE = '2022FA'\nGROUP BY   tso.SUBJECT_ID,  tso.SUBJECT_TITLE,  tso.OFFER_DEPT_NAME;"
+    "question": "For each building type, show building count, total external gross area, total assignable area, and assignable-area percentage.",
+    "SQL": "SELECT BUILDING_TYPE, COUNT(*) AS building_count, SUM(EXT_GROSS_AREA) AS total_ext_gross_area, SUM(ASSIGNABLE_AREA) AS total_assignable_area, 100 * SUM(ASSIGNABLE_AREA) / NULLIF(SUM(EXT_GROSS_AREA), 0) AS assignable_area_percent FROM fclt_building WHERE EXT_GROSS_AREA > 0 GROUP BY BUILDING_TYPE ORDER BY assignable_area_percent DESC;"
   },
   {
     "db_id": "dw",
-    "question": "For each building room in space_detail, show the building room, room name, room square footage, space unit, and space usage by joining space_detail to space_unit and space_usage.",
-    "SQL": "SELECT sd.BUILDING_ROOM, sd.BUILDING_ROOM_NAME, sd.ROOM_SQUARE_FOOTAGE, su.SPACE_UNIT, sug.SPACE_USAGE\nFROM space_detail AS sd\nLEFT JOIN space_unit AS su ON sd.SPACE_UNIT_KEY = su.SPACE_UNIT_KEY\nLEFT JOIN space_usage AS sug ON sd.SPACE_USAGE_KEY = sug.SPACE_USAGE_KEY;"
+    "question": "For each campus sector and access level, show building count, total assignable area, average building height, and rank access levels within each campus sector by total assignable area.",
+    "SQL": "SELECT CAMPUS_SECTOR, ACCESS_LEVEL_NAME, COUNT(*) AS building_count, SUM(ASSIGNABLE_AREA) AS total_assignable_area, AVG(BUILDING_HEIGHT) AS avg_building_height, DENSE_RANK() OVER (PARTITION BY CAMPUS_SECTOR ORDER BY SUM(ASSIGNABLE_AREA) DESC) AS access_level_rank FROM fclt_building GROUP BY CAMPUS_SECTOR, ACCESS_LEVEL_NAME ORDER BY CAMPUS_SECTOR, access_level_rank;"
   },
   {
     "db_id": "dw",
-    "question": "For each space usage, show the usage name, number of rooms, total room square footage, average room square footage, and standard deviation (using STDDEV only and never STDDEV_POP) of room square footage.",
-    "SQL": "SELECT   su.SPACE_USAGE,  COUNT(sd.ROOM_NUMBER) AS number_of_rooms,  SUM(sd.ROOM_SQUARE_FOOTAGE) AS total_room_square_footage,  AVG(sd.ROOM_SQUARE_FOOTAGE) AS average_room_square_footage,  STDDEV(sd.ROOM_SQUARE_FOOTAGE) AS stddev_room_square_footage\nFROM   space_detail AS sd\nJOIN   space_usage AS su ON sd.SPACE_USAGE_KEY = su.SPACE_USAGE_KEY\nGROUP BY   su.SPACE_USAGE\nORDER BY   su.SPACE_USAGE;"
+    "question": "For each floor in each building, show floor area, building total floor area, and the floor's percent contribution to the building's floor area.",
+    "SQL": "WITH floor_area AS (SELECT FCLT_BUILDING_KEY, FLOOR, SUM(ASSIGNABLE_AREA + NON_ASSIGNABLE_AREA) AS floor_total_area FROM fclt_floor GROUP BY FCLT_BUILDING_KEY, FLOOR), building_area AS (SELECT FCLT_BUILDING_KEY, SUM(ASSIGNABLE_AREA + NON_ASSIGNABLE_AREA) AS building_total_floor_area FROM fclt_floor GROUP BY FCLT_BUILDING_KEY) SELECT f.FCLT_BUILDING_KEY, f.FLOOR, f.floor_total_area, b.building_total_floor_area, 100 * f.floor_total_area / NULLIF(b.building_total_floor_area, 0) AS floor_area_percent FROM floor_area f JOIN building_area b ON f.FCLT_BUILDING_KEY = b.FCLT_BUILDING_KEY ORDER BY f.FCLT_BUILDING_KEY, f.FLOOR;"
   },
   {
     "db_id": "dw",
-    "question": "For each building in buildings, show the building number, building name, gross square footage, assignable square footage, and assignable percentage. Exclude rows with null or zero gross square footage.",
-    "SQL": "SELECT BUILDING_NUMBER, BUILDING_NAME, BLDG_GROSS_SQUARE_FOOTAGE, BLDG_ASSIGNABLE_SQUARE_FOOTAGE, (BLDG_ASSIGNABLE_SQUARE_FOOTAGE / BLDG_GROSS_SQUARE_FOOTAGE) * 100 AS ASSIGNABLE_PERCENTAGE\nFROM buildings\nWHERE BLDG_GROSS_SQUARE_FOOTAGE IS NOT NULL AND BLDG_GROSS_SQUARE_FOOTAGE <> 0;"
+    "question": "For each organization in fclt_rooms, show room count, total area, average area, and the largest room area. Include only organizations with at least five rooms.",
+    "SQL": "SELECT ORGANIZATION_NAME, COUNT(*) AS room_count, SUM(AREA) AS total_area, AVG(AREA) AS avg_area, MAX(AREA) AS largest_room_area FROM fclt_rooms WHERE ORGANIZATION_NAME IS NOT NULL AND AREA > 0 GROUP BY ORGANIZATION_NAME HAVING COUNT(*) >= 5 ORDER BY total_area DESC;"
   },
   {
     "db_id": "dw",
-    "question": "For each major use in fac_rooms, show the major use description, number of rooms, average area, minimum area, and maximum area for rooms with area greater than 0.",
-    "SQL": "SELECT MAJOR_USE_DESC,COUNT(*) AS number_of_rooms,AVG(AREA) AS average_area,MIN(AREA) AS minimum_area,MAX(AREA) AS maximum_area\nFROM fac_rooms\nWHERE AREA > 0\nGROUP BY MAJOR_USE_DESC;"
+    "question": "For each employee department, show total employees, employees with office phones, employees with emails, and percent with both phone and email.",
+    "SQL": "SELECT DEPARTMENT_NUMBER, DEPARTMENT_NAME, COUNT(*) AS employee_count, SUM(CASE WHEN OFFICE_PHONE IS NOT NULL AND OFFICE_PHONE <> '' THEN 1 ELSE 0 END) AS with_office_phone, SUM(CASE WHEN EMAIL_ADDRESS IS NOT NULL AND EMAIL_ADDRESS <> '' THEN 1 ELSE 0 END) AS with_email, 100 * SUM(CASE WHEN OFFICE_PHONE IS NOT NULL AND OFFICE_PHONE <> '' AND EMAIL_ADDRESS IS NOT NULL AND EMAIL_ADDRESS <> '' THEN 1 ELSE 0 END) / NULLIF(COUNT(*), 0) AS percent_with_phone_and_email FROM employee_directory GROUP BY DEPARTMENT_NUMBER, DEPARTMENT_NAME HAVING COUNT(*) >= 5 ORDER BY percent_with_phone_and_email DESC;"
   },
   {
     "db_id": "dw",
-    "question": "For each top-level HR organization name, show the organization name, number of HR units, and number of distinct DLC names from hr_org_unit.",
-    "SQL": "SELECT HR_ORG_LEVEL1_NAME AS top_level_hr_organization_name,COUNT(DISTINCT HR_ORG_UNIT_ID) AS number_of_hr_units,COUNT(DISTINCT DLC_NAME) AS number_of_distinct_dlc_names\nFROM hr_org_unit\nGROUP BY HR_ORG_LEVEL1_NAME\nORDER BY HR_ORG_LEVEL1_NAME;"
+    "question": "For each Drupal employee group and type, show employee count, number with additional appointment, number with dual appointment, and percentage with any extra appointment.",
+    "SQL": "SELECT EMPLOYEE_GROUP, EMPLOYEE_TYPE, COUNT(*) AS employee_count, SUM(CASE WHEN HAS_ADDL_APPOINTMENT = 'Y' THEN 1 ELSE 0 END) AS additional_appointment_count, SUM(CASE WHEN HAS_DUAL_APPOINTMENT = 'Y' THEN 1 ELSE 0 END) AS dual_appointment_count, 100 * SUM(CASE WHEN HAS_ADDL_APPOINTMENT = 'Y' OR HAS_DUAL_APPOINTMENT = 'Y' THEN 1 ELSE 0 END) / NULLIF(COUNT(*), 0) AS percent_with_extra_appointment FROM drupal_employee_directory GROUP BY EMPLOYEE_GROUP, EMPLOYEE_TYPE ORDER BY percent_with_extra_appointment DESC;"
   },
   {
     "db_id": "dw",
-    "question": "For each faculty roster administrative organization, show the administrative organization title, number of faculty, number with endowed chair, and number with emeritus status.",
-    "SQL": "SELECT HR_ORG_UNIT_TITLE AS administrative_organization_title,COUNT(*) AS number_of_faculty,SUM(CASE WHEN ENDOWED_CHAIR IS NOT NULL AND ENDOWED_CHAIR <> '' THEN 1 ELSE 0 END) AS number_with_endowed_chair,SUM(CASE WHEN EMERITUS_STATUS IS NOT NULL AND EMERITUS_STATUS <> '' THEN 1 ELSE 0 END) AS number_with_emeritus_status\nFROM hr_faculty_roster\nGROUP BY HR_ORG_UNIT_TITLE\nORDER BY HR_ORG_UNIT_TITLE;"
+    "question": "For each student department and student year, show student count and the year rank within the department by count.",
+    "SQL": "SELECT DEPARTMENT_NAME, STUDENT_YEAR, COUNT(*) AS student_count, DENSE_RANK() OVER (PARTITION BY DEPARTMENT_NAME ORDER BY COUNT(*) DESC) AS year_rank_within_department FROM mit_student_directory WHERE DEPARTMENT_NAME IS NOT NULL AND STUDENT_YEAR IS NOT NULL GROUP BY DEPARTMENT_NAME, STUDENT_YEAR ORDER BY DEPARTMENT_NAME, year_rank_within_department;"
   },
   {
     "db_id": "dw",
-    "question": "For each warehouse user unit, show the unit id, unit name, user type, appointment type, and number of users. Include only rows with non-null unit id.",
-    "SQL": "SELECT UNIT_ID, UNIT_NAME, TYPE, APPOINTMENT_TYPE, COUNT(*) AS number_of_users\nFROM warehouse_users\nWHERE UNIT_ID IS NOT NULL\nGROUP BY UNIT_ID, UNIT_NAME, TYPE, APPOINTMENT_TYPE;"
+    "question": "For each faculty HR organization unit, show faculty count, number with endowed chair, number emeritus, and percent emeritus.",
+    "SQL": "SELECT HR_ORG_UNIT_TITLE, COUNT(*) AS faculty_count, SUM(CASE WHEN ENDOWED_CHAIR IS NOT NULL AND ENDOWED_CHAIR <> '' THEN 1 ELSE 0 END) AS endowed_chair_count, SUM(CASE WHEN EMERITUS_STATUS IS NOT NULL AND EMERITUS_STATUS <> '' THEN 1 ELSE 0 END) AS emeritus_count, 100 * SUM(CASE WHEN EMERITUS_STATUS IS NOT NULL AND EMERITUS_STATUS <> '' THEN 1 ELSE 0 END) / NULLIF(COUNT(*), 0) AS percent_emeritus FROM hr_faculty_roster WHERE HR_ORG_UNIT_TITLE IS NOT NULL GROUP BY HR_ORG_UNIT_TITLE ORDER BY faculty_count DESC;"
   },
   {
     "db_id": "dw",
-    "question": "For each subject code in sis_subject_code, show the subject code, subject code description, department name, school name, and number of rows for Mathematics department only.",
-    "SQL": "SELECT SUBJECT_CODE, SUBJECT_CODE_DESC, DEPARTMENT_NAME, SCHOOL_NAME, COUNT(*) AS num_rows\nFROM sis_subject_code\nWHERE DEPARTMENT_NAME = 'Mathematics'\nGROUP BY SUBJECT_CODE, SUBJECT_CODE_DESC, DEPARTMENT_NAME, SCHOOL_NAME;"
+    "question": "For each HR top-level organization, show number of organization units, number of distinct departments, and number of distinct DLC keys.",
+    "SQL": "SELECT ORG_HIER_TOP_LEVEL_NAME, COUNT(DISTINCT HR_ORG_UNIT_ID) AS org_unit_count, COUNT(DISTINCT HR_DEPARTMENT_ID) AS department_count, COUNT(DISTINCT DLC_KEY) AS dlc_key_count FROM hr_org_unit WHERE ORG_HIER_TOP_LEVEL_NAME IS NOT NULL GROUP BY ORG_HIER_TOP_LEVEL_NAME ORDER BY org_unit_count DESC;"
   },
   {
     "db_id": "dw",
-    "question": "For each department in course_catalog_subject_offered, show the department name, number of variable-unit subjects, number of non-variable-unit subjects, and total number of subjects for academic year 2024.",
-    "SQL": "SELECT DEPARTMENT_NAME,SUM(CASE WHEN IS_VARIABLE_UNITS = 'Y' THEN 1 ELSE 0 END) AS variable_unit_subjects,SUM(CASE WHEN IS_VARIABLE_UNITS <> 'Y' OR IS_VARIABLE_UNITS IS NULL THEN 1 ELSE 0 END) AS non_variable_unit_subjects,COUNT(*) AS total_subjects\nFROM course_catalog_subject_offered\nWHERE ACADEMIC_YEAR = '2024'\nGROUP BY DEPARTMENT_NAME;"
+    "question": "For each library course instructor department, show instructor count, course count, earliest date_from, and latest date_to.",
+    "SQL": "SELECT DEPARTMENT, COUNT(DISTINCT INSTRUCTOR_NAME) AS instructor_count, COUNT(DISTINCT COURSE_NAME) AS course_count, MIN(DATE_FROM) AS earliest_date_from, MAX(DATE_TO) AS latest_date_to FROM library_course_instructor WHERE DEPARTMENT IS NOT NULL GROUP BY DEPARTMENT ORDER BY course_count DESC;"
   },
   {
     "db_id": "dw",
-    "question": "For each department and grade type description in course_catalog_subject_offered, show the department name, grade type description, count of subjects, and average total units for academic year 2024. Include only rows with non-null total units.",
-    "SQL": "SELECT DEPARTMENT_NAME, GRADE_TYPE_DESC, COUNT(SUBJECT_ID) AS subject_count, AVG(TOTAL_UNITS) AS avg_total_units\nFROM course_catalog_subject_offered\nWHERE ACADEMIC_YEAR = '2024'AND TOTAL_UNITS IS NOT NULL\nGROUP BY DEPARTMENT_NAME, GRADE_TYPE_DESC;"
+    "question": "For each library catalog publisher, show catalog count, earliest catalog year, latest catalog year, and average record counter. Include only publishers with at least five catalog records.",
+    "SQL": "SELECT CATALOG_PUBLISHER, COUNT(*) AS catalog_count, MIN(CATALOG_YEAR) AS earliest_catalog_year, MAX(CATALOG_YEAR) AS latest_catalog_year, AVG(RECORD_COUNTER) AS avg_record_counter FROM library_reserve_catalog WHERE CATALOG_PUBLISHER IS NOT NULL GROUP BY CATALOG_PUBLISHER HAVING COUNT(*) >= 5 ORDER BY catalog_count DESC;"
   },
   {
     "db_id": "dw",
-    "question": "For each academic year in academic_terms_all, show the academic year, academic year description, and number of rows, including only non-null academic years.",
-    "SQL": "SELECT ACADEMIC_YEAR, ACADEMIC_YEAR_DESC, COUNT(*) AS row_count FROM academic_terms_all WHERE ACADEMIC_YEAR IS NOT NULL GROUP BY ACADEMIC_YEAR, ACADEMIC_YEAR_DESC ORDER BY ACADEMIC_YEAR;"
+    "question": "For each Moira list visibility combination, show list count, active list count, mailing list count, and group count.",
+    "SQL": "SELECT IS_PUBLIC, IS_HIDDEN, COUNT(*) AS list_count, SUM(CASE WHEN IS_ACTIVE = 'Y' THEN 1 ELSE 0 END) AS active_list_count, SUM(CASE WHEN IS_MOIRA_MAILING_LIST = 'Y' THEN 1 ELSE 0 END) AS mailing_list_count, SUM(CASE WHEN IS_MOIRA_GROUP = 'Y' THEN 1 ELSE 0 END) AS group_count FROM moira_list GROUP BY IS_PUBLIC, IS_HIDDEN ORDER BY list_count DESC;"
   },
   {
     "db_id": "dw",
-    "question": "For each school in sis_department, show the school name and number of departments, including only non-null school names.",
-    "SQL": "SELECT SCHOOL_NAME, COUNT(*) AS department_count FROM sis_department WHERE SCHOOL_NAME IS NOT NULL GROUP BY SCHOOL_NAME ORDER BY department_count DESC, SCHOOL_NAME;"
+    "question": "For each Moira list, show the list name, active flag, number of members, and number of members with MIT IDs. Include only lists with at least ten detail records.",
+    "SQL": "SELECT ml.MOIRA_LIST_NAME, ml.IS_ACTIVE, COUNT(md.MOIRA_LIST_MEMBER) AS member_count, SUM(CASE WHEN md.MOIRA_LIST_MEMBER_MIT_ID IS NOT NULL AND md.MOIRA_LIST_MEMBER_MIT_ID <> '' THEN 1 ELSE 0 END) AS members_with_mit_id FROM moira_list ml JOIN moira_list_detail md ON ml.MOIRA_LIST_KEY = md.MOIRA_LIST_KEY GROUP BY ml.MOIRA_LIST_NAME, ml.IS_ACTIVE HAVING COUNT(md.MOIRA_LIST_MEMBER) >= 10 ORDER BY member_count DESC;"
   },
   {
     "db_id": "dw",
-    "question": "For each building in buildings, show the building number, building name, gross square footage, assignable square footage, and assignable percentage, excluding buildings with null or zero gross square footage.",
-    "SQL": "SELECT BUILDING_NUMBER, BUILDING_NAME, BLDG_GROSS_SQUARE_FOOTAGE, BLDG_ASSIGNABLE_SQUARE_FOOTAGE, (BLDG_ASSIGNABLE_SQUARE_FOOTAGE / BLDG_GROSS_SQUARE_FOOTAGE) * 100 AS assignable_percentage FROM buildings WHERE BLDG_GROSS_SQUARE_FOOTAGE IS NOT NULL AND BLDG_GROSS_SQUARE_FOOTAGE <> 0 ORDER BY assignable_percentage DESC, BUILDING_NUMBER;"
+    "question": "For each top-level profit center category, show group count, number of distinct profit center ids, number of distinct DLC keys, and minimum and maximum group names alphabetically.",
+    "SQL": "SELECT PC_LEVEL1_CATEGORY, COUNT(*) AS group_count, COUNT(DISTINCT PROFIT_CENTER_ID) AS distinct_profit_center_count, COUNT(DISTINCT DLC_KEY) AS distinct_dlc_key_count, MIN(PROFIT_CENTER_GROUP_NAME) AS first_group_name, MAX(PROFIT_CENTER_GROUP_NAME) AS last_group_name FROM profit_center_group WHERE PC_LEVEL1_CATEGORY IS NOT NULL GROUP BY PC_LEVEL1_CATEGORY ORDER BY group_count DESC;"
   },
   {
     "db_id": "dw",
-    "question": "For each major use description in fclt_rooms, show number of rooms, total area, average area, variance of area, and standard deviation of area using STDDEV, considering only rooms with area greater than 100.",
-    "SQL": "SELECT MAJOR_USE_DESC, COUNT(*) AS room_count, SUM(AREA) AS total_area, AVG(AREA) AS avg_area, VARIANCE(AREA) AS variance_area, STDDEV(AREA) AS stddev_area FROM fclt_rooms WHERE AREA > 100 GROUP BY MAJOR_USE_DESC ORDER BY total_area DESC, MAJOR_USE_DESC;"
+    "question": "For each financial fiscal year and fiscal period, show the period start date, period end date, and dense rank of the period within its fiscal year by start date.",
+    "SQL": "SELECT FISCAL_YEAR, FISCAL_PERIOD, PERIOD_START_DATE, PERIOD_END_DATE, DENSE_RANK() OVER (PARTITION BY FISCAL_YEAR ORDER BY PERIOD_START_DATE) AS period_rank_in_year FROM frc_fiscal_periods WHERE FISCAL_YEAR IS NOT NULL AND FISCAL_PERIOD IS NOT NULL ORDER BY FISCAL_YEAR, period_rank_in_year;"
   },
   {
     "db_id": "dw",
-    "question": "For each department in employee_directory, show the department name, department number, number of employees, number with office phone, and number with email address.",
-    "SQL": "SELECT DEPARTMENT_NAME, DEPARTMENT_NUMBER, COUNT(*) AS employee_count, COUNT(CASE WHEN OFFICE_PHONE IS NOT NULL AND OFFICE_PHONE <> '' THEN 1 END) AS employees_with_office_phone, COUNT(CASE WHEN EMAIL_ADDRESS IS NOT NULL AND EMAIL_ADDRESS <> '' THEN 1 END) AS employees_with_email FROM employee_directory WHERE DEPARTMENT_NAME IS NOT NULL GROUP BY DEPARTMENT_NAME, DEPARTMENT_NUMBER ORDER BY employee_count DESC, DEPARTMENT_NAME;"
+    "question": "For each level-one fund center, show the number of fund centers and the number of distinct level-two and level-three fund centers below it.",
+    "SQL": "SELECT FUND_CENTER_NAME_LEVEL1, COUNT(DISTINCT FUND_CENTER_ID) AS fund_center_count, COUNT(DISTINCT FUND_CENTER_ID_LEVEL2) AS level2_fund_center_count, COUNT(DISTINCT FUND_CENTER_ID_LEVEL3) AS level3_fund_center_count FROM fund_center_hierarchy WHERE FUND_CENTER_NAME_LEVEL1 IS NOT NULL GROUP BY FUND_CENTER_NAME_LEVEL1 ORDER BY fund_center_count DESC;"
   },
   {
     "db_id": "dw",
-    "question": "For each student department and student year in mit_student_directory, show the department name, student year, and number of students, excluding null department names and null student years.",
-    "SQL": "SELECT DEPARTMENT_NAME, STUDENT_YEAR, COUNT(*) AS student_count FROM mit_student_directory WHERE DEPARTMENT_NAME IS NOT NULL AND STUDENT_YEAR IS NOT NULL GROUP BY DEPARTMENT_NAME, STUDENT_YEAR ORDER BY DEPARTMENT_NAME, STUDENT_YEAR;"
+    "question": "For each space usage category, show room count, total square footage, average square footage, and rank categories by total square footage.",
+    "SQL": "SELECT su.SPACE_USAGE, COUNT(sd.BUILDING_ROOM) AS room_count, SUM(sd.ROOM_SQUARE_FOOTAGE) AS total_square_footage, AVG(sd.ROOM_SQUARE_FOOTAGE) AS avg_square_footage, DENSE_RANK() OVER (ORDER BY SUM(sd.ROOM_SQUARE_FOOTAGE) DESC) AS sqft_rank FROM space_detail sd JOIN space_usage su ON sd.SPACE_USAGE_KEY = su.SPACE_USAGE_KEY WHERE sd.ROOM_SQUARE_FOOTAGE > 0 GROUP BY su.SPACE_USAGE ORDER BY sqft_rank;"
   },
   {
     "db_id": "dw",
-    "question": "For each degree type in student_degree_program, show the degree type, degree type description, number of programs, minimum degree weight, maximum degree weight, and average degree weight.",
-    "SQL": "SELECT DEGREE_TYPE, DEGREE_TYPE_DESC, COUNT(*) AS degree_program_count, MIN(DEGREE_WEIGHT) AS min_degree_weight, MAX(DEGREE_WEIGHT) AS max_degree_weight, AVG(DEGREE_WEIGHT) AS avg_degree_weight FROM student_degree_program WHERE DEGREE_TYPE IS NOT NULL GROUP BY DEGREE_TYPE, DEGREE_TYPE_DESC ORDER BY degree_program_count DESC, DEGREE_TYPE;"
+    "question": "For each space unit, show the number of distinct space usages, room count, and total square footage from space_detail.",
+    "SQL": "SELECT unit.SPACE_UNIT, COUNT(DISTINCT usage_table.SPACE_USAGE) AS distinct_space_usage_count, COUNT(sd.BUILDING_ROOM) AS room_count, SUM(sd.ROOM_SQUARE_FOOTAGE) AS total_square_footage FROM space_detail sd JOIN space_unit unit ON sd.SPACE_UNIT_KEY = unit.SPACE_UNIT_KEY JOIN space_usage usage_table ON sd.SPACE_USAGE_KEY = usage_table.SPACE_USAGE_KEY GROUP BY unit.SPACE_UNIT ORDER BY distinct_space_usage_count DESC, total_square_footage DESC;"
   },
   {
     "db_id": "dw",
-    "question": "For each warehouse user unit, show the unit id, unit name, type, appointment type, and number of users, excluding null unit ids.",
-    "SQL": "SELECT UNIT_ID, UNIT_NAME, TYPE, APPOINTMENT_TYPE, COUNT(*) AS user_count FROM warehouse_users WHERE UNIT_ID IS NOT NULL GROUP BY UNIT_ID, UNIT_NAME, TYPE, APPOINTMENT_TYPE ORDER BY UNIT_NAME, TYPE, APPOINTMENT_TYPE;"
+    "question": "For each supervisor department, show supervisee count, total square footage, total research volume, and square feet per supervisee recomputed from totals.",
+    "SQL": "SELECT DEPT_NAMES, SUM(NUM_OF_SUPERVISEES) AS total_supervisees, SUM(SQFT) AS total_sqft, SUM(RESEARCH_VOLUME) AS total_research_volume, SUM(SQFT) / NULLIF(SUM(NUM_OF_SUPERVISEES), 0) AS recomputed_sqft_per_supervisee FROM space_supervisor_usage GROUP BY DEPT_NAMES HAVING SUM(NUM_OF_SUPERVISEES) > 0 ORDER BY recomputed_sqft_per_supervisee DESC;"
   },
   {
     "db_id": "dw",
-    "question": "For each department in employee_directory, show the department name, department number, total number of employees, percentage of employees with an office phone, and percentage of employees with an email address, excluding null department names.",
-    "SQL": "SELECT DEPARTMENT_NAME, DEPARTMENT_NUMBER, COUNT(*) AS employee_count, 100.0 * COUNT(CASE WHEN OFFICE_PHONE IS NOT NULL AND OFFICE_PHONE <> '' THEN 1 END) / COUNT(*) AS office_phone_percentage, 100.0 * COUNT(CASE WHEN EMAIL_ADDRESS IS NOT NULL AND EMAIL_ADDRESS <> '' THEN 1 END) / COUNT(*) AS email_percentage FROM employee_directory WHERE DEPARTMENT_NAME IS NOT NULL GROUP BY DEPARTMENT_NAME, DEPARTMENT_NUMBER ORDER BY employee_count DESC, DEPARTMENT_NAME;"
+    "question": "For each department in subject_grouping, show the number of groupings in 2022FA and the matching number of offered subjects from subject_offered_summary.",
+    "SQL": "WITH grouping_counts AS (SELECT DEPARTMENT_CODE, DEPARTMENT_NAME, COUNT(*) AS grouping_count FROM subject_grouping WHERE TERM_CODE = '2022FA' GROUP BY DEPARTMENT_CODE, DEPARTMENT_NAME), offered_counts AS (SELECT OFFER_DEPT_CODE AS DEPARTMENT_CODE, COUNT(DISTINCT SUBJECT_ID) AS offered_subject_count FROM subject_offered_summary WHERE TERM_CODE = '2022FA' GROUP BY OFFER_DEPT_CODE) SELECT g.DEPARTMENT_CODE, g.DEPARTMENT_NAME, g.grouping_count, COALESCE(o.offered_subject_count, 0) AS offered_subject_count FROM grouping_counts g LEFT JOIN offered_counts o ON g.DEPARTMENT_CODE = o.DEPARTMENT_CODE ORDER BY g.grouping_count DESC;"
   },
   {
     "db_id": "dw",
-    "question": "For each student department in mit_student_directory, show the department name, number of distinct student years represented, and total number of students, excluding null department names and null student years.",
-    "SQL": "SELECT DEPARTMENT_NAME, COUNT(DISTINCT STUDENT_YEAR) AS student_year_count, COUNT(*) AS student_count FROM mit_student_directory WHERE DEPARTMENT_NAME IS NOT NULL AND STUDENT_YEAR IS NOT NULL GROUP BY DEPARTMENT_NAME ORDER BY student_count DESC, DEPARTMENT_NAME;"
+    "question": "For each subject grouping key in 2022FA, show subject count, total enrollment, average enrollment, and the grouping's rank by total enrollment.",
+    "SQL": "SELECT SUBJECT_GROUPING_KEY, COUNT(DISTINCT SUBJECT_ID) AS subject_count, SUM(NUM_ENROLLED_STUDENTS) AS total_enrollment, AVG(NUM_ENROLLED_STUDENTS) AS avg_enrollment, DENSE_RANK() OVER (ORDER BY SUM(NUM_ENROLLED_STUDENTS) DESC) AS grouping_enrollment_rank FROM subject_offered_summary WHERE TERM_CODE = '2022FA' AND SUBJECT_GROUPING_KEY IS NOT NULL GROUP BY SUBJECT_GROUPING_KEY ORDER BY grouping_enrollment_rank;"
   },
   {
     "db_id": "dw",
-    "question": "For each warehouse user unit, show the unit id, unit name, total number of users, number of distinct user types, and number of distinct appointment types, excluding null unit ids.",
-    "SQL": "SELECT UNIT_ID, UNIT_NAME, COUNT(*) AS user_count, COUNT(DISTINCT TYPE) AS distinct_type_count, COUNT(DISTINCT APPOINTMENT_TYPE) AS distinct_appointment_type_count FROM warehouse_users WHERE UNIT_ID IS NOT NULL GROUP BY UNIT_ID, UNIT_NAME ORDER BY user_count DESC, UNIT_NAME;"
+    "question": "For each school, compare catalog subject count from course_catalog_subject_offered with offered subject count from subject_offered_summary for departments in the same school.",
+    "SQL": "WITH catalog_counts AS (SELECT d.SCHOOL_NAME, COUNT(DISTINCT c.SUBJECT_ID) AS catalog_subject_count FROM sis_department d JOIN course_catalog_subject_offered c ON d.DEPARTMENT_CODE = c.DEPARTMENT_CODE WHERE c.ACADEMIC_YEAR = '2024' GROUP BY d.SCHOOL_NAME), offered_counts AS (SELECT OFFER_SCHOOL_NAME AS SCHOOL_NAME, COUNT(DISTINCT SUBJECT_ID) AS offered_subject_count FROM subject_offered_summary WHERE TERM_CODE = '2022FA' GROUP BY OFFER_SCHOOL_NAME) SELECT COALESCE(c.SCHOOL_NAME, o.SCHOOL_NAME) AS SCHOOL_NAME, COALESCE(c.catalog_subject_count, 0) AS catalog_subject_count, COALESCE(o.offered_subject_count, 0) AS offered_subject_count, COALESCE(c.catalog_subject_count, 0) - COALESCE(o.offered_subject_count, 0) AS subject_count_difference FROM catalog_counts c LEFT JOIN offered_counts o ON c.SCHOOL_NAME = o.SCHOOL_NAME UNION SELECT COALESCE(c.SCHOOL_NAME, o.SCHOOL_NAME) AS SCHOOL_NAME, COALESCE(c.catalog_subject_count, 0) AS catalog_subject_count, COALESCE(o.offered_subject_count, 0) AS offered_subject_count, COALESCE(c.catalog_subject_count, 0) - COALESCE(o.offered_subject_count, 0) AS subject_count_difference FROM catalog_counts c RIGHT JOIN offered_counts o ON c.SCHOOL_NAME = o.SCHOOL_NAME WHERE c.SCHOOL_NAME IS NULL ORDER BY ABS(subject_count_difference) DESC;"
   }
 ]
