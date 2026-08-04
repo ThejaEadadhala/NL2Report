@@ -1116,5 +1116,6 @@
       "judge_verdict": "incorrect",
       "judge_reason": "The predicted SQL uses 'double' instead of '=' for bond type and filters by molecule label instead of molecule ID. These discrepancies, along with the row count mismatch, indicate the predicted SQL does not return the correct result."
     }
-  ]
+  ],
+  "last_run_at": "2026-08-03T16:04:53"
 }

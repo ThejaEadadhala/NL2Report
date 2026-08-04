@@ -59,7 +59,7 @@ def load_results(path: Path) -> list[dict[str, Any]]:
     return data
 
 
-def make_judge(model_name: str, openai_mode: str):
+def make_judge(model_name: str, openai_mode: str, anthropic_mode: str = "library"):
     if model_name == "openai":
         from models.openai_model import OpenAIModel
 
@@ -67,7 +67,7 @@ def make_judge(model_name: str, openai_mode: str):
     if model_name == "anthropic":
         from models.anthropic_model import AnthropicModel
 
-        return AnthropicModel()
+        return AnthropicModel(use_api=anthropic_mode == "api")
     if model_name == "gemini":
         from models.gemini_model import GeminiModel
 
@@ -246,6 +246,16 @@ def judge_batch(judge, items: list[dict[str, Any]]) -> list[dict[str, Any]]:
     return judged
 
 
+def judge_error_item(item: dict[str, Any], exc: Exception) -> dict[str, Any]:
+    item_for_judge = minimal_item(item)
+    return {
+        **item_for_judge,
+        "judge_score": None,
+        "judge_verdict": "judge_error",
+        "judge_reason": f"{type(exc).__name__}: {exc}",
+    }
+
+
 def chunks(items: list[dict[str, Any]], size: int):
     for start in range(0, len(items), size):
         yield items[start:start + size]
@@ -274,6 +284,7 @@ def judge_results_file(
     output_path: Path | None = None,
     judge_model: str = "openai",
     openai_mode: str = "library",
+    anthropic_mode: str = "library",
     limit: int | None = None,
     sleep_seconds: float = 0.0,
     batch_size: int = 5,
@@ -283,7 +294,7 @@ def judge_results_file(
         results = results[:limit]
 
     final_output_path = output_path or input_path.with_name(f"{input_path.stem}_llm_judged.json")
-    judge = make_judge(judge_model, openai_mode)
+    judge = make_judge(judge_model, openai_mode, anthropic_mode)
 
     judged = []
     batch_size = max(1, batch_size)
@@ -292,9 +303,24 @@ def judge_results_file(
         indexes = ", ".join(str(item.get("index")) for item in batch)
         print(f"[batch {batch_number}/{len(batches)}] Judging indexes={indexes}")
         if batch_size == 1:
-            judged.extend(judge_item(judge, item) for item in batch)
+            for item in batch:
+                try:
+                    judged.append(judge_item(judge, item))
+                except Exception as exc:
+                    print(f"  Judge failed for index={item.get('index')}: {exc}")
+                    judged.append(judge_error_item(item, exc))
         else:
-            judged.extend(judge_batch(judge, batch))
+            try:
+                judged.extend(judge_batch(judge, batch))
+            except Exception as exc:
+                print(f"  Batch judge failed: {exc}")
+                print("  Retrying this batch one item at a time.")
+                for item in batch:
+                    try:
+                        judged.append(judge_item(judge, item))
+                    except Exception as item_exc:
+                        print(f"  Judge failed for index={item.get('index')}: {item_exc}")
+                        judged.append(judge_error_item(item, item_exc))
         if sleep_seconds and batch_number < len(batches):
             time.sleep(sleep_seconds)
 
@@ -302,6 +328,7 @@ def judge_results_file(
         "input": str(input_path),
         "judge_model": judge_model,
         "openai_mode": openai_mode if judge_model == "openai" else None,
+        "anthropic_mode": anthropic_mode if judge_model == "anthropic" else None,
         "batch_size": batch_size,
         "generated_at": datetime.now().isoformat(timespec="seconds"),
         "summary": summarize(judged),
@@ -320,6 +347,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--output", type=Path, default=None, help="Output JSON path.")
     parser.add_argument("--judge-model", default="openai", choices=["openai", "anthropic", "gemini"])
     parser.add_argument("--openai-mode", default="library", choices=["library", "api"])
+    parser.add_argument("--anthropic-mode", default="library", choices=["library", "api"])
     parser.add_argument("--batch-size", type=int, default=5, help="Number of SQL pairs to judge per LLM call.")
     parser.add_argument("--limit", type=int, default=None, help="Optional max number of rows to judge.")
     parser.add_argument("--sleep", type=float, default=0.0, help="Seconds to sleep between judge calls.")
@@ -333,6 +361,7 @@ def main() -> None:
         output_path=args.output,
         judge_model=args.judge_model,
         openai_mode=args.openai_mode,
+        anthropic_mode=args.anthropic_mode,
         limit=args.limit,
         sleep_seconds=args.sleep,
         batch_size=args.batch_size,

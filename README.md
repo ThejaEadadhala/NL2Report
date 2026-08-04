@@ -79,7 +79,11 @@ GEMINI_API_KEY=AIzaSy...
 # OpenAI-compatible API mode for openai_model.py
 GOAPI_API_KEY=sk-...
 GOAPI_BASE_URL=https://goapi.gptnb.ai/v1
-GOAPI_MODEL=gpt-3.5-turbo
+GOAPI_MODEL=gpt-4o
+
+# OpenAI-compatible API mode for anthropic_model.py
+ANTHROPIC_BASE_URL=https://goapi.gptnb.ai/v1
+ANTHROPIC_MODEL=anthropic-turbo
 
 # MySQL (Beaver dataset only)
 MYSQL_USER=root
@@ -94,6 +98,10 @@ Keys are loaded automatically via `python-dotenv`. Only set the keys for models 
 `openai_model.py` supports two modes:
 - `--openai-mode library` uses `OPENAI_API_KEY` and the standard OpenAI endpoint.
 - `--openai-mode api` uses the OpenAI-compatible API fields above (`GOAPI_API_KEY`, optional `GOAPI_BASE_URL`, optional `GOAPI_MODEL`).
+
+`anthropic_model.py` supports two modes:
+- `--anthropic-mode library` uses the Anthropic SDK.
+- `--anthropic-mode api` uses an OpenAI-compatible API with `ANTHROPIC_MODEL=anthropic-turbo`.
 
 ### 3. Set up datasets
 
@@ -207,6 +215,9 @@ python pipeline/batch_eval.py --dataset bird --model anthropic --questions datas
 
 # Beaver with openai_model.py through the OpenAI-compatible API
 python3 pipeline/batch_eval.py --dataset beaver --model openai --openai-mode api --questions datasets/beaver/questions.json
+
+# Beaver with anthropic_model.py through the OpenAI-compatible API
+python3 pipeline/batch_eval.py --dataset beaver --model anthropic --anthropic-mode api --questions datasets/beaver/questions.json
 
 # Custom output path
 python pipeline/batch_eval.py --dataset tpch --model anthropic --questions datasets/tpch/tpch_questions.json --output results/tpch_anthropic.json

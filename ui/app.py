@@ -32,7 +32,7 @@ MODEL_DETAILS = {
     "anthropic": {
         "label": "anthropic",
         "provider": "Anthropic",
-        "model_name": "anthropic-turbo",
+        "model_name": "claude-sonnet-4-6",
         "context_window": "Model dependent",
         "enabled": True,
     },
@@ -450,7 +450,8 @@ def model_run_environment(selected_model: str) -> dict[str, str]:
         env["GOAPI_MODEL"] = "gpt-4o"
         env["GPTNB_MODEL"] = "gpt-4o"
     elif backend == "anthropic":
-        env["ANTHROPIC_MODEL"] = "anthropic-turbo"
+        env["ANTHROPIC_MODEL"] = "claude-sonnet-4-6"
+        env["ANTHROPIC_API_MODEL"] = "claude-sonnet-4-6"
     return env
 
 
@@ -459,6 +460,8 @@ def model_cli_args(selected_model: str) -> list[str]:
     args = ["--model", backend]
     if backend == "openai":
         args.extend(["--openai-mode", "api"])
+    elif backend == "anthropic":
+        args.extend(["--anthropic-mode", "api"])
     return args
 
 
@@ -506,7 +509,7 @@ def run_single_evaluated_command(
     selected_model: str,
 ) -> tuple[str, int]:
     from pipeline.batch_eval import process_question
-    from pipeline.run_analysis import find_database_ref, load_schema, schema_engine
+    from pipeline.run_analysis import find_database_ref, load_schema, resolve_engine_name
     from pipeline.vector_filter import apply_vector_filter
     from scripts.judge_pred_sql import judge_results_file
 
@@ -526,14 +529,18 @@ def run_single_evaluated_command(
         gold_sql=item.get("gold_sql"),
     )
     db_ref = find_database_ref(dataset, db_name, schema)
-    engine = schema_engine(schema)
+    engine = resolve_engine_name(dataset, None, schema)
     model = None
 
     try:
         from pipeline.run_analysis import get_model
 
         os.environ.update(model_run_environment(selected_model))
-        model = get_model(model_arg, "api")
+        model = get_model(
+            model_arg,
+            "api" if model_arg == "openai" else "library",
+            "api" if model_arg == "anthropic" else "library",
+        )
         result = process_question(item, dataset, model, schema, db_ref, engine)
     except Exception as exc:
         result = {
@@ -569,8 +576,9 @@ def run_single_evaluated_command(
             report = judge_results_file(
                 input_path=output_path,
                 output_path=judge_output_path,
-                judge_model="openai",
-                openai_mode="api",
+                judge_model=model_arg,
+                openai_mode="api" if model_arg == "openai" else "library",
+                anthropic_mode="api" if model_arg == "anthropic" else "library",
                 batch_size=1,
             )
             report["last_run_at"] = started_at

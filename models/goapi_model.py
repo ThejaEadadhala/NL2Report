@@ -8,7 +8,7 @@ PlanningAgent swallows it, and planning silently never fires.
 """
 
 import os
-from openai import OpenAI
+from openai import OpenAI as OpenAICompatibleClient
 from models.base_model import BaseModel
 
 GOAPI_BASE_URL = "https://goapi.gptnb.ai/v1"
@@ -20,12 +20,12 @@ class GoAPIModel(BaseModel):
         api_key = os.getenv("GOAPI_KEY") or os.getenv("GOAPI_API_KEY")
         if not api_key:
             raise EnvironmentError("GOAPI_KEY not set in .env")
-        self.client = OpenAI(api_key=api_key, base_url=GOAPI_BASE_URL)
+        self.chat_client = OpenAICompatibleClient(api_key=api_key, base_url=GOAPI_BASE_URL)
         self.model = model
 
     def _generate(self, system: str, user: str) -> str:
         """Raw LLM call. Required by PlanningAgent."""
-        response = self.client.chat.completions.create(
+        response = self.chat_client.chat.completions.create(
             model=self.model,
             messages=[
                 {"role": "system", "content": system},

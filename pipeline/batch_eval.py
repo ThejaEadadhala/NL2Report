@@ -31,7 +31,7 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from config import DEFAULT_MODEL
 from pipeline.planning_agent import PlanningAgent
-from pipeline.run_analysis import get_model, load_schema, schema_engine, find_database_ref, execute_sql
+from pipeline.run_analysis import get_model, load_schema, find_database_ref, execute_sql, resolve_engine_name
 from pipeline.single_grain_compiler import compile_single_grain_sql
 from pipeline.vector_filter import apply_vector_filter
 from scripts.judge_pred_sql import judge_results_file
@@ -76,6 +76,7 @@ def run_judge(
     result_path: Path,
     judge_model: str,
     judge_openai_mode: str,
+    judge_anthropic_mode: str,
     judge_batch_size: int,
     judge_output: Path | None = None,
 ) -> None:
@@ -85,6 +86,7 @@ def run_judge(
         output_path=judge_output,
         judge_model=judge_model,
         openai_mode=judge_openai_mode,
+        anthropic_mode=judge_anthropic_mode,
         batch_size=judge_batch_size,
     )
     summary = report["summary"]
@@ -285,15 +287,19 @@ def main():
     parser.add_argument("--model", default=DEFAULT_MODEL, help="Model: ollama | anthropic | openai | gemini")
     parser.add_argument("--openai-mode", default="library", choices=["library", "api"],
                         help="OpenAI adapter mode: library uses OPENAI_API_KEY; api uses OpenAI-compatible API env vars")
+    parser.add_argument("--anthropic-mode", default="library", choices=["library", "api"],
+                        help="Anthropic adapter mode: library uses the Anthropic SDK; api uses OpenAI-compatible API env vars")
     parser.add_argument("--questions", required=True, help="Path to questions JSON file")
     parser.add_argument(
         "--output", default=None,
         help="Output JSON path (default: results/<dataset>_<model>_results.json)"
     )
-    parser.add_argument("--judge-model", default="openai", choices=["openai", "anthropic", "gemini"],
-                        help="LLM judge model to run after result JSON exists")
+    parser.add_argument("--judge-model", default=None, choices=["openai", "anthropic", "gemini"],
+                        help="LLM judge model to run after result JSON exists. Defaults to --model.")
     parser.add_argument("--judge-openai-mode", default=None, choices=["library", "api"],
                         help="OpenAI mode for the judge. Defaults to --openai-mode.")
+    parser.add_argument("--judge-anthropic-mode", default=None, choices=["library", "api"],
+                        help="Anthropic mode for the judge. Defaults to --anthropic-mode.")
     parser.add_argument("--judge-batch-size", type=int, default=5,
                         help="Number of SQL pairs to judge per LLM call")
     parser.add_argument("--judge-output", default=None, help="Judge output JSON path")
@@ -307,7 +313,9 @@ def main():
         sys.exit(1)
 
     output_path = Path(args.output) if args.output else Path(f"results/{args.dataset}_{args.model}_results.json")
+    judge_model = args.judge_model or args.model
     judge_openai_mode = args.judge_openai_mode or args.openai_mode
+    judge_anthropic_mode = args.judge_anthropic_mode or args.anthropic_mode
     judge_output_path = Path(args.judge_output) if args.judge_output else None
 
     questions = load_questions(questions_path)
@@ -324,10 +332,10 @@ def main():
         print(f"No SQL generation needed: {output_path}")
         print_final(list(existing.values()), 0.0)
         if not args.skip_judge:
-            run_judge(output_path, args.judge_model, judge_openai_mode, args.judge_batch_size, judge_output_path)
+            run_judge(output_path, judge_model, judge_openai_mode, judge_anthropic_mode, args.judge_batch_size, judge_output_path)
         return
 
-    model = get_model(args.model, args.openai_mode)
+    model = get_model(args.model, args.openai_mode, args.anthropic_mode)
     results: list[dict] = list(existing.values())
 
     total = len(questions)
@@ -338,12 +346,14 @@ def main():
     print(f"Model   : {args.model}")
     if args.model == "openai":
         print(f"OpenAI  : {args.openai_mode}")
+    if args.model == "anthropic":
+        print(f"Anthropic: {args.anthropic_mode}")
     print(f"Output  : {output_path}")
     print(f"Total   : {total} questions\n")
 
     global_start = time.time()
     first_schema = load_schema(args.dataset, questions[0]["db"])
-    detected_engine = schema_engine(first_schema)
+    detected_engine = resolve_engine_name(args.dataset, None, first_schema)
 
     for item in questions:
         idx = item["index"]
@@ -366,7 +376,7 @@ def main():
             selected_tables = [str(t) for t in selected_tables if t]
             print(f"  [Schema] Tables passed to model ({len(selected_tables)}): {', '.join(selected_tables)}")
             
-            engine = schema_engine(schema)
+            engine = resolve_engine_name(args.dataset, None, schema)
             db_ref = find_database_ref(args.dataset, db_name, schema)
 
             result = run_with_timeout(
@@ -402,7 +412,7 @@ def main():
     print_final(results, time.time() - global_start, dataset=args.dataset, model=args.model, engine=detected_engine)
     print(f"\n  Results saved to {output_path}")
     if not args.skip_judge:
-        run_judge(output_path, args.judge_model, judge_openai_mode, args.judge_batch_size, judge_output_path)
+        run_judge(output_path, judge_model, judge_openai_mode, judge_anthropic_mode, args.judge_batch_size, judge_output_path)
 
 
 if __name__ == "__main__":

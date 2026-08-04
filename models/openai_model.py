@@ -1,5 +1,5 @@
 import os
-from openai import OpenAI
+from openai import OpenAI as OpenAICompatibleClient
 from models.base_model import BaseModel
 
 DEFAULT_MODEL = "gpt-4o"
@@ -31,10 +31,10 @@ class OpenAIModel(BaseModel):
         client_kwargs = {"api_key": api_key}
         if base_url:
             client_kwargs["base_url"] = base_url
-        self.client = OpenAI(**client_kwargs)
+        self.chat_client = OpenAICompatibleClient(**client_kwargs)
 
     def _generate(self, system: str, user: str) -> str:
-        response = self.client.chat.completions.create(
+        response = self.chat_client.chat.completions.create(
             model=self.model,
             messages=[
                 {"role": "system", "content": system},
